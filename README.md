@@ -1,6 +1,6 @@
 ---
 title: "Stat 850 Project"
-author: "Firstname Lastname, Firstname Lastname, ..."
+author: "Carson Trego, Ryan Lalicker""
 format: md
 ---
 
