@@ -26,30 +26,29 @@ The data we are using in this project comes from the U.S. Energy Information Adm
 
 To access the data we used, you can either view the CSV we have created, or access the information yourself using the API.
 
-> 1\) Go to the official EIA website at eia.gov/opendata/
->
-> 2\) select electricity and go to generation
->
-> 3\) under generation, select "includes monthly generation by fuel type, sector, and state"
->
-> 4\) after following the link, go under "API ROUTE" and set select route to "Electricity", then below that select "Electric Power Operations (Annual And Monthly)"
->
-> 5\) under "FREQUENCY", set "select frequency" to "monthly" and do not fill in the optional start and end parameters.
->
-> 6\) under "DATA TYPE", hit "select all"
->
-> 7\) finally, hit submit to get your API URL and header.
->
-> Once you have the information provided from this search and your API key, you should be able to run the following code:
+1. Go to the official EIA website at https://www.eia.gov/opendata/
+
+2. select electricity and go to generation
+
+3. under generation, select "includes monthly generation by fuel type, sector, and state"
+
+4. after following the link, go under "API ROUTE" and set select route to "Electricity", then below that select "Electric Power Operations (Annual And Monthly)"
+
+5. under "FREQUENCY", set "select frequency" to "monthly" and do not fill in the optional start and end parameters.
+
+6. under "DATA TYPE", hit "select all"
+
+7. finally, hit submit to get your API URL and header.
+
+Once you have the information provided from this search and your API key, you should be able to run the following code to download the data
 
 ```{python, eval = F, echo = T}
 import requests
 import json
 import pandas as pd
-from skimpy import skim
 
 # API KEY
-api_key = 'YOU NEED A KEY'
+api_key = 'API KEY HERE'
 
 #API URL
 apiUrl = "https://api.eia.gov/v2/electricity/electric-power-operational-data/data/?frequency=monthly&data[0]=ash-content&data[1]=consumption-for-eg&data[2]=consumption-for-eg-btu&data[3]=consumption-uto&data[4]=consumption-uto-btu&data[5]=cost&data[6]=cost-per-btu&data[7]=generation&data[8]=heat-content&data[9]=receipts&data[10]=receipts-btu&data[11]=stocks&data[12]=sulfur-content&data[13]=total-consumption&data[14]=total-consumption-btu&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000"
@@ -102,11 +101,16 @@ else:
     print(f"REQUEST FAILED---CODE: {response.status_code}")
     print(response.text) 
 
-
-
 df1=pd.DataFrame(data)
 df1=pd.DataFrame(data['response']['data'])
 df1.head()
+df1.to_csv("data/EIA_monthly_data.csv")
+```
+
+```{python}
+import pandas as pd
+from skimpy import skim
+df1 = pd.read_csv("data/EIA_monthly_data.csv")
 skim(df1)
 ```
 
@@ -125,7 +129,7 @@ SOME SIGNIFICANT RANGE OUTLIERS ARE TO BE NOTED
 SOME UNITS ARE INCOMPLETE, IN TERMS OF NEEDING A NUMERATOR
 
 | Name                   | Description                                                               | Type      | Units                              | Range/Values         |
-|-------------|--------------------|-------------|-------------|-------------|
+|------------|-------------------------|------------|------------|------------|
 | sectorid               | Number id associated with the sector inn question                         | numeric   | NA                                 | 0 - 99               |
 | ash-content            | Average ash content of consumed fuel                                      | numeric   | percent                            | 0 - 60%              |
 | consumption-for-eg     | Consumption of Fuels for Electricity Generation (Physical Units)          | numeric   | \<Variable\> Physical Unit         | 0-650,000 Units      |
@@ -176,17 +180,22 @@ We hope to have the graphs done and the paper mostly written by Thanksgiving bre
 
 We think this data could potentially provide some challenges. If they are too difficult we may change our project if that is allowed.
 
+------------------------------------------------------------------------
 
------
+project-team-1-21\$ git fame . --incl=".(q\|Q\|r\|R)md" Processing: 100%\|██████████████████████████████████████████████████████████████████████████████████████████████\| 4/4 \[00:00\<00:00, 256.39file/s\] Total commits: 4 Total ctimes: 24 Total files: 6 Total loc: 410 \| Author \| loc \| coms \| fils \| distribution \| \|:----------------------\|------:\|-------:\|-------:\|:----------------\| \| github-classroom\[bot\] \| 276 \| 1 \| 4 \| 67.3/25.0/66.7 \| \| seatreeg \| 117 \| 1 \| 1 \| 28.5/25.0/16.7 \| \| Ryan Lalicker \| 17 \| 2 \| 1 \| 4.1/50.0/16.7 \|
 
-project-team-1-21$ git fame . --incl=".(q|Q|r|R)md"
-Processing: 100%|██████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 256.39file/s]
-Total commits: 4
-Total ctimes: 24
-Total files: 6
-Total loc: 410
-| Author                |   loc |   coms |   fils |  distribution   |
-|:----------------------|------:|-------:|-------:|:----------------|
-| github-classroom[bot] |   276 |      1 |      4 | 67.3/25.0/66.7  |
-| seatreeg              |   117 |      1 |      1 | 28.5/25.0/16.7  |
-| Ryan Lalicker         |    17 |      2 |      1 | 4.1/50.0/16.7   |
+
+Best practice is to store API keys in a valut for your project, using the `secret` package: https://github.com/gaborcsardi/secret
+
+If you make an appointment with me I'll help you figure out how to set this up so that the two of you and I can run your code reproducibly. :)
+
+For now, I've saved the data out to a CSV and separated the code to preview the data from the code to obtain it. You should copy your data description information into the data/README file so that everything is set up properly - you can even add your code to get the data to the code/ folder and document it there. 
+
+
+I think you will probably want to focus on questions like... 
+
+- How does fuel density differ between different types of power generation?
+- What are the challenges in how the EIA reports data when looking at renewable energy?
+- Can you identify generation technology/type by combinations of other variables (using missingness here would be cheating, I think)
+- You might be able to replicate https://xkcd.com/1162/, which would be entertaining :)
+
