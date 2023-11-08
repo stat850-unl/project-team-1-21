@@ -81,11 +81,50 @@ plt.show()
 plt.close()
 dfsulfur
 dfash
+# Sulfur content higher in bituminous coal, bituminous coal and synthetic coal,
+# coal, excluding waste coal , lignite coal, petroleum, petroleum coal, and waste coal.
+
 
 plt.close('all')
 df1['cost-per-btu']
 
+
 dfcost=df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()
 dfcost.plot(kind='bar')
 plt.show()
+plt.close()
 dfcost
+
+# These next two graphs are likely not useful but I made them anyway.
+dfAshByState = df1.groupby('location')['ash-content'].mean()
+dfAshByState.plot(kind='bar')
+plt.show()
+plt.close()
+dfAshByState
+
+dfSulferByState = df1.groupby('location')['sulfur-content'].mean()
+dfSulferByState.plot(kind='bar')
+plt.show()
+plt.close()
+dfSulferByState
+
+# Looking at generation by fuel type - probably not useful in its current form.
+dfgen=df1.groupby('fuelTypeDescription')['generation'].mean()
+dfgen.plot(kind='bar')
+plt.show()
+plt.close()
+dfgen
+
+# Some bars seem to follow the ash and sulfer content, which would be expected.
+# Some do not - may want to take a closer look.
+
+
+# Consumption
+dfCon=df1.groupby('fuelTypeDescription')['total-consumption-btu'].mean()
+dfCon.plot(kind='bar')
+plt.show()
+plt.close()
+dfCon
+
+
+
