@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>quartoproj</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="docToQuart_files/libs/clipboard/clipboard.min.js"></script>
+<script src="docToQuart_files/libs/quarto-html/quarto.js"></script>
+<script src="docToQuart_files/libs/quarto-html/popper.min.js"></script>
+<script src="docToQuart_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="docToQuart_files/libs/quarto-html/anchor.min.js"></script>
+<link href="docToQuart_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="docToQuart_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="docToQuart_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="docToQuart_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="docToQuart_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">quartoproj</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="github-note" class="level1">
+<h1>GITHUB NOTE:</h1>
+<p>Due to some issue with github (questions will be asked at officie hours) and a need for mobile writing, a shared doc was used to generate the non-code aspects of the document. I, Carson, will be submitting this file to github, but it is with firm believe that equivelent work was put into this document.</p>
+</section>
+<section id="dependency-installation" class="level1">
+<h1>Dependency Installation</h1>
+<p>{&lt;we have questions on doing this in python, and using renv&gt;}</p>
+</section>
+<section id="main-code" class="level1">
+<h1>Main Code</h1>
+<p>NOTE: this is not intended for the document in-use (it should be and is at the end in the reproducability and code section), but is instead to be convenient when preparing the file</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimpy <span class="im">import</span> skim</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#AVAILABLE TIMES</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>avtimes<span class="op">=</span>[<span class="st">"01"</span>,<span class="st">"02"</span>,<span class="st">"03"</span>,<span class="st">"04"</span>,<span class="st">"05"</span>,<span class="st">"06"</span>,<span class="st">"07"</span>,<span class="st">"08"</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>dataofdatalist<span class="op">=</span>[]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> timeloop <span class="kw">in</span> avtimes:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># API KEY</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  api_key <span class="op">=</span> <span class="st">'RucYMPTp3yg6yYY0ktOEnbxaFDNvsDXDIQfGV3NK'</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#API URL</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  apiUrl <span class="op">=</span> <span class="st">"https://api.eia.gov/v2/electricity/electric-power-operational-data/data/?frequency=monthly&amp;data[0]=ash-content&amp;data[1]=consumption-for-eg&amp;data[2]=consumption-for-eg-btu&amp;data[3]=consumption-uto&amp;data[4]=consumption-uto-btu&amp;data[5]=cost&amp;data[6]=cost-per-btu&amp;data[7]=generation&amp;data[8]=heat-content&amp;data[9]=receipts&amp;data[10]=receipts-btu&amp;data[11]=stocks&amp;data[12]=sulfur-content&amp;data[13]=total-consumption&amp;data[14]=total-consumption-btu&amp;sort[0][column]=period&amp;sort[0][direction]=desc&amp;offset=0&amp;length=5000"</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Combined API URL and API key, will be used as a single input inton the api function</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  urlAndKey <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>apiUrl<span class="sc">}</span><span class="ss">&amp;api_key=</span><span class="sc">{</span>api_key<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># HEADER, an input to the api</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  headers <span class="op">=</span> {</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"X-Params"</span>: json.dumps({</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"frequency"</span>: <span class="st">"monthly"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">"data"</span>: [</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ash-content"</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-for-eg"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-for-eg-btu"</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-uto"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-uto-btu"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cost"</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cost-per-btu"</span>,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"generation"</span>,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"heat-content"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"receipts"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"receipts-btu"</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stocks"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sulfur-content"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total-consumption"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total-consumption-btu"</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>      ],</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"facets"</span>: {},</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">"start"</span>: <span class="st">"2023-"</span><span class="op">+</span>timeloop,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"end"</span>: <span class="st">"2023-"</span><span class="op">+</span>timeloop,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">"sort"</span>: [</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>          <span class="st">"column"</span>: <span class="st">"period"</span>,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>          <span class="st">"direction"</span>: <span class="st">"desc"</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>      ],</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">"offset"</span>: <span class="dv">0</span>,</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">"length"</span>: <span class="dv">5000</span> <span class="co">#ADJUSTABLE; WILL EXTEND WHEN I GET MORE SPACE MY COMPUTER IS MELTING</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># GET REQUEST, as stated in the EIA method section</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  response <span class="op">=</span> requests.get(urlAndKey, headers<span class="op">=</span>headers)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Response Status code (200 = success)</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()  <span class="co"># read response</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>:</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"REQUEST FAILED---CODE: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(response.text)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  dataofdatalist.append(data[<span class="st">'response'</span>][<span class="st">'data'</span>])</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(timeloop)</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="co">#dfTEST=pd.DataFrame(data['response']['data'])</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="co">#for x in dataofdatalist:</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="co">#  print(111)</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="co">#  dataofdatalist[x]=pd.DataFrame(dataofdatalist[x])</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="co">#Yeah yeah, this is horrfic design, may change it later</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>df___i<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">0</span>])</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>df__ii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">1</span>])</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>df_iii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">2</span>])</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>df__iv<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">3</span>])</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>df___v<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">4</span>])</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>df__vi<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">5</span>])</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>df_vii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">6</span>])</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>dfviii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">7</span>])</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="co">#API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them</span></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>metalist<span class="op">=</span>[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>dfLONG<span class="op">=</span>pd.concat(metalist, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(dfLONG[<span class="st">'period'</span>])</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>fueleeNotDict<span class="op">=</span>{</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>  <span class="st">'all coal products'</span>                           :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>  <span class="st">'all fuels'</span>                                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>  <span class="st">'all renewables'</span>                              :<span class="st">'NULL'</span>,</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">'anthracite coal'</span>                             :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>  <span class="st">'biogenic municipal solid waste'</span>              :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>  <span class="st">'biomass'</span>                                     :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>  <span class="st">'bituminous coal'</span>                             :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>  <span class="st">'bituminous coal and synthetic coal'</span>          :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>  <span class="st">'coal, excluding waste coal'</span>                  :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>  <span class="st">'conventional hydroelectric'</span>                  :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>  <span class="st">'distillate fuel oil'</span>                         :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>  <span class="st">'estimated small scale solar photovoltaic'</span>    :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>  <span class="st">'estimated total solar'</span>                       :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>  <span class="st">'estimated total solar photovoltaic'</span>          :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>  <span class="st">'fossil fuels'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>  <span class="st">'geothermal'</span>                                  :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>  <span class="st">'hydro-electric pumped storage'</span>               :<span class="st">'NULL'</span>,</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>  <span class="st">'landfill gas'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>  <span class="st">'lignite coal'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>  <span class="st">'municiapl landfill gas'</span>                      :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>  <span class="st">'natural gas'</span>                                 :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>  <span class="st">'natural gas &amp; other gases'</span>                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>  <span class="st">'nuclear'</span>                                     :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>  <span class="st">'offshore wind turbine'</span>                       :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>  <span class="st">'onshore wind turbine'</span>                        :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>  <span class="st">'other'</span>                                       :<span class="st">'NULL'</span>,</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>  <span class="st">'other gases'</span>                                 :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>  <span class="st">'other renewables'</span>                            :<span class="st">'NULL'</span>,</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>  <span class="st">'petroleum'</span>                                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>  <span class="st">'petroleum coke'</span>                              :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>  <span class="st">'petroleum liquids'</span>                           :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>  <span class="st">'refined coal'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>  <span class="st">'renewable'</span>                                   :<span class="st">'NULL'</span>,</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>  <span class="st">'renewable waste products'</span>                    :<span class="st">'UNSURE'</span>,</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>  <span class="st">'residual fuel oil'</span>                           :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>  <span class="st">'solar'</span>                                       :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>  <span class="st">'solar photovoltaic'</span>                          :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>  <span class="st">'solar thermal'</span>                               :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>  <span class="st">'subbituminous coal'</span>                          :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>  <span class="st">'waste coal'</span>                                  :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>  <span class="st">'waste oil and other oils'</span>                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>  <span class="st">'wind'</span>                                        :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>  <span class="st">'wood and wood wastes'</span>                        :<span class="st">'FUELEE'</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>FUELEEZ<span class="op">=</span>[key <span class="cf">for</span> key, val <span class="kw">in</span> fueleeNotDict.items() <span class="cf">if</span> val <span class="op">==</span> <span class="st">'FUELEE'</span>]</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a><span class="co">#'FUELEE' (uses fuel)</span></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a><span class="co">#'NON-FUELEE' (doesnt use fuel)</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a><span class="co">#'NULL' (neither/both)</span></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a><span class="co">#'UNSURE' (unsure)</span></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>df1<span class="op">=</span>dfLONG</span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.max_columns'</span>,<span class="dv">40</span>)</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>).count()</span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>dfash<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()</span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>dfsulfur<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()</span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>dfash.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>dfsulfur.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>dfsulfur</span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>dfash</span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a><span class="co"># Sulfur content higher in bituminous coal, bituminous coal and synthetic coal,</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="co"># coal, excluding waste coal , lignite coal, petroleum, petroleum coal, and waste coal.</span></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>plt.close(<span class="st">'all'</span>)</span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'cost-per-btu'</span>]</span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>dfcost<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>dfcost.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>dfcost</span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">False</span>:</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>  <span class="co"># These next two graphs are likely not useful but I made them anyway.</span></span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>  dfAshByState <span class="op">=</span> df1.groupby(<span class="st">'location'</span>)[<span class="st">'ash-content'</span>].mean()</span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>  dfAshByState.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>  plt.show()</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>  plt.close()</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>  dfAshByState</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>  dfSulferByState <span class="op">=</span> df1.groupby(<span class="st">'location'</span>)[<span class="st">'sulfur-content'</span>].mean()</span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>  dfSulferByState.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>  plt.show()</span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>  plt.close()</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>  dfSulferByState</span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a><span class="co"># Looking at generation by fuel type - probably not useful in its current form.</span></span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>dfgen<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean()</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>dfgen.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>dfgen</span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a><span class="co"># Some bars seem to follow the ash and sulfer content, which would be expected.</span></span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a><span class="co"># Some do not - may want to take a closer look.</span></span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Consumption</span></span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>dfCon<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'total-consumption-btu'</span>].mean()</span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>dfCon.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>dfCon</span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a><span class="co">#######</span></span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span></span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a><span class="co">#NOTE!!!! THE OTHER HEAT RATE IS BUGGED, BUT THIS ONE SEEMS TO WORK JUST FINE</span></span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a><span class="co">#1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412)</span></span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a><span class="co">#EFFICIENCY </span></span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a><span class="co">#(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[FUELEEZ].plot(kind='bar')</span></span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.show()</span></span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.close()</span></span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>FUELEEZ</span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a><span class="co">#EFFICIENCY </span></span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff<span class="op">=</span>FUELEEZ.copy()</span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'anthracite coal'</span>)</span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'other gases'</span>)</span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff] <span class="co">#million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input</span></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff].plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"input/output energy efficicency of fuelee sources"</span>)</span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"efficiecncy (KWH in per KWH out)"</span>)</span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>kwhToKwhEff<span class="op">=</span>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff] <span class="co">#million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input</span></span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a><span class="co">#HEAT RATE</span></span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff<span class="op">=</span>FUELEEZ.copy()</span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'anthracite coal'</span>)</span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'other gases'</span>)</span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>((df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> ))[elligebleForIOEff] <span class="co">#same operation as above but dont flip the operation and leave the mmbtu as btu</span></span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>((df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> ))[elligebleForIOEff].plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Heat Rate of Fuelees"</span>)</span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"btu input per kwh output"</span>)</span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a><span class="co">#SULFUR CONTENT</span></span>
+<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a>elligebleForSC <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Sulfur Content  of Fuelees"</span>)</span>
+<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"sulfur content (percentage of fuel weight)"</span>)</span>
+<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a><span class="co">#ASH CONTENT</span></span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>elligebleForAC <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Ash Content  of Fuelees"</span>)</span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Ash content (percentage of fuel weight)"</span>)</span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a><span class="co">#COST</span></span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>elligebleForCOST <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Fuel Unit Price of Fuelees"</span>)</span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cost Per BTU"</span>)</span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a><span class="co">#COSTPERKWH</span></span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>elligebleForCOST <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]<span class="op">/</span><span class="fl">293.07107</span> <span class="co">#dollars per million btu to dollars per kwh</span></span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut<span class="op">=</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]<span class="op">/</span><span class="fl">293.07107</span>)<span class="op">/</span>kwhToKwhEff <span class="co">#cost per millionn btu to dollars per kwh input divided by efficiency of input energy </span></span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut<span class="op">=</span>fuelCostPerKwhOut[fuelCostPerKwhOut<span class="op">&gt;</span><span class="dv">0</span>] <span class="co">#get rid of Nan valjues</span></span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Price per kwh Production (cost per kwh fuel/efficiency)"</span>)</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cost Per Kwh fuel"</span>)</span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>df1.columns</span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>df1.head()</span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'heat-content'</span>].mean()[elligebleForCOST]</span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'stocks-units'</span>].unique()</span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'sectorDescription'</span>].unique()</span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'period'</span>].unique()</span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a>df1.head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>01
+02
+03
+04
+05
+06
+07
+08</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-2.png" width="567" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-3.png" width="571" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-4.png" width="567" height="686"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-5.png" width="584" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-6.png" width="567" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-7.png" width="589" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-8.png" width="610" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-9.png" width="589" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-10.png" width="585" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-11.png" width="585" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-2-output-12.png" width="597" height="669"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>&lt;bound method NDFrame.head of         period location stateDescription  sectorid  \
+0      2023-01       ID            Idaho        90   
+1      2023-01       ID            Idaho        90   
+2      2023-01       ID            Idaho        90   
+3      2023-01       ID            Idaho        90   
+4      2023-01       ID            Idaho        90   
+...        ...      ...              ...       ...   
+39995  2023-08       KS           Kansas        98   
+39996  2023-08       KS           Kansas        98   
+39997  2023-08       KS           Kansas        98   
+39998  2023-08       KS           Kansas        98   
+39999  2023-08       KS           Kansas        98   
+
+                   sectorDescription fueltypeid        fuelTypeDescription  \
+0      Electric Power Sector Non-CHP        OB2                    biomass   
+1      Electric Power Sector Non-CHP        OBW                    biomass   
+2      Electric Power Sector Non-CHP        ORW           other renewables   
+3      Electric Power Sector Non-CHP        PEL          petroleum liquids   
+4      Electric Power Sector Non-CHP        PET                  petroleum   
+...                              ...        ...                        ...   
+39995                 Electric Power        NGO  natural gas &amp; other gases   
+39996                 Electric Power        NUC                    nuclear   
+39997                 Electric Power        PEL          petroleum liquids   
+39998                 Electric Power        PET                  petroleum   
+39999                 Electric Power        REN                  renewable   
+
+       ash-content ash-content-units  consumption-for-eg  \
+0              0.0           percent                 NaN   
+1              0.0           percent                 NaN   
+2              0.0           percent                 NaN   
+3              0.0           percent               0.000   
+4              0.0           percent               0.000   
+...            ...               ...                 ...   
+39995          0.0           percent            6915.815   
+39996          0.0           percent               0.000   
+39997          0.0           percent                 NaN   
+39998          0.0           percent                 NaN   
+39999          0.0           percent             121.745   
+
+      consumption-for-eg-units  consumption-for-eg-btu  \
+0      thousand physical units                     NaN   
+1      thousand physical units                     NaN   
+2      thousand physical units                     NaN   
+3             thousand barrels                 0.00000   
+4             thousand barrels                 0.00000   
+...                        ...                     ...   
+39995             thousand Mcf                 7.01023   
+39996  thousand physical units                 9.17738   
+39997         thousand barrels                     NaN   
+39998         thousand barrels                     NaN   
+39999  thousand physical units                 6.08599   
+
+      consumption-for-eg-btu-units  consumption-uto    consumption-uto-units  \
+0                    million MMBtu              NaN  thousand physical units   
+1                    million MMBtu              NaN  thousand physical units   
+2                    million MMBtu              NaN  thousand physical units   
+3                    million MMBtu              0.0         thousand barrels   
+4                    million MMBtu              0.0         thousand barrels   
+...                            ...              ...                      ...   
+39995                million MMBtu              0.0             thousand Mcf   
+39996                million MMBtu              0.0  thousand physical units   
+39997                million MMBtu              NaN         thousand barrels   
+39998                million MMBtu              NaN         thousand barrels   
+39999                million MMBtu              0.0  thousand physical units   
+
+       consumption-uto-btu consumption-uto-btu-units    cost  \
+0                      NaN             million MMBtu     NaN   
+1                      NaN             million MMBtu     NaN   
+2                      NaN             million MMBtu     NaN   
+3                      0.0             million MMBtu     NaN   
+4                      0.0             million MMBtu     NaN   
+...                    ...                       ...     ...   
+39995                  0.0             million MMBtu     NaN   
+39996                  0.0             million MMBtu     NaN   
+39997                  NaN             million MMBtu  141.16   
+39998                  NaN             million MMBtu     NaN   
+39999                  0.0             million MMBtu     NaN   
+
+                       cost-units  cost-per-btu       cost-per-btu-units  \
+0      dollars per physical units           NaN  dollars per million Btu   
+1      dollars per physical units           NaN  dollars per million Btu   
+2      dollars per physical units           NaN  dollars per million Btu   
+3             dollars per barrels           NaN  dollars per million Btu   
+4             dollars per barrels           NaN  dollars per million Btu   
+...                           ...           ...                      ...   
+39995             dollars per Mcf           NaN  dollars per million Btu   
+39996  dollars per physical units           NaN  dollars per million Btu   
+39997         dollars per barrels       24.3619  dollars per million Btu   
+39998         dollars per barrels           NaN  dollars per million Btu   
+39999  dollars per physical units           NaN  dollars per million Btu   
+
+       generation        generation-units  heat-content  \
+0             NaN  thousand megawatthours        0.6010   
+1             NaN  thousand megawatthours        0.6010   
+2             NaN  thousand megawatthours        0.0000   
+3         0.00000  thousand megawatthours        0.0000   
+4         0.00000  thousand megawatthours        0.0000   
+...           ...                     ...           ...   
+39995   795.51933  thousand megawatthours        1.0137   
+39996   879.98700  thousand megawatthours        0.0000   
+39997         NaN  thousand megawatthours        5.7330   
+39998         NaN  thousand megawatthours        5.7330   
+39999  1771.46435  thousand megawatthours        0.4940   
+
+           heat-content-units  receipts           receipts-units  \
+0      Btu per physical units     0.000  thousand physical units   
+1      Btu per physical units     0.000  thousand physical units   
+2      Btu per physical units     0.000  thousand physical units   
+3             Btu per barrels     0.000         thousand barrels   
+4             Btu per barrels     0.000         thousand barrels   
+...                       ...       ...                      ...   
+39995             Btu per Mcf  3665.009             thousand Mcf   
+39996  Btu per physical units     0.000  thousand physical units   
+39997         Btu per barrels     6.863         thousand barrels   
+39998         Btu per barrels     6.863         thousand barrels   
+39999  Btu per physical units     0.000  thousand physical units   
+
+       receipts-btu receipts-btu-units   stocks             stocks-units  \
+0           0.00000        billion Btu      NaN  thousand physical units   
+1           0.00000        billion Btu      NaN  thousand physical units   
+2           0.00000        billion Btu      NaN  thousand physical units   
+3           0.00000        billion Btu    0.271         thousand barrels   
+4           0.00000        billion Btu      NaN         thousand barrels   
+...             ...                ...      ...                      ...   
+39995    3700.78985        billion Btu      NaN             thousand Mcf   
+39996       0.00000        billion Btu      NaN  thousand physical units   
+39997      39.76600        billion Btu  221.686         thousand barrels   
+39998      39.76600        billion Btu      NaN         thousand barrels   
+39999       0.00000        billion Btu      NaN  thousand physical units   
+
+       sulfur-content sulfur-content-units  total-consumption  \
+0                 0.0              percent                NaN   
+1                 0.0              percent                NaN   
+2                 0.0              percent                NaN   
+3                 0.0              percent              0.000   
+4                 0.0              percent              0.000   
+...               ...                  ...                ...   
+39995             0.0              percent           6915.815   
+39996             0.0              percent              0.000   
+39997             0.0              percent                NaN   
+39998             0.0              percent                NaN   
+39999             0.0              percent            121.745   
+
+       total-consumption-units  total-consumption-btu  \
+0      thousand physical units                    NaN   
+1      thousand physical units                    NaN   
+2      thousand physical units                    NaN   
+3             thousand barrels                0.00000   
+4             thousand barrels                0.00000   
+...                        ...                    ...   
+39995             thousand Mcf                7.01023   
+39996  thousand physical units                9.17738   
+39997         thousand barrels                    NaN   
+39998         thousand barrels                    NaN   
+39999  thousand physical units                6.08599   
+
+      total-consumption-btu-units  
+0                   million MMBtu  
+1                   million MMBtu  
+2                   million MMBtu  
+3                   million MMBtu  
+4                   million MMBtu  
+...                           ...  
+39995               million MMBtu  
+39996               million MMBtu  
+39997               million MMBtu  
+39998               million MMBtu  
+39999               million MMBtu  
+
+[40000 rows x 37 columns]&gt;</code></pre>
+</div>
+</div>
+<section id="improvementprogress-needed-notes" class="level2">
+<h2 class="anchored" data-anchor-id="improvementprogress-needed-notes">Improvement/progress needed notes</h2>
+<p>-find more information about the sources without much to measure (solar, nuclear), as these sources have mostly been stripped in the analysis performed. There is a disbalance of information in favor of methods that use combustion</p>
+<p>-convert the scratch sources to normal sources</p>
+<p>-make the graphics not look bad: cropping, text size, x axis arrangement, and alternating colors of bars will be required</p>
+</section>
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">PURPOSE</h2>
+<p>In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more compicated, and the audience is more engaged than ever.</p>
+<p>^{&lt;this needs more sourcing but i may need to talk to someone who is better at finding historical trends&gt;}</p>
+<p>Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss indevidual characteristics, and not use those characteristics to form any recommendation.</p>
+</section>
+<section id="about-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-data"><strong>ABOUT THE DATA</strong></h2>
+<p>(will include a description of the agency, dataset, and how to obtain it)<br>
+The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {&lt;SOURCE NEEDED&gt;}.</p>
+<pre><code>The EIA hosts an Open Data program with the stated intention of making energy data \"more accessible, understandable, relevant and responsive\" {\&lt;source, open data site\&gt;}. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country{\&lt;SOURCE EIA OPEN DATA\&gt;}. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.
+
+For more information on obtaining the information for reproducibility, please go to the Reproducibility and Code section</code></pre>
+</section>
+<section id="background-info" class="level2">
+<h2 class="anchored" data-anchor-id="background-info"><strong>BACKGROUND INFO</strong></h2>
+<p>STEAM -ELECTRIC POWER</p>
+<p>A Steam-Electric Power Station is a powerstation that makes use of a steam engine{&lt;sourcedoc: “steam turbine”&gt;}. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator.&nbsp;</p>
+<p>While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% {&lt;sourcedoc: primary to final&gt;}{&lt;sourcedoc:heat rates&gt;}.</p>
+<p>These steam turbines are critical components of the world’s power infrastructure, as most of the world’s electricity is generated using them {&lt;sourcedoc: steam turbine&gt;}, and 53.2% of US electricity is generated using a steam turbine&nbsp; {&lt;sourcedoc: steam turbine&gt;}. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don’t require steam turbines. These alternatives will be discussed individually in the @sources of power@ section below.</p>
+<p>&nbsp;&nbsp;</p>
+<p>CATEGORIZATION ####may need some sources here and there, specifically in the examples, will add later.</p>
+<p>Many of the metrics in this report are based on the use of fuel (e.g.&nbsp;The cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun’s rays to generate electricity, so there is no need to “top up” the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with**.</p>
+<p>**Note: While solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun’s fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. This form of analysis was not included in the report.&nbsp; {&lt;ngl what I wrote here is gratuitous, likely removing it&gt;}</p>
+<p>To organize the data for convenient reading, the power sources were put into two groups, fuelees and non-fuelees. Fuelees are power sources that require fuel to be regularly put in the generator to make power. Examples include: coal, natural gas, biomass, and nuclear. Non-fuelees, on the other hand, do not require regular input fuel to operate (although they may require regular maintenance). Examples include: wind, solar, and hydro-electric power.</p>
+<p><br>
+</p>
+</section>
+<section id="background-power-types" class="level2">
+<h2 class="anchored" data-anchor-id="background-power-types">Background: Power Types</h2>
+<section id="this-section-will-serve-the-funciton-as-half-of-our-data-dictionary-but-designed-to-be-read-like-a-paper-rather-than-a-reference-for-data-science.-we-will-first-describe-the-types-of-energy-so-that-the-reader-has-context-for-the-x-axis-variables-then-in-each-part-of-the-analysis-will-include-context-on-the-y-axis-variables." class="level4">
+<h4 class="anchored" data-anchor-id="this-section-will-serve-the-funciton-as-half-of-our-data-dictionary-but-designed-to-be-read-like-a-paper-rather-than-a-reference-for-data-science.-we-will-first-describe-the-types-of-energy-so-that-the-reader-has-context-for-the-x-axis-variables-then-in-each-part-of-the-analysis-will-include-context-on-the-y-axis-variables.">This section will serve the funciton as half of our data dictionary, but designed to be read like a paper rather than a reference for data science. We will first describe the types of energy so that the reader has context for the x axis variables, then in each part of the analysis will include context on the y axis variables.</h4>
+<p>####there is an unfathomable amount of overlap in our variables [ residual fuel oil(petroleum fuel oil(petroleum))) ], i will consider making a visual venn diagram chart for this.</p>
+<p><strong>COAL POWER</strong></p>
+<p>Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants {&lt;sorucedoc:coaltypes&gt;}. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced{&lt;sorucedoc:coaltypes&gt;}.</p>
+<p><strong>Anthracite</strong></p>
+<p>Anthracite contains 86%-97% carbon, and occurs naturally.</p>
+<p><br>
+</p>
+<p><strong>Bituminous</strong></p>
+<p>Bituminous coal contains 45%-86% carbon, and occurs naturally.</p>
+<p><br>
+</p>
+<p><strong>Subbituminous</strong></p>
+<p>Subbituminous coal contains 35%-45% carbon, and occurs naturally.</p>
+<p><br>
+</p>
+<p><strong>Lignite</strong></p>
+<p>Lignite contains 25%-65% carbon, and occurs naturally.</p>
+<p><br>
+<br>
+</p>
+<p><strong>Waste</strong></p>
+<p>Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines, and can sometimes be cleaned by removing some of the non-combustible materials {&lt;wastecoaldef&gt;}</p>
+<p><strong>Refined</strong></p>
+<p>Refined coal (not to be confused with coal that has @standard@ pre-processing) is coal that has been modified to reduce impurities and improve heat content {&lt;refinedcoaldef&gt;}. Refined coal meets the standards set by the IRS definition of the substance{&lt;notice 2010-54&gt;}. Refined coal is often made by mixing proprietary additives into coal {&lt;refinedcoalarticle&gt;}.</p>
+<p><strong>Synthetic??? Unsure if it means pyrolytic or something else.</strong></p>
+<p><strong>FLAMMABLE GAS POWER</strong></p>
+<p><strong>Natural Gas</strong></p>
+<p>Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane{&lt;natgaseee&gt;}.</p>
+<p><strong>Landfill Gas</strong></p>
+<p>Bacteria can naturally decompose organic materials into a gas that is approximately 50/50 methane and CO2. This gas can be treated to remove CO2 and other gases, turning it into biomethane, or burned directly for energy.</p>
+<p><br>
+</p>
+<p><strong>BIOMASS</strong></p>
+<p>Biomass is organic material derived from living organisms. Biomass can include wood, grasses, foods, excrement, and biogenic portions of municipal solid waste{&lt;biomass&gt;}. Biomass can be burned directly or turned into other useful products such as methane or chemical feedstocks{&lt;biomass&gt;} {&lt;waste to energy&gt;}{&lt;municiple solid waste&gt;}.</p>
+<p><strong>BIOGENIC MUNICIPAL SOLID WASTE</strong></p>
+<p>Municipal solid waste is the formal term for garbage. Municipal solid waste can contain a mixture of organic flammable compounds and non-combustible materials {&lt;waste to energy&gt;}. The biogenic municipal solid waste is the parts of garbage that is produced by living organisms (e.g.&nbsp;discarded food, paper, cardboard) {&lt;biomass&gt;}.Municipal solid waste can be burned directly in waste to energy plants converted to combustible has at landfills, or converted into other chemical products {&lt;waste to energy&gt;}{&lt;municiple solid waste&gt;}{&lt;biomass&gt;}.</p>
+<p>{&lt;waste to energy&gt;}</p>
+<p><br>
+</p>
+<p><strong>SOLAR POWER</strong></p>
+<p>Solar power is energy derived from energy directly produced by the sun. There are two main types:</p>
+<p><strong>Concentrated</strong></p>
+<p>Concentrated solar power plants collect the energy from the sun’s rays into a small area using mirrors, to create heat (similar to using a magnifying glass on a bright day to start fires){&lt;CSP&gt;}. This heat can then be used to drive a @generator@{&lt;CSP&gt;}.&nbsp;</p>
+<p><strong>Photovoltaic</strong></p>
+<p>Photovoltaic solar energy, also called solar panels, use semiconductors to directly convert light into electricity without any moving parts (&lt;solarcellphysics&gt;). Photovoltaic panels output minimal power at night, and are considered an intermittent form of power that can benefit from energy storage systems {&lt;intermittent&gt;}.</p>
+<p><strong>HYDRO ELECTRIC</strong></p>
+<p>Hydroelectric power is power extracted from water flowing from a higher point of altitude to a lower point of altitude {&lt;con hydro&gt;} {&lt;pumped hydro&gt;}. There are two main kinds of hydroelectric power:</p>
+<p><strong>Conventional</strong></p>
+<p>Conventional hydroelectric power uses naturally occurring water sources as a way to generate electricity{&lt;con hydro&gt;} . These water sources can replenish themselves via the water cycle, and shouldn’t need to be refilled{&lt;con hydro&gt;} .&nbsp;</p>
+<p><strong>Pumped</strong></p>
+<p>Pumped hydrolectric power uses water from reservoirs that are filled using mechanical pumps {&lt;pumped hydro&gt;}. These pumps require electricity, and are usually powered when energy is&nbsp; in lower demand{&lt;pumped hydro&gt;}. This allows the reservoir to extract that energy when demand goes up{&lt;pumped hydro&gt;}. Pumped hydro power is not a method of generating new energy into the grid, and is more so a method of storing energy that has already been generated{&lt;pumped hydro&gt;}. Energy storage systems can help increase the reliability of the grid, especially when intermittent generators (such as solar and wind power) are in use {(ph renew)}{&lt;intermittent&gt;}. Pumped hydro power is currently the largest source of energy storage in the United States, surpassing other forms of storage, such as large scale batteries {&lt;pumped hydro&gt;}.</p>
+<p><strong>WIND POWER</strong></p>
+<p>Wind power is a form of electricity extracted from the motion of the wind, most commonly by using large generators called wind turbines. There are two main types of wind power:</p>
+<p><strong>Onshore</strong></p>
+<p>Onshore wind turbines are wind generators built on land – typically in areas that are not densely populated {&lt;adv and challenges&gt;}{&lt;wind&gt;}. The output of an onshore wind turbine is dependent on the strength of the wind in the area, thus a wind turbine is considered an intermittent form of power, and can benefit from power storage systems {&lt;intermittent&gt;}</p>
+<p><strong>Offshore</strong></p>
+<p>Offshore wind turbines are wind generators build off-land, usually on the ocean nearby the coasts.These turbines can potentially offer more powerful and consistent electricity than onshore wind, but are more dificult to establish and maintain {&lt;wind&gt;}{&lt;offshore wind&gt;}{&lt;offshore article&gt;}.</p>
+<p><strong>PETROLEUM POWER</strong> Petroleum describes a series of products made from crude oil {&lt;petrol&gt;}. These products can vary significantly, but in the context of this document we will focus on three main petroleum products:</p>
+<p><strong>Distillate Fuel Oil</strong></p>
+<p>Distilate fuel oil is a liquid product obtained from distilling crude oil {&lt;petrol&gt;}. Distillate fuel oil has a higher boiling point than gasoline and kerosine, and is often used in heating oil and diesel fuel{&lt;petrol&gt;}{&lt;distilate fo def&gt;}.</p>
+<p><strong>Residual Fuel Oil</strong></p>
+<p>Residual fuel oil is a liquid product obtained from dsitilling crude oil&nbsp; {&lt;petrol&gt;}. It has a very high boiling point (&gt;1,050F). This fuel can be burned in steam boats and powerplants or mixed with distillate fuel oil to be used in certain types of diesel engines {&lt;distilate fo def&gt;}.&nbsp;</p>
+<p><strong>Petroleum Coke</strong></p>
+<p>Petroleum coke is a combustible, carbon-based, solid material obtained during petroleum refining operations {&lt;petcoke&gt;}. Despite being considered a waste byproduct{&lt;waste oil&gt;}It can be used in power generation, metal refining, and cement production {&lt;petcoke&gt;}.</p>
+<p><strong>Waste oils and other oils ##look into this one in particular</strong></p>
+<p>Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes {&lt;wasteoil&gt;}. These oils can still be burned for heating and energy purposes {&lt;wasteoil&gt;}.</p>
+<p>–</p>
+<p><strong>GEOTHERMAL POWER</strong></p>
+<p>Geothermal power is energy obtained from the natural heat given off by the interanls of the earth {&lt;geotherm&gt;}. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed {&lt;SOURCE NEEDED&gt;}.</p>
+<p><strong>NUCLEAR POWER</strong></p>
+<p>Nuclear power is energy obtained from heat generated by splitting large atomic nuclei {&lt;nuclear&gt;}. Nuclear power plants typically rely on enriched uranium fuel {&lt;nuclear enrichment&gt;}, although some forms of reactors do not require enriched uranium and can use other fuels {&lt;fast reactors&gt;}</p>
+<p><br>
+</p>
+</section>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis"><strong>Analysis</strong></h2>
+<p><strong>HEAT RATE</strong></p>
+<p>The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy (In British Thermal Units, BTU) required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen {&lt;presumebly&gt;} to demonstrate that the measurement compares raw heat to electricity. Below is a table of available and sensible power types and their heat rates.</p>
+<p>NOTE: Higher values are LESS efficient</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#HEAT RATE</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff<span class="op">=</span>FUELEEZ.copy()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'anthracite coal'</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'other gases'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>((df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> ))[elligebleForIOEff] <span class="co">#same operation as above but dont flip the operation and leave the mmbtu as btu</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>((df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> ))[elligebleForIOEff].plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Heat Rate of Fuelees"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"btu input per kwh output"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-3-output-1.png" width="610" height="669"></p>
+</div>
+</div>
+<p><br>
+</p>
+<p>The data on this table is functionally equivalent to the Thermal Efficiency section, so analysis will continue there.</p>
+<p><br>
+</p>
+<p><strong>THERMAL EFFICIENCY</strong></p>
+<p>Thermal efficiency is the ratio of energy used in a generator vs the amount of useful energy produced (e.g.&nbsp;if you put in 10 units of energy, and get back 5 units of electricity, the thermal efficiency is 50%.). Thermal efficiency is, to some, easier to understand than the heat rate, and can be useful in other calculations, some which will be mentioned further in the document. Below is a table of available and sensible power types and their thermal efficiencies.</p>
+<p>NOTE: Higher values are MORE efficient.</p>
+<p><br>
+</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#EFFICIENCY </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff<span class="op">=</span>FUELEEZ.copy()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'anthracite coal'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'other gases'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff] <span class="co">#million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff].plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"input/output energy efficicency of fuelee sources"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"efficiecncy (KWH in per KWH out)"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-4-output-1.png" width="589" height="669"></p>
+</div>
+</div>
+<p>#consider removing the “other”</p>
+<pre><code>Solid waste has been shown to be the least efficient of the relevant types, below 20%. Natural gas was shown to be significantly more thermally efficient than most other power sources, with a thermal efficiency over 40%. This higher efficiency is partially due to the different types of generators used in natural gas power plants {\&lt;source needed\&gt;}. These generators, called combined cycle power plants, use multiple heat engines together to extract more energy during combustion{\&lt;source needed\&gt;}. This arrangement is primarily used for natural gas, which contributes to the large spike in efficiency for natural gas systems{\&lt;source needed\&gt;}.</code></pre>
+<p><strong>COST PER MILLION BTU</strong></p>
+<p><strong>#I FORGOT TO LABLE THE AXIS AS MILLION</strong></p>
+<p>Fuel costs can be an important factor in the cost of operation for any machine, and electrical systems are no different. While the cost of fuel could be measured in kilograms, barrels, gallons, or any other physical unit, this may not be a fair measurement. The amount of energy in a kilogram of fuel can vary dramatically, so to account for those differences, the cost of fuels was measured by the amount of energy in dollars per million BTUs. Below is a table of available and sensible fuel types and their cost per million BTUs.</p>
+<p>NOTE: Higher values are MORE expensive.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#COST</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>elligebleForCOST <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Fuel Unit Price of Fuelees"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cost Per BTU"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-5-output-1.png" width="585" height="669"></p>
+</div>
+</div>
+<p><br>
+</p>
+<p>The petroleum products (aside from petroleum coke) are each more expensive than any other source in the list. Fuels such as coal and natural gas are more or less similar in price, and the difference between coal and natural gas with petroleum is dramatic. Cost is likely a contributing factor of why petroleum is only around 0.4% of total US electrical energy produced {&lt;genbysource&gt;} despite being produced in large quantities and being one of the primary sources of overall energy {&lt;eneg by source&gt;}{&lt;prodbysource&gt;}</p>
+<p><strong>UNIT COST FOR FUEL</strong></p>
+<p>The cost per BTU of fuel does not fully capture the cost of fuel for a given power source, as different methods of generation can difffer significantly in how efficient they can capture energy from the fuel. Using our thermal efficiency numbers from earlier, we can approximate the cost of fuel per Kwh by taking the cost per Kwh and dividing it by the thermal efficiency of the generator type. Below is a table of all the sensible and available generator types and thier cost of fuel per Kwh produced:</p>
+<p>NOTE: Higher is MORE expensive.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#COSTPERKWH</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>elligebleForCOST <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]<span class="op">/</span><span class="fl">293.07107</span> <span class="co">#dollars per million btu to dollars per kwh</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut<span class="op">=</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]<span class="op">/</span><span class="fl">293.07107</span>)<span class="op">/</span>kwhToKwhEff <span class="co">#cost per millionn btu to dollars per kwh input divided by efficiency of input energy </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut<span class="op">=</span>fuelCostPerKwhOut[fuelCostPerKwhOut<span class="op">&gt;</span><span class="dv">0</span>] <span class="co">#get rid of Nan valjues</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Price per kwh Production (cost per kwh fuel/efficiency)"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cost Per Kwh fuel"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-6-output-1.png" width="597" height="669"></p>
+</div>
+</div>
+<p><br>
+</p>
+<p>Once the efficiency is factored in, natural gas sources show to be less expensive than coal per kilowatt of generated electricity, while petroleum remains expensive per unit of energy. Petroleum coke, refined coal, and waste coal all show uniquely low values.</p>
+<pre><code>It is important to note that this solely measures the cost for fuel, and the total cost for electricity generation is more than what is shown above, as electricity generation requires infrastructure, labor, and other associated costs.</code></pre>
+<p><strong>SULFUR CONTENT</strong></p>
+<p>The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk {&lt;SOURCE NEEDED&gt;} Below is a table of all the sensible and available generator types and their ash content as a percentage of the fuel’s total mass.</p>
+<p>NOTE: Higher values contain MORE sulfur.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#SULFUR CONTENT</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>elligebleForSC <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Sulfur Content  of Fuelees"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"sulfur content (percentage of fuel weight)"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-7-output-1.png" width="589" height="669"></p>
+</div>
+</div>
+<p>Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petrolum liquiods, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke{&lt;source needed&gt;}{&lt;this could be a huge jump in logic, maybe petroleum coke burners arent that protected?&gt;}</p>
+<p>Unsurprisingly, refined coal (coal which has been processed to remove impurities and improve heat content) has some of the lowest values for sulfur content.&nbsp;</p>
+<p><strong>ASH CONTENT</strong></p>
+<p>Many combustible fuels produce a solid, incombustible substance, called ash, after being burned{&lt;SOURCE NEEDED?&gt;}. While the ashes of combustible fuels can be useful for a variety of products{&lt;&gt;}, the ashes in power generation can present a variety of problems. Below is a table of all the sensible and available generator types and their ash content as a percentage of the fuels total mass.</p>
+<p>NOTE: Higher values result in MORE ash.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ASH CONTENT</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>elligebleForAC <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Ash Content  of Fuelees"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Ash content (percentage of fuel weight)"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-8-output-1.png" width="585" height="669"></p>
+</div>
+</div>
+<pre><code>Ash content was shown to be mostly even spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.</code></pre>
+</section>
+<section id="reproducibility-and-code" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-and-code"><strong>Reproducibility and Code</strong></h2>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimpy <span class="im">import</span> skim</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#AVAILABLE TIMES</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>avtimes<span class="op">=</span>[<span class="st">"01"</span>,<span class="st">"02"</span>,<span class="st">"03"</span>,<span class="st">"04"</span>,<span class="st">"05"</span>,<span class="st">"06"</span>,<span class="st">"07"</span>,<span class="st">"08"</span>]</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>dataofdatalist<span class="op">=</span>[]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> timeloop <span class="kw">in</span> avtimes:</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># API KEY</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  api_key <span class="op">=</span> <span class="st">'RucYMPTp3yg6yYY0ktOEnbxaFDNvsDXDIQfGV3NK'</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#API URL</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  apiUrl <span class="op">=</span> <span class="st">"https://api.eia.gov/v2/electricity/electric-power-operational-data/data/?frequency=monthly&amp;data[0]=ash-content&amp;data[1]=consumption-for-eg&amp;data[2]=consumption-for-eg-btu&amp;data[3]=consumption-uto&amp;data[4]=consumption-uto-btu&amp;data[5]=cost&amp;data[6]=cost-per-btu&amp;data[7]=generation&amp;data[8]=heat-content&amp;data[9]=receipts&amp;data[10]=receipts-btu&amp;data[11]=stocks&amp;data[12]=sulfur-content&amp;data[13]=total-consumption&amp;data[14]=total-consumption-btu&amp;sort[0][column]=period&amp;sort[0][direction]=desc&amp;offset=0&amp;length=5000"</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Combined API URL and API key, will be used as a single input inton the api function</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  urlAndKey <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>apiUrl<span class="sc">}</span><span class="ss">&amp;api_key=</span><span class="sc">{</span>api_key<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># HEADER, an input to the api</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  headers <span class="op">=</span> {</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"X-Params"</span>: json.dumps({</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"frequency"</span>: <span class="st">"monthly"</span>,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">"data"</span>: [</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ash-content"</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-for-eg"</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-for-eg-btu"</span>,</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-uto"</span>,</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"consumption-uto-btu"</span>,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cost"</span>,</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cost-per-btu"</span>,</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"generation"</span>,</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"heat-content"</span>,</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"receipts"</span>,</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"receipts-btu"</span>,</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stocks"</span>,</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sulfur-content"</span>,</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total-consumption"</span>,</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total-consumption-btu"</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>      ],</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"facets"</span>: {},</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">"start"</span>: <span class="st">"2023-"</span><span class="op">+</span>timeloop,</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"end"</span>: <span class="st">"2023-"</span><span class="op">+</span>timeloop,</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">"sort"</span>: [</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>          <span class="st">"column"</span>: <span class="st">"period"</span>,</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>          <span class="st">"direction"</span>: <span class="st">"desc"</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>      ],</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">"offset"</span>: <span class="dv">0</span>,</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">"length"</span>: <span class="dv">5000</span> <span class="co">#ADJUSTABLE; WILL EXTEND WHEN I GET MORE SPACE MY COMPUTER IS MELTING</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># GET REQUEST, as stated in the EIA method section</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  response <span class="op">=</span> requests.get(urlAndKey, headers<span class="op">=</span>headers)</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Response Status code (200 = success)</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()  <span class="co"># read response</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>:</span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"REQUEST FAILED---CODE: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(response.text)</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>  dataofdatalist.append(data[<span class="st">'response'</span>][<span class="st">'data'</span>])</span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(timeloop)</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="co">#dfTEST=pd.DataFrame(data['response']['data'])</span></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co">#for x in dataofdatalist:</span></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co">#  print(111)</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="co">#  dataofdatalist[x]=pd.DataFrame(dataofdatalist[x])</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a><span class="co">#Yeah yeah, this is horrfic design, may change it later</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>df___i<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">0</span>])</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>df__ii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">1</span>])</span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>df_iii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">2</span>])</span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>df__iv<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">3</span>])</span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>df___v<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">4</span>])</span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>df__vi<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">5</span>])</span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>df_vii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">6</span>])</span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>dfviii<span class="op">=</span>pd.DataFrame(dataofdatalist[<span class="dv">7</span>])</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="co">#API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>metalist<span class="op">=</span>[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]</span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>dfLONG<span class="op">=</span>pd.concat(metalist, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(dfLONG[<span class="st">'period'</span>])</span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>fueleeNotDict<span class="op">=</span>{</span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>  <span class="st">'all coal products'</span>                           :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>  <span class="st">'all fuels'</span>                                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>  <span class="st">'all renewables'</span>                              :<span class="st">'NULL'</span>,</span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">'anthracite coal'</span>                             :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>  <span class="st">'biogenic municipal solid waste'</span>              :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>  <span class="st">'biomass'</span>                                     :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>  <span class="st">'bituminous coal'</span>                             :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>  <span class="st">'bituminous coal and synthetic coal'</span>          :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>  <span class="st">'coal, excluding waste coal'</span>                  :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a>  <span class="st">'conventional hydroelectric'</span>                  :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>  <span class="st">'distillate fuel oil'</span>                         :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a>  <span class="st">'estimated small scale solar photovoltaic'</span>    :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a>  <span class="st">'estimated total solar'</span>                       :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a>  <span class="st">'estimated total solar photovoltaic'</span>          :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>  <span class="st">'fossil fuels'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>  <span class="st">'geothermal'</span>                                  :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a>  <span class="st">'hydro-electric pumped storage'</span>               :<span class="st">'NULL'</span>,</span>
+<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a>  <span class="st">'landfill gas'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>  <span class="st">'lignite coal'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>  <span class="st">'municiapl landfill gas'</span>                      :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>  <span class="st">'natural gas'</span>                                 :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a>  <span class="st">'natural gas &amp; other gases'</span>                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a>  <span class="st">'nuclear'</span>                                     :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a>  <span class="st">'offshore wind turbine'</span>                       :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a>  <span class="st">'onshore wind turbine'</span>                        :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a>  <span class="st">'other'</span>                                       :<span class="st">'NULL'</span>,</span>
+<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>  <span class="st">'other gases'</span>                                 :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a>  <span class="st">'other renewables'</span>                            :<span class="st">'NULL'</span>,</span>
+<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a>  <span class="st">'petroleum'</span>                                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a>  <span class="st">'petroleum coke'</span>                              :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a>  <span class="st">'petroleum liquids'</span>                           :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a>  <span class="st">'refined coal'</span>                                :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a>  <span class="st">'renewable'</span>                                   :<span class="st">'NULL'</span>,</span>
+<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a>  <span class="st">'renewable waste products'</span>                    :<span class="st">'UNSURE'</span>,</span>
+<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a>  <span class="st">'residual fuel oil'</span>                           :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a>  <span class="st">'solar'</span>                                       :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a>  <span class="st">'solar photovoltaic'</span>                          :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a>  <span class="st">'solar thermal'</span>                               :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>  <span class="st">'subbituminous coal'</span>                          :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a>  <span class="st">'waste coal'</span>                                  :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a>  <span class="st">'waste oil and other oils'</span>                   :<span class="st">'FUELEE'</span>,</span>
+<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>  <span class="st">'wind'</span>                                        :<span class="st">'NON-FUELEE'</span>,</span>
+<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>  <span class="st">'wood and wood wastes'</span>                        :<span class="st">'FUELEE'</span></span>
+<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a>FUELEEZ<span class="op">=</span>[key <span class="cf">for</span> key, val <span class="kw">in</span> fueleeNotDict.items() <span class="cf">if</span> val <span class="op">==</span> <span class="st">'FUELEE'</span>]</span>
+<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="co">#'FUELEE' (uses fuel)</span></span>
+<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a><span class="co">#'NON-FUELEE' (doesnt use fuel)</span></span>
+<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a><span class="co">#'NULL' (neither/both)</span></span>
+<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a><span class="co">#'UNSURE' (unsure)</span></span>
+<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a>df1<span class="op">=</span>dfLONG</span>
+<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.max_columns'</span>,<span class="dv">40</span>)</span>
+<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>).count()</span>
+<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a>dfash<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()</span>
+<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a>dfsulfur<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()</span>
+<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a>dfash.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a>dfsulfur.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a>dfsulfur</span>
+<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a>dfash</span>
+<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a><span class="co"># Sulfur content higher in bituminous coal, bituminous coal and synthetic coal,</span></span>
+<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a><span class="co"># coal, excluding waste coal , lignite coal, petroleum, petroleum coal, and waste coal.</span></span>
+<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a>plt.close(<span class="st">'all'</span>)</span>
+<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'cost-per-btu'</span>]</span>
+<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a>dfcost<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()</span>
+<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a>dfcost.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a>dfcost</span>
+<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">False</span>:</span>
+<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a>  <span class="co"># These next two graphs are likely not useful but I made them anyway.</span></span>
+<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a>  dfAshByState <span class="op">=</span> df1.groupby(<span class="st">'location'</span>)[<span class="st">'ash-content'</span>].mean()</span>
+<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a>  dfAshByState.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a>  plt.show()</span>
+<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a>  plt.close()</span>
+<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a>  dfAshByState</span>
+<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a>  dfSulferByState <span class="op">=</span> df1.groupby(<span class="st">'location'</span>)[<span class="st">'sulfur-content'</span>].mean()</span>
+<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a>  dfSulferByState.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>  plt.show()</span>
+<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a>  plt.close()</span>
+<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a>  dfSulferByState</span>
+<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a><span class="co"># Looking at generation by fuel type - probably not useful in its current form.</span></span>
+<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a>dfgen<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean()</span>
+<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a>dfgen.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a>dfgen</span>
+<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a><span class="co"># Some bars seem to follow the ash and sulfer content, which would be expected.</span></span>
+<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a><span class="co"># Some do not - may want to take a closer look.</span></span>
+<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Consumption</span></span>
+<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a>dfCon<span class="op">=</span>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'total-consumption-btu'</span>].mean()</span>
+<span id="cb14-208"><a href="#cb14-208" aria-hidden="true" tabindex="-1"></a>dfCon.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-209"><a href="#cb14-209" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a>dfCon</span>
+<span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a><span class="co">#######</span></span>
+<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span></span>
+<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a><span class="co">#NOTE!!!! THE OTHER HEAT RATE IS BUGGED, BUT THIS ONE SEEMS TO WORK JUST FINE</span></span>
+<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a><span class="co">#1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412)</span></span>
+<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="co">#EFFICIENCY </span></span>
+<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a><span class="co">#(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[FUELEEZ].plot(kind='bar')</span></span>
+<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.show()</span></span>
+<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.close()</span></span>
+<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a>FUELEEZ</span>
+<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a><span class="co">#EFFICIENCY </span></span>
+<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff<span class="op">=</span>FUELEEZ.copy()</span>
+<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'anthracite coal'</span>)</span>
+<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'other gases'</span>)</span>
+<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff] <span class="co">#million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input</span></span>
+<span id="cb14-233"><a href="#cb14-233" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff].plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"input/output energy efficicency of fuelee sources"</span>)</span>
+<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"efficiecncy (KWH in per KWH out)"</span>)</span>
+<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a>kwhToKwhEff<span class="op">=</span>(<span class="dv">1</span><span class="op">/</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> <span class="op">/</span><span class="dv">3412</span>))[elligebleForIOEff] <span class="co">#million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input</span></span>
+<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-242"><a href="#cb14-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-243"><a href="#cb14-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-244"><a href="#cb14-244" aria-hidden="true" tabindex="-1"></a><span class="co">#HEAT RATE</span></span>
+<span id="cb14-245"><a href="#cb14-245" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff<span class="op">=</span>FUELEEZ.copy()</span>
+<span id="cb14-246"><a href="#cb14-246" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'anthracite coal'</span>)</span>
+<span id="cb14-247"><a href="#cb14-247" aria-hidden="true" tabindex="-1"></a>elligebleForIOEff.remove(<span class="st">'other gases'</span>)</span>
+<span id="cb14-248"><a href="#cb14-248" aria-hidden="true" tabindex="-1"></a>((df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> ))[elligebleForIOEff] <span class="co">#same operation as above but dont flip the operation and leave the mmbtu as btu</span></span>
+<span id="cb14-249"><a href="#cb14-249" aria-hidden="true" tabindex="-1"></a>((df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'consumption-for-eg-btu'</span>].mean() <span class="op">/</span> df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'generation'</span>].mean() <span class="op">*</span><span class="dv">1000</span><span class="op">*</span><span class="dv">1000</span> ))[elligebleForIOEff].plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-250"><a href="#cb14-250" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Heat Rate of Fuelees"</span>)</span>
+<span id="cb14-251"><a href="#cb14-251" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb14-252"><a href="#cb14-252" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"btu input per kwh output"</span>)</span>
+<span id="cb14-253"><a href="#cb14-253" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-254"><a href="#cb14-254" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-255"><a href="#cb14-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-256"><a href="#cb14-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-257"><a href="#cb14-257" aria-hidden="true" tabindex="-1"></a><span class="co">#SULFUR CONTENT</span></span>
+<span id="cb14-258"><a href="#cb14-258" aria-hidden="true" tabindex="-1"></a>elligebleForSC <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb14-259"><a href="#cb14-259" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb14-260"><a href="#cb14-260" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'sulfur-content'</span>].mean()[elligebleForSC] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-261"><a href="#cb14-261" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Sulfur Content  of Fuelees"</span>)</span>
+<span id="cb14-262"><a href="#cb14-262" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb14-263"><a href="#cb14-263" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"sulfur content (percentage of fuel weight)"</span>)</span>
+<span id="cb14-264"><a href="#cb14-264" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-265"><a href="#cb14-265" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-266"><a href="#cb14-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-267"><a href="#cb14-267" aria-hidden="true" tabindex="-1"></a><span class="co">#ASH CONTENT</span></span>
+<span id="cb14-268"><a href="#cb14-268" aria-hidden="true" tabindex="-1"></a>elligebleForAC <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb14-269"><a href="#cb14-269" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb14-270"><a href="#cb14-270" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'ash-content'</span>].mean()[elligebleForAC] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-271"><a href="#cb14-271" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Ash Content  of Fuelees"</span>)</span>
+<span id="cb14-272"><a href="#cb14-272" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb14-273"><a href="#cb14-273" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Ash content (percentage of fuel weight)"</span>)</span>
+<span id="cb14-274"><a href="#cb14-274" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-275"><a href="#cb14-275" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-276"><a href="#cb14-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-277"><a href="#cb14-277" aria-hidden="true" tabindex="-1"></a><span class="co">#COST</span></span>
+<span id="cb14-278"><a href="#cb14-278" aria-hidden="true" tabindex="-1"></a>elligebleForCOST <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb14-279"><a href="#cb14-279" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]</span>
+<span id="cb14-280"><a href="#cb14-280" aria-hidden="true" tabindex="-1"></a>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]).plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-281"><a href="#cb14-281" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Fuel Unit Price of Fuelees"</span>)</span>
+<span id="cb14-282"><a href="#cb14-282" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb14-283"><a href="#cb14-283" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cost Per BTU"</span>)</span>
+<span id="cb14-284"><a href="#cb14-284" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-285"><a href="#cb14-285" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-286"><a href="#cb14-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-287"><a href="#cb14-287" aria-hidden="true" tabindex="-1"></a><span class="co">#COSTPERKWH</span></span>
+<span id="cb14-288"><a href="#cb14-288" aria-hidden="true" tabindex="-1"></a>elligebleForCOST <span class="op">=</span> FUELEEZ.copy()</span>
+<span id="cb14-289"><a href="#cb14-289" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]<span class="op">/</span><span class="fl">293.07107</span> <span class="co">#dollars per million btu to dollars per kwh</span></span>
+<span id="cb14-290"><a href="#cb14-290" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut<span class="op">=</span>(df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST][df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'cost-per-btu'</span>].mean()[elligebleForCOST] <span class="op">!=</span> <span class="dv">0</span>]<span class="op">/</span><span class="fl">293.07107</span>)<span class="op">/</span>kwhToKwhEff <span class="co">#cost per millionn btu to dollars per kwh input divided by efficiency of input energy </span></span>
+<span id="cb14-291"><a href="#cb14-291" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut<span class="op">=</span>fuelCostPerKwhOut[fuelCostPerKwhOut<span class="op">&gt;</span><span class="dv">0</span>] <span class="co">#get rid of Nan valjues</span></span>
+<span id="cb14-292"><a href="#cb14-292" aria-hidden="true" tabindex="-1"></a>fuelCostPerKwhOut.plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb14-293"><a href="#cb14-293" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Price per kwh Production (cost per kwh fuel/efficiency)"</span>)</span>
+<span id="cb14-294"><a href="#cb14-294" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"energy source"</span>)</span>
+<span id="cb14-295"><a href="#cb14-295" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cost Per Kwh fuel"</span>)</span>
+<span id="cb14-296"><a href="#cb14-296" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-297"><a href="#cb14-297" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb14-298"><a href="#cb14-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-299"><a href="#cb14-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-300"><a href="#cb14-300" aria-hidden="true" tabindex="-1"></a>df1.columns</span>
+<span id="cb14-301"><a href="#cb14-301" aria-hidden="true" tabindex="-1"></a>df1.head()</span>
+<span id="cb14-302"><a href="#cb14-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-303"><a href="#cb14-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-304"><a href="#cb14-304" aria-hidden="true" tabindex="-1"></a>df1.groupby(<span class="st">'fuelTypeDescription'</span>)[<span class="st">'heat-content'</span>].mean()[elligebleForCOST]</span>
+<span id="cb14-305"><a href="#cb14-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-306"><a href="#cb14-306" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'stocks-units'</span>].unique()</span>
+<span id="cb14-307"><a href="#cb14-307" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'sectorDescription'</span>].unique()</span>
+<span id="cb14-308"><a href="#cb14-308" aria-hidden="true" tabindex="-1"></a>df1[<span class="st">'period'</span>].unique()</span>
+<span id="cb14-309"><a href="#cb14-309" aria-hidden="true" tabindex="-1"></a>df1.head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>01
+02
+03
+04
+05
+06
+07
+08</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-2.png" width="567" height="686"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-3.png" width="571" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-4.png" width="567" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-5.png" width="584" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-6.png" width="567" height="685"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-7.png" width="589" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-8.png" width="610" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-9.png" width="589" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-10.png" width="585" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-11.png" width="585" height="669"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="docToQuart_files/figure-html/cell-9-output-12.png" width="597" height="669"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>&lt;bound method NDFrame.head of         period location stateDescription  sectorid sectorDescription  \
+0      2023-01       WI        Wisconsin        96    All Commercial   
+1      2023-01       WI        Wisconsin        96    All Commercial   
+2      2023-01       WI        Wisconsin        96    All Commercial   
+3      2023-01       WI        Wisconsin        96    All Commercial   
+4      2023-01       WI        Wisconsin        96    All Commercial   
+...        ...      ...              ...       ...               ...   
+39995  2023-08       NJ       New Jersey        97    All Industrial   
+39996  2023-08       NJ       New Jersey        97    All Industrial   
+39997  2023-08       NJ       New Jersey        97    All Industrial   
+39998  2023-08       NJ       New Jersey        97    All Industrial   
+39999  2023-08       NJ       New Jersey        97    All Industrial   
+
+      fueltypeid        fuelTypeDescription  ash-content ash-content-units  \
+0            OBW                    biomass          0.0           percent   
+1            ORW           other renewables          0.0           percent   
+2            PEL          petroleum liquids          0.0           percent   
+3            PET                  petroleum          0.0           percent   
+4            REN                  renewable          0.0           percent   
+...          ...                        ...          ...               ...   
+39995         NG                natural gas          0.0           percent   
+39996        NGO  natural gas &amp; other gases          0.0           percent   
+39997        OOG                other gases          0.0           percent   
+39998        OTH                      other          0.0           percent   
+39999         PC             petroleum coke          0.0           percent   
+
+       consumption-for-eg consumption-for-eg-units  consumption-for-eg-btu  \
+0                     NaN  thousand physical units                     NaN   
+1                     NaN  thousand physical units                     NaN   
+2                     NaN         thousand barrels                     NaN   
+3                     NaN         thousand barrels                     NaN   
+4                  48.112  thousand physical units                 0.03377   
+...                   ...                      ...                     ...   
+39995             221.124             thousand Mcf                 0.22845   
+39996             283.048             thousand Mcf                 0.29049   
+39997              61.924             thousand Mcf                 0.06205   
+39998               0.000  thousand physical units                 0.00000   
+39999               0.000      thousand short tons                 0.00000   
+
+      consumption-for-eg-btu-units  consumption-uto    consumption-uto-units  \
+0                    million MMBtu              NaN  thousand physical units   
+1                    million MMBtu              NaN  thousand physical units   
+2                    million MMBtu              NaN         thousand barrels   
+3                    million MMBtu              NaN         thousand barrels   
+4                    million MMBtu           36.999  thousand physical units   
+...                            ...              ...                      ...   
+39995                million MMBtu          402.892             thousand Mcf   
+39996                million MMBtu          908.894             thousand Mcf   
+39997                million MMBtu          506.002             thousand Mcf   
+39998                million MMBtu            0.000  thousand physical units   
+39999                million MMBtu            0.000      thousand short tons   
+
+       consumption-uto-btu consumption-uto-btu-units  cost  \
+0                      NaN             million MMBtu   NaN   
+1                      NaN             million MMBtu   NaN   
+2                      NaN             million MMBtu   0.0   
+3                      NaN             million MMBtu   NaN   
+4                  0.02003             million MMBtu   NaN   
+...                    ...                       ...   ...   
+39995              0.41554             million MMBtu   0.0   
+39996              0.92256             million MMBtu   NaN   
+39997              0.50701             million MMBtu   NaN   
+39998              0.00000             million MMBtu   NaN   
+39999              0.00000             million MMBtu   0.0   
+
+                       cost-units  cost-per-btu       cost-per-btu-units  \
+0      dollars per physical units           NaN  dollars per million Btu   
+1      dollars per physical units           NaN  dollars per million Btu   
+2             dollars per barrels           0.0  dollars per million Btu   
+3             dollars per barrels           NaN  dollars per million Btu   
+4      dollars per physical units           NaN  dollars per million Btu   
+...                           ...           ...                      ...   
+39995             dollars per Mcf           0.0  dollars per million Btu   
+39996             dollars per Mcf           NaN  dollars per million Btu   
+39997             dollars per Mcf           NaN  dollars per million Btu   
+39998  dollars per physical units           NaN  dollars per million Btu   
+39999      dollars per short tons           0.0  dollars per million Btu   
+
+       generation        generation-units  heat-content  \
+0         2.24758  thousand megawatthours        0.6010   
+1         2.24758  thousand megawatthours        0.0000   
+2             NaN  thousand megawatthours        5.8240   
+3             NaN  thousand megawatthours        5.8240   
+4         7.12814  thousand megawatthours        0.5450   
+...           ...                     ...           ...   
+39995    41.04917  thousand megawatthours        1.0320   
+39996    53.04419  thousand megawatthours        1.0177   
+39997    11.99502  thousand megawatthours        1.0020   
+39998     0.00000  thousand megawatthours        0.0000   
+39999     0.00000  thousand megawatthours        0.0000   
+
+           heat-content-units  receipts           receipts-units  \
+0      Btu per physical units       0.0  thousand physical units   
+1      Btu per physical units       0.0  thousand physical units   
+2             Btu per barrels       0.0         thousand barrels   
+3             Btu per barrels       0.0         thousand barrels   
+4      Btu per physical units       0.0  thousand physical units   
+...                       ...       ...                      ...   
+39995             Btu per Mcf       0.0             thousand Mcf   
+39996             Btu per Mcf       0.0             thousand Mcf   
+39997             Btu per Mcf       0.0             thousand Mcf   
+39998  Btu per physical units       0.0  thousand physical units   
+39999      Btu per short tons       0.0      thousand short tons   
+
+       receipts-btu receipts-btu-units  stocks             stocks-units  \
+0               0.0        billion Btu     NaN  thousand physical units   
+1               0.0        billion Btu     NaN  thousand physical units   
+2               0.0        billion Btu   22.96         thousand barrels   
+3               0.0        billion Btu     NaN         thousand barrels   
+4               0.0        billion Btu     NaN  thousand physical units   
+...             ...                ...     ...                      ...   
+39995           0.0        billion Btu     NaN             thousand Mcf   
+39996           0.0        billion Btu     NaN             thousand Mcf   
+39997           0.0        billion Btu     NaN             thousand Mcf   
+39998           0.0        billion Btu     NaN  thousand physical units   
+39999           0.0        billion Btu    0.00      thousand short tons   
+
+       sulfur-content sulfur-content-units  total-consumption  \
+0                 0.0              percent                NaN   
+1                 0.0              percent                NaN   
+2                 0.0              percent                NaN   
+3                 0.0              percent                NaN   
+4                 0.0              percent             85.111   
+...               ...                  ...                ...   
+39995             0.0              percent            624.016   
+39996             0.0              percent           1191.942   
+39997             0.0              percent            567.926   
+39998             0.0              percent              0.000   
+39999             0.0              percent              0.000   
+
+       total-consumption-units  total-consumption-btu  \
+0      thousand physical units                    NaN   
+1      thousand physical units                    NaN   
+2             thousand barrels                    NaN   
+3             thousand barrels                    NaN   
+4      thousand physical units                0.05380   
+...                        ...                    ...   
+39995             thousand Mcf                0.64399   
+39996             thousand Mcf                1.21305   
+39997             thousand Mcf                0.56906   
+39998  thousand physical units                0.00000   
+39999      thousand short tons                0.00000   
+
+      total-consumption-btu-units  
+0                   million MMBtu  
+1                   million MMBtu  
+2                   million MMBtu  
+3                   million MMBtu  
+4                   million MMBtu  
+...                           ...  
+39995               million MMBtu  
+39996               million MMBtu  
+39997               million MMBtu  
+39998               million MMBtu  
+39999               million MMBtu  
+
+[40000 rows x 37 columns]&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="references-scratch-work-planned-to-be-refined-on-full-completion" class="level2">
+<h2 class="anchored" data-anchor-id="references-scratch-work-planned-to-be-refined-on-full-completion"><strong>References {scratch work, planned to be refined on full completion}</strong></h2>
+<p>Python packages</p>
+<pre class="{txt}"><code>requests 2.31.0
+json 2.0.9 [DEFUALT PY]
+pandas 2.0.3
+skimpy {&lt;attribute version difficulties&gt;}
+matplotlib.pyplot {&lt;attribute version difficulties&gt;}</code></pre>
+<p>E-Sources</p>
+<pre class="{txt}"><code>DATA SOUCE—--EIA
+https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data?frequency=monthly&amp;data=ash-content;consumption-for-eg;consumption-for-eg-btu;consumption-uto;consumption-uto-btu;cost;cost-per-btu;generation;heat-content;receipts;receipts-btu;stocks;sulfur-content;total-consumption;total-consumption-btu;&amp;sortColumn=period;&amp;sortDirection=desc;
+
+POWER SOURCE ARTICLE&gt;?&lt;
+https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3
+
+Gen by source
+https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3
+
+Energ by source
+https://www.eia.gov/todayinenergy/detail.php?id=56980#:~:text=Fossil%20fuels%E2%80%94petroleum%2C%20natural%20gas,high%2013.2%20quads%20in%202022.
+
+Prod by source
+https://www.eia.gov/todayinenergy/detail.php?id=45096
+
+
+
+
+COAL TYPES
+https://www.eia.gov/energyexplained/coal/#:~:text=Types%20of%20coal,energy%20the%20coal%20can%20produce.
+
+
+STEAM TURBINE
+https://www.eia.gov/energyexplained/electricity/how-electricity-is-generated.php
+
+
+Heat rates
+https://www.eia.gov/electricity/annual/html/epa_08_02.html
+
+History primary to final
+https://www.sciencedirect.com/science/article/pii/S036054422300169X#fig13
+
+natgascs
+https://www.eia.gov/todayinenergy/detail.php?id=39012#:~:text=U.S.%20natural%20gas%2Dfired%20combined,capacity%20surpasses%20coal%2Dfired%20capacity&amp;text=The%20amount%20of%20generating%20capacity,capacity%20in%20the%20United%20States.
+
+wastecoaldef
+https://www.eia.gov/tools/glossary/index.php?id=W
+
+refinedcoaldef
+https://www.eia.gov/tools/glossary/index.php?id=refined_coal
+
+Refined coal article
+https://www.eia.gov/todayinenergy/detail.php?id=53099
+
+natgaseee
+https://www.eia.gov/kids/energy-sources/natural-gas/
+
+biogaslf
+https://www.eia.gov/energyexplained/biomass/landfill-gas-and-biogas.php
+Municipal solid waste
+https://www.eia.gov/energyexplained/biomass/waste-to-energy.php
+
+Waste to energy
+https://www.eia.gov/energyexplained/biomass/waste-to-energy-in-depth.php
+
+biomass
+https://www.eia.gov/energyexplained/biomass/
+
+solar
+https://www.eia.gov/energyexplained/solar/
+
+CSP
+https://www.energy.gov/eere/solar/concentrating-solar-thermal-power-basics#:~:text=What%20is%20concentrating%20solar%2Dthermal,temperature%20fluid%20in%20the%20receiver.
+
+
+Solar pv
+https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics
+
+HEAT RATE DEF
+https://www.eia.gov/tools/faqs/faq.php?id=107&amp;t=3#:~:text=The%20heat%20rate%20is%20the,Btu)%20per%20net%20kWh%20generated.
+
+PUMPED HYDRO
+https://www.eia.gov/todayinenergy/detail.php?id=41833
+
+CONHYDRO
+https://www.eia.gov/energyexplained/hydropower/
+
+Ph renewables
+https://www.eia.gov/todayinenergy/detail.php?id=57360
+
+WIND
+https://www.eia.gov/kids/energy-sources/wind/
+
+Offshore wind
+https://www.energy.gov/eere/wind/offshore-wind-research-and-development
+
+Adv and challenges
+https://www.energy.gov/eere/wind/advantages-and-challenges-wind-energy
+
+Offshore article
+https://www.eia.gov/todayinenergy/detail.php?id=52940
+
+Intermittency
+https://www.eia.gov/todayinenergy/detail.php?id=55719
+
+Solar cell physics
+https://www.energy.gov/eere/solar/solar-photovoltaic-cell-basics#:~:text=There%20are%20several%20different%20semiconductor,material%20as%20an%20electrical%20current.
+
+Petrol
+https://www.eia.gov/kids/energy-sources/oil/#:~:text=Petroleum%20means%20rock%20oil%20or,hydrocarbons%20contained%20in%20natural%20gas.
+
+
+Distillate fo def
+https://www.eia.gov/tools/glossary/index.php?id=Distillate%20fuel%20oil
+
+Resid fo def
+https://www.eia.gov/tools/glossary/index.php?id=residual%20fuel%20oil#:~:text=5%2C%20a%20residual%20fuel%20oil,government%20service%20and%20inshore%20powerplants.
+
+
+Coke def
+https://www.eia.gov/tools/glossary/index.php?id=Petroleum%20coke#:~:text=Petroleum%20coke%2C%20catalyst%3A%20The%20carbonaceous,carbon%20producing%20heat%20and%20CO2.
+Or
+https://www.eia.gov/dnav/pet/TblDefs/pet_pnp_capfuel_tbldef2.asp
+Second one is better
+
+Petcoke
+https://www.eia.gov/todayinenergy/detail.php?id=6430
+
+geotherm
+https://www.eia.gov/kids/energy-sources/geothermal/
+
+Waste oils
+https://www.eia.gov/todayinenergy/detail.php?id=13531#:~:text=The%20petroleum%20and%20coal%20products%20industry%20(mostly%20refineries)%20uses%20waste,23%25%20of%20its%20fuel%20use.
+
+nuclear
+https://www.eia.gov/energyexplained/nuclear/#:~:text=All%20nuclear%20power%20plants%20use,form%20of%20heat%20and%20radiation.
+
+Nuclear enerichment
+https://www.eia.gov/energyexplained/nuclear/the-nuclear-fuel-cycle.php#:~:text=Uranium%20enrichment,gaseous%20diffusion%20and%20gas%20centrifuge.
+
+Fast reactors
+https://www.ne.anl.gov/About/reactors/frt.shtml
+</code></pre>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
