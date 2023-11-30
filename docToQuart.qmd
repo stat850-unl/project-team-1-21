@@ -369,15 +369,13 @@ While using a steam engine for power may seem old fashioned, modern steam turbin
 
 These steam turbines are critical components of the world's power infrastructure, as most of the world\\'s electricity is generated using them {\\\<sourcedoc: steam turbine\\\>}, and 53.2% of US electricity is generated using a steam turbine  {\\\<sourcedoc: steam turbine\\\>}. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don't require steam turbines. These alternatives will be discussed individually in the \\\@sources of power\\\@ section below.
 
-**Categorization**  ####may need some sources here and there, specifically in the examples, will add later.
+**Categorization** ####may need some sources here and there, specifically in the examples, will add later.
 
-```         
-Many of the metrics in this report are based on the use of fuel (e.g. The cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun\'s rays to generate electricity, so there is no need to \"top up\" the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.
+Many of the metrics in this report are based on the use of fuel (e.g. The cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun's rays to generate electricity, so there is no need to "top up" the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.
 
 To organize the data for convenient reading, the power sources were put into two groups, fuelees and non-fuelees. Fuelees are power sources that require fuel to be regularly put in the generator to make power. Examples include: coal, natural gas, biomass, and nuclear. Non-fuelees, on the other hand, do not require regular input fuel to operate (although they may require regular maintenance). Examples include: wind, solar, and hydro-electric power.
 
-It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun\'s fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report. \
-```
+It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun's fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report. \
 
 ## Background: Power Types
 
