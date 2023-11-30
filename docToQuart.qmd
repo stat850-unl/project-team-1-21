@@ -345,35 +345,29 @@ November 28, 2023
 
 ## PURPOSE
 
-In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more compicated, and the audience is more engaged than ever.
+In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more complicated, and the audience is more engaged than ever.
 
 \^{\<this needs more sourcing but i may need to talk to someone who is better at finding historical trends\>}
 
-Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss individual characteristics, and not use those characteristics to form any recommendation.\
+Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss individual characteristics, and not use those characteristics to form any recommendation.
 
 ## **ABOUT THE DATA**
 
-```         
-The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\<SOURCE NEEDED\>}.
+The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\\\<SOURCE NEEDED\\\>}.
 
-The EIA hosts an Open Data program with the stated intention of making energy data \"more accessible, understandable, relevant and responsive\" {\<source, open data site\>}. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country{\<SOURCE EIA OPEN DATA\>}. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.
+The EIA hosts an Open Data program with the stated intention of making energy data \\"more accessible, understandable, relevant and responsive\\" {\\\<source, open data site\\\>}. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country{\\\<SOURCE EIA OPEN DATA\\\>}. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.
 
 For more information on obtaining the information for reproducibility, please go to the Reproducibility and Code section.
-```
 
 ## **BACKGROUND INFO**
 
 **Steam -Electric Power**
 
-```         
-A Steam-Electric Power Station is a powerstation that makes use of a steam engine{\<sourcedoc: \"steam turbine\"\>}. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator. 
+A Steam-Electric Power Station is a powerstation that makes use of a steam engine{\\\<sourcedoc: \\"steam turbine\\"\\\>}. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator. 
 
-While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% {\<sourcedoc: primary to final\>}{\<sourcedoc:heat rates\>}.
+While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% {\\\<sourcedoc: primary to final\\\>}{\\\<sourcedoc:heat rates\\\>}.
 
-These steam turbines are critical components of the world's power infrastructure, as most of the world\'s electricity is generated using them {\<sourcedoc: steam turbine\>}, and 53.2% of US electricity is generated using a steam turbine  {\<sourcedoc: steam turbine\>}. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don't require steam turbines. These alternatives will be discussed individually in the \@sources of power\@ section below.
-```
-
-  
+These steam turbines are critical components of the world's power infrastructure, as most of the world\\'s electricity is generated using them {\\\<sourcedoc: steam turbine\\\>}, and 53.2% of US electricity is generated using a steam turbine  {\\\<sourcedoc: steam turbine\\\>}. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don't require steam turbines. These alternatives will be discussed individually in the \\\@sources of power\\\@ section below.
 
 **Categorization**  ####may need some sources here and there, specifically in the examples, will add later.
 
@@ -391,15 +385,13 @@ It is worth noting that while solar panels do technically require fuel to genera
 
 **Coal Power**
 
-```         
-Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants {\<sorucedoc:coaltypes\>}. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced{\<sorucedoc:coaltypes\>}.
+Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants {\\\<sorucedoc:coaltypes\\\>}. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced{\\\<sorucedoc:coaltypes\\\>}.
 
 Among the different types of coal power in the data set are the naturally occurring anthracite, bituminous, subbituminous, and lignite coal. The percentage of carbon varies for each with anthracite containing 86%-97%, bituminous containing 45%-86%, subbituminous containing 35%-45% carbon, and lignite containing 25%-65% carbon.  
 
-Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials {\<wastecoaldef\>}
+Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials {\\\<wastecoaldef\\\>}
 
-Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has \@standard\@ pre-processing) is coal that has been modified to reduce impurities and improve heat content {\<refinedcoaldef\>}. Refined coal meets the standards set by the IRS definition of the substance{\<notice 2010-54\>}. Refined coal is often made by mixing proprietary additives into coal {\<refinedcoalarticle\>}.
-```
+Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has \\\@standard\\\@ pre-processing) is coal that has been modified to reduce impurities and improve heat content {\\\<refinedcoaldef\\\>}. Refined coal meets the standards set by the IRS definition of the substance{\\\<notice 2010-54\\\>}. Refined coal is often made by mixing proprietary additives into coal {\\\<refinedcoalarticle\\\>}.
 
 **Synthetic??? Unsure if it means pyrolytic or something else.**\
 
@@ -407,15 +399,11 @@ Another unnatural coal in the data set is refined coal. Refined coal (not to be 
 
 \<intro about gas\>
 
-```         
-Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane{\<natgaseee\>}. This is different from landfill gas, which occurs naturally when bacteria naturally decomposes organic materials into a gas that is approximately 50% methane and 50% carbon dioxide. This gas can be treated to remove carbon dioxide and other gasses, turning it into biomethane, or burned directly for energy.
-```
+Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane{\\\<natgaseee\\\>}. This is different from landfill gas, which occurs naturally when bacteria naturally decomposes organic materials into a gas that is approximately 50% methane and 50% carbon dioxide. This gas can be treated to remove carbon dioxide and other gasses, turning it into biomethane, or burned directly for energy.
 
 **Biomass**
 
-```         
-Biomass is organic material derived from living organisms. Biomass can include wood, grasses, foods, excrement, and biogenic portions of municipal solid waste{\<biomass\>}. Biomass can be burned directly or turned into other useful products such as methane or chemical feedstocks{\<biomass\>} {\<waste to energy\>}{\<municiple solid waste\>}.\
-```
+Biomass is organic material derived from living organisms. Biomass can include wood, grasses, foods, excrement, and biogenic portions of municipal solid waste{\\\<biomass\\\>}. Biomass can be burned directly or turned into other useful products such as methane or chemical feedstocks{\\\<biomass\\\>} {\\\<waste to energy\\\>}{\\\<municiple solid waste\\\>}.
 
 **Biogenic Municipal Solid Waste**
 
@@ -423,46 +411,36 @@ Municipal solid waste is the formal term for garbage. Municipal solid waste can 
 
 **SOLAR POWER**
 
-```         
-Solar power is energy derived from energy directly produced by the sun. There are two main types: concentrated and photovoltaic. Concentrated solar power plants collect the energy from the sun's rays into a small area using mirrors, to create heat, which is similar to using a magnifying glass on a bright day to start fires {\<CSP\>}. This heat can then be used to drive a \@generator\@{\<CSP\>}. 
+Solar power is energy derived from energy directly produced by the sun. There are two main types: concentrated and photovoltaic. Concentrated solar power plants collect the energy from the sun's rays into a small area using mirrors, to create heat, which is similar to using a magnifying glass on a bright day to start fires {\\\<CSP\\\>}. This heat can then be used to drive a \\\@generator\\\@{\\\<CSP\\\>}. 
 
-Photovoltaic solar energy, also called solar panels, use semiconductors to directly convert light into electricity without any moving parts (\<solarcellphysics\>). Photovoltaic panels output minimal power at night, and are considered an intermittent form of power that can benefit from energy storage systems {\<intermittent\>}.\
-```
+Photovoltaic solar energy, also called solar panels, use semiconductors to directly convert light into electricity without any moving parts (\\\<solarcellphysics\\\>). Photovoltaic panels output minimal power at night, and are considered an intermittent form of power that can benefit from energy storage systems {\\\<intermittent\\\>}.
 
 **HYDRO ELECTRIC**
 
 Hydroelectric power is power extracted from water flowing from a higher point of altitude to a lower point of altitude {\<con hydro\>} {\<pumped hydro\>}. There are two main kinds of hydroelectric power. The first is conventional hydroelectric power which uses naturally occurring water sources as a way to generate electricity{\<con hydro\>} . These water sources can replenish themselves via the water cycle, and shouldn't need to be refilled{\<con hydro\>} . 
 
-```         
-The second form of hydroelectric power in our data set is pumped. Pumped hydroelectric power uses water from reservoirs that are filled using mechanical pumps {\<pumped hydro\>}. These pumps require electricity, and are usually powered when energy is  in lower demand{\<pumped hydro\>}. This allows the reservoir to extract that energy when demand goes up{\<pumped hydro\>}. Pumped hydro power is not a method of generating new energy into the grid, and is more so a method of storing energy that has already been generated{\<pumped hydro\>}. Energy storage systems can help increase the reliability of the grid, especially when intermittent generators (such as solar and wind power) are in use {(ph renew)}{\<intermittent\>}. Pumped hydro power is currently the largest source of energy storage in the United States, surpassing other forms of storage, such as large scale batteries {\<pumped hydro\>}.\
-```
+The second form of hydroelectric power in our data set is pumped. Pumped hydroelectric power uses water from reservoirs that are filled using mechanical pumps {\\\<pumped hydro\\\>}. These pumps require electricity, and are usually powered when energy is  in lower demand{\\\<pumped hydro\\\>}. This allows the reservoir to extract that energy when demand goes up{\\\<pumped hydro\\\>}. Pumped hydro power is not a method of generating new energy into the grid, and is more so a method of storing energy that has already been generated{\\\<pumped hydro\\\>}. Energy storage systems can help increase the reliability of the grid, especially when intermittent generators (such as solar and wind power) are in use {(ph renew)}{\\\<intermittent\\\>}. Pumped hydro power is currently the largest source of energy storage in the United States, surpassing other forms of storage, such as large scale batteries {\\\<pumped hydro\\\>}.
 
 **WIND POWER**
 
 Wind power is a form of electricity extracted from the motion of the wind, most commonly by using large generators called wind turbines. There are two main types of wind turbines depending on the location. If the turbines are built inland, they are most likely onshore wind turbines. Onshore wind turbines are built on land and typically in areas that are not densely populated {\<adv and challenges\>}{\<wind\>}. The output of an onshore wind turbine is dependent on the strength of the wind in the area, thus a wind turbine is considered an intermittent form of power, and can benefit from power storage systems {\<intermittent\>}.
 
-```         
-Conversely, offshore wind turbines are wind generators built off-land, usually on the ocean near the coasts. These turbines can potentially offer more powerful and consistent electricity than onshore wind, but are more difficult to establish and maintain {\<wind\>}{\<offshore wind\>}{\<offshore article\>}.
-```
+Conversely, offshore wind turbines are wind generators built off-land, usually on the ocean near the coasts. These turbines can potentially offer more powerful and consistent electricity than onshore wind, but are more difficult to establish and maintain {\\\<wind\\\>}{\\\<offshore wind\\\>}{\\\<offshore article\\\>}.
 
 **PETROLEUM POWER\
-** Petroleum describes a series of products made from crude oil {\<petrol\>}. These products can vary significantly, but in the context of this document we will focus on three main petroleum products: distillate fuel oil, residual fuel oil, and petroleum coke.
+**Petroleum describes a series of products made from crude oil {\<petrol\>}. These products can vary significantly, but in the context of this document we will focus on three main petroleum products: distillate fuel oil, residual fuel oil, and petroleum coke.
 
-```         
-Distillate fuel oil is a liquid product obtained from distilling crude oil {\<petrol\>}. Distillate fuel oil has a higher boiling point than gasoline and kerosine, and is often used in heating oil and diesel fuel{\<petrol\>}{\<distilate fo def\>}.
+Distillate fuel oil is a liquid product obtained from distilling crude oil {\\\<petrol\\\>}. Distillate fuel oil has a higher boiling point than gasoline and kerosine, and is often used in heating oil and diesel fuel{\\\<petrol\\\>}{\\\<distilate fo def\\\>}.
 
-Residual fuel oil is a liquid product obtained from dsitilling crude oil  {\<petrol\>}. With a boiling point of greater than 1,050F, this fuel can be burned in steam boats and powerplants or mixed with distillate fuel oil to be used in certain types of diesel engines {\<distilate fo def\>}. 
+Residual fuel oil is a liquid product obtained from dsitilling crude oil  {\\\<petrol\\\>}. With a boiling point of greater than 1,050F, this fuel can be burned in steam boats and powerplants or mixed with distillate fuel oil to be used in certain types of diesel engines {\\\<distilate fo def\\\>}. 
 
-Petroleum coke is a combustible, carbon-based, solid material obtained during petroleum refining operations {\<petcoke\>}. Despite being considered a waste byproduct{\<waste oil\>}It can be used in power generation, metal refining, and cement production {\<petcoke\>}.
-```
+Petroleum coke is a combustible, carbon-based, solid material obtained during petroleum refining operations {\\\<petcoke\\\>}. Despite being considered a waste byproduct{\\\<waste oil\\\>}It can be used in power generation, metal refining, and cement production {\\\<petcoke\\\>}.
 
 \
 
 **Waste Oils and OtherOoils ##look into this one in particular**
 
-```         
-Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes {\<wasteoil\>}. These oils can still be burned for heating and energy purposes {\<wasteoil\>}.
-```
+Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes {\\\<wasteoil\\\>}. These oils can still be burned for heating and energy purposes {\\\<wasteoil\\\>}.
 
 **Geothermal Power**
 
@@ -555,11 +533,9 @@ plt.show()
 plt.close()
 ```
 
-```         
 Once the efficiency is factored in, natural gas sources show to be less expensive than coal per kilowatt of generated electricity, while petroleum remains expensive per unit of energy. Petroleum coke, refined coal, and waste coal all show uniquely low values.
 
 It is important to note that this solely measures the cost for fuel, and the total cost for electricity generation is more than what is shown above, as electricity generation requires infrastructure, labor, and other associated costs.
-```
 
 **Sulfur Content**
 
