@@ -170,10 +170,10 @@ df1.groupby('fuelTypeDescription').count()
 
 dfash=df1.groupby('fuelTypeDescription')['ash-content'].mean()
 dfsulfur=df1.groupby('fuelTypeDescription')['sulfur-content'].mean()
-dfash.plot(kind='bar')
+dfash.plot(kind='barh')
 plt.show()
 plt.close()
-dfsulfur.plot(kind='bar')
+dfsulfur.plot(kind='barh')
 plt.show()
 plt.close()
 dfsulfur
@@ -187,7 +187,7 @@ df1['cost-per-btu']
 
 
 dfcost=df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()
-dfcost.plot(kind='bar')
+dfcost.plot(kind='barh')
 plt.show()
 plt.close()
 dfcost
@@ -195,13 +195,13 @@ dfcost
 if False:
   # These next two graphs are likely not useful but I made them anyway.
   dfAshByState = df1.groupby('location')['ash-content'].mean()
-  dfAshByState.plot(kind='bar')
+  dfAshByState.plot(kind='barh')
   plt.show()
   plt.close()
   dfAshByState
   
   dfSulferByState = df1.groupby('location')['sulfur-content'].mean()
-  dfSulferByState.plot(kind='bar')
+  dfSulferByState.plot(kind='barh')
   plt.show()
   plt.close()
   dfSulferByState
@@ -209,7 +209,7 @@ if False:
 
 # Looking at generation by fuel type - probably not useful in its current form.
 dfgen=df1.groupby('fuelTypeDescription')['generation'].mean()
-dfgen.plot(kind='bar')
+dfgen.plot(kind='barh')
 plt.show()
 plt.close()
 dfgen
@@ -220,7 +220,7 @@ dfgen
 
 # Consumption
 dfCon=df1.groupby('fuelTypeDescription')['total-consumption-btu'].mean()
-dfCon.plot(kind='bar')
+dfCon.plot(kind='barh')
 plt.show()
 plt.close()
 dfCon
@@ -245,7 +245,7 @@ elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
-(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='bar')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
 plt.title("input/output energy efficicency of fuelee sources")
 plt.xlabel("energy source")
 plt.ylabel("efficiecncy (KWH in per KWH out)")
@@ -261,7 +261,7 @@ elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
-((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='bar')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
 plt.title("Heat Rate of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("btu input per kwh output")
@@ -272,7 +272,7 @@ plt.close()
 #SULFUR CONTENT
 elligebleForSC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
-(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
 plt.title("Sulfur Content  of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("sulfur content (percentage of fuel weight)")
@@ -282,7 +282,7 @@ plt.close()
 #ASH CONTENT
 elligebleForAC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
-(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
 plt.title("Ash Content  of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("Ash content (percentage of fuel weight)")
@@ -292,7 +292,7 @@ plt.close()
 #COST
 elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
-(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
 plt.title("Fuel Unit Price of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("Cost Per BTU")
@@ -304,7 +304,7 @@ elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
 fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
-fuelCostPerKwhOut.plot(kind='bar')
+fuelCostPerKwhOut.plot(kind='barh')
 plt.title("Price per kwh Production (cost per kwh fuel/efficiency)")
 plt.xlabel("energy source")
 plt.ylabel("Cost Per Kwh fuel")
@@ -484,12 +484,13 @@ elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
-((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='bar')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
 plt.title("Graph 1 - Heat Rate of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("btu input per kwh output")
 plt.show()
 plt.close()
+
 ```
 
 The data on this table is functionally equivalent to the Thermal Efficiency section, so analysis will continue there.
@@ -504,7 +505,7 @@ elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
-(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='bar')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
 plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
 plt.xlabel("energy source")
 plt.ylabel("efficiecncy (KWH in per KWH out)")
@@ -526,7 +527,7 @@ Fuel costs can be an important factor in the cost of operation for any machine, 
 #COST
 elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
-(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
 plt.title("Graph 3 - Fuel Unit Price of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("Cost Per BTU")
@@ -546,7 +547,7 @@ elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
 fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
-fuelCostPerKwhOut.plot(kind='bar')
+fuelCostPerKwhOut.plot(kind='barh')
 plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
 plt.xlabel("energy source")
 plt.ylabel("Cost Per Kwh fuel")
@@ -568,7 +569,7 @@ The amount of sulfur present in a fuel can play a large role in how much polluti
 #SULFUR CONTENT
 elligebleForSC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
-(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
 plt.title("Graph 5 - Sulfur Content  of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("sulfur content (percentage of fuel weight)")
@@ -588,7 +589,7 @@ Many combustible fuels produce a solid, incombustible substance, called ash, aft
 #ASH CONTENT
 elligebleForAC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
-(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
 plt.title("Graph 6 - Ash Content of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("Ash content (percentage of fuel weight)")
@@ -758,10 +759,10 @@ df1.groupby('fuelTypeDescription').count()
 
 dfash=df1.groupby('fuelTypeDescription')['ash-content'].mean()
 dfsulfur=df1.groupby('fuelTypeDescription')['sulfur-content'].mean()
-dfash.plot(kind='bar')
+dfash.plot(kind='barh')
 plt.show()
 plt.close()
-dfsulfur.plot(kind='bar')
+dfsulfur.plot(kind='barh')
 plt.show()
 plt.close()
 dfsulfur
@@ -775,7 +776,7 @@ df1['cost-per-btu']
 
 
 dfcost=df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()
-dfcost.plot(kind='bar')
+dfcost.plot(kind='barh')
 plt.show()
 plt.close()
 dfcost
@@ -783,13 +784,13 @@ dfcost
 if False:
   # These next two graphs are likely not useful but I made them anyway.
   dfAshByState = df1.groupby('location')['ash-content'].mean()
-  dfAshByState.plot(kind='bar')
+  dfAshByState.plot(kind='barh')
   plt.show()
   plt.close()
   dfAshByState
   
   dfSulferByState = df1.groupby('location')['sulfur-content'].mean()
-  dfSulferByState.plot(kind='bar')
+  dfSulferByState.plot(kind='barh')
   plt.show()
   plt.close()
   dfSulferByState
@@ -797,7 +798,7 @@ if False:
 
 # Looking at generation by fuel type - probably not useful in its current form.
 dfgen=df1.groupby('fuelTypeDescription')['generation'].mean()
-dfgen.plot(kind='bar')
+dfgen.plot(kind='barh')
 plt.show()
 plt.close()
 dfgen
@@ -808,7 +809,7 @@ dfgen
 
 # Consumption
 dfCon=df1.groupby('fuelTypeDescription')['total-consumption-btu'].mean()
-dfCon.plot(kind='bar')
+dfCon.plot(kind='barh')
 plt.show()
 plt.close()
 dfCon
@@ -822,7 +823,7 @@ df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupb
 #1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412)
 #EFFICIENCY 
 
-#(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[FUELEEZ].plot(kind='bar')
+#(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[FUELEEZ].plot(kind='barh')
 #plt.show()
 #plt.close()
 FUELEEZ
@@ -833,7 +834,7 @@ elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
-(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='bar')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
 plt.title("input/output energy efficicency of fuelee sources")
 plt.xlabel("energy source")
 plt.ylabel("efficiecncy (KWH in per KWH out)")
@@ -849,7 +850,7 @@ elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
-((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='bar')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
 plt.title("Heat Rate of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("btu input per kwh output")
@@ -860,7 +861,7 @@ plt.close()
 #SULFUR CONTENT
 elligebleForSC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
-(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
 plt.title("Sulfur Content  of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("sulfur content (percentage of fuel weight)")
@@ -870,7 +871,7 @@ plt.close()
 #ASH CONTENT
 elligebleForAC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
-(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
 plt.title("Ash Content  of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("Ash content (percentage of fuel weight)")
@@ -880,7 +881,7 @@ plt.close()
 #COST
 elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
-(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='bar')
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
 plt.title("Fuel Unit Price of Fuelees")
 plt.xlabel("energy source")
 plt.ylabel("Cost Per BTU")
@@ -892,7 +893,7 @@ elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
 fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
-fuelCostPerKwhOut.plot(kind='bar')
+fuelCostPerKwhOut.plot(kind='barh')
 plt.title("Price per kwh Production (cost per kwh fuel/efficiency)")
 plt.xlabel("energy source")
 plt.ylabel("Cost Per Kwh fuel")
