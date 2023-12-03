@@ -1,24 +1,319 @@
 ---
-format: revealjs
+title: "Group 1.21 Project"
+author: "Carson Trego and Ryan Lalicker"
+date: December 3, 2023
+theme: UNLTheme
+format: beamer
 ---
 
-## Quarto
+```{python}
+#| echo: false
 
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+import requests
+import json
+import pandas as pd
+from skimpy import skim
+import matplotlib.pyplot as plt
 
-## Bullets
+#AVAILABLE TIMES
+avtimes=["01","02","03","04","05","06","07","08"]
 
-When you click the **Render** button a document will be generated that includes:
+dataofdatalist=[]
+for timeloop in avtimes:
+  # API KEY
+  api_key = 'RucYMPTp3yg6yYY0ktOEnbxaFDNvsDXDIQfGV3NK'
+  
+  #API URL
+  apiUrl = "https://api.eia.gov/v2/electricity/electric-power-operational-data/data/?frequency=monthly&data[0]=ash-content&data[1]=consumption-for-eg&data[2]=consumption-for-eg-btu&data[3]=consumption-uto&data[4]=consumption-uto-btu&data[5]=cost&data[6]=cost-per-btu&data[7]=generation&data[8]=heat-content&data[9]=receipts&data[10]=receipts-btu&data[11]=stocks&data[12]=sulfur-content&data[13]=total-consumption&data[14]=total-consumption-btu&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000"
+  
+  #Combined API URL and API key, will be used as a single input inton the api function
+  urlAndKey = f"{apiUrl}&api_key={api_key}"
+  
+  # HEADER, an input to the api
+  headers = {
+    "X-Params": json.dumps({
+      "frequency": "monthly",
+      "data": [
+        "ash-content",
+        "consumption-for-eg",
+        "consumption-for-eg-btu",
+        "consumption-uto",
+        "consumption-uto-btu",
+        "cost",
+        "cost-per-btu",
+        "generation",
+        "heat-content",
+        "receipts",
+        "receipts-btu",
+        "stocks",
+        "sulfur-content",
+        "total-consumption",
+        "total-consumption-btu"
+      ],
+      "facets": {},
+      "start": "2023-"+timeloop,
+      "end": "2023-"+timeloop,
+      "sort": [
+        {
+          "column": "period",
+          "direction": "desc"
+        }
+      ],
+      "offset": 0,
+      "length": 5000 #ADJUSTABLE; WILL EXTEND WHEN I GET MORE SPACE MY COMPUTER IS MELTING
+    })
+  }
+  
+  # GET REQUEST, as stated in the EIA method section
+  response = requests.get(urlAndKey, headers=headers)
+  
+  # Response Status code (200 = success)
+  if response.status_code == 200:
+    data = response.json()  # read response
+  else:
+    print(f"REQUEST FAILED---CODE: {response.status_code}")
+    print(response.text)
+  
+  dataofdatalist.append(data['response']['data'])
+  #print(timeloop)
 
--   Content authored with markdown
--   Output from executable code
+#dfTEST=pd.DataFrame(data['response']['data'])
+#for x in dataofdatalist:
+#  print(111)
+#  dataofdatalist[x]=pd.DataFrame(dataofdatalist[x])
 
-## Code
 
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+#Yeah yeah, this is horrfic design, may change it later
+df___i=pd.DataFrame(dataofdatalist[0])
+df__ii=pd.DataFrame(dataofdatalist[1])
+df_iii=pd.DataFrame(dataofdatalist[2])
+df__iv=pd.DataFrame(dataofdatalist[3])
+df___v=pd.DataFrame(dataofdatalist[4])
+df__vi=pd.DataFrame(dataofdatalist[5])
+df_vii=pd.DataFrame(dataofdatalist[6])
+dfviii=pd.DataFrame(dataofdatalist[7])
 
-```{r}
-1 + 1
+#API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them
+metalist=[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]
+dfLONG=pd.concat(metalist, ignore_index=True)
+len(dfLONG['period'])
+
+
+
+
+
+
+fueleeNotDict={
+  'all coal products'                           :'FUELEE',
+  'all fuels'                                   :'FUELEE',
+  'all renewables'                              :'NULL',
+  'anthracite coal'                             :'FUELEE',
+  'biogenic municipal solid waste'              :'FUELEE',
+  'biomass'                                     :'FUELEE',
+  'bituminous coal'                             :'FUELEE',
+  'bituminous coal and synthetic coal'          :'FUELEE',
+  'coal, excluding waste coal'                  :'FUELEE',
+  'conventional hydroelectric'                  :'NON-FUELEE',
+  'distillate fuel oil'                         :'FUELEE',
+  'estimated small scale solar photovoltaic'    :'NON-FUELEE',
+  'estimated total solar'                       :'NON-FUELEE',
+  'estimated total solar photovoltaic'          :'NON-FUELEE',
+  'fossil fuels'                                :'FUELEE',
+  'geothermal'                                  :'NON-FUELEE',
+  'hydro-electric pumped storage'               :'NULL',
+  'landfill gas'                                :'FUELEE',
+  'lignite coal'                                :'FUELEE',
+  'municiapl landfill gas'                      :'FUELEE',
+  'natural gas'                                 :'FUELEE',
+  'natural gas & other gases'                   :'FUELEE',
+  'nuclear'                                     :'FUELEE',
+  'offshore wind turbine'                       :'NON-FUELEE',
+  'onshore wind turbine'                        :'NON-FUELEE',
+  'other'                                       :'NULL',
+  'other gases'                                 :'FUELEE',
+  'other renewables'                            :'NULL',
+  'petroleum'                                   :'FUELEE',
+  'petroleum coke'                              :'FUELEE',
+  'petroleum liquids'                           :'FUELEE',
+  'refined coal'                                :'FUELEE',
+  'renewable'                                   :'NULL',
+  'renewable waste products'                    :'UNSURE',
+  'residual fuel oil'                           :'FUELEE',
+  'solar'                                       :'NON-FUELEE',
+  'solar photovoltaic'                          :'NON-FUELEE',
+  'solar thermal'                               :'NON-FUELEE',
+  'subbituminous coal'                          :'FUELEE',
+  'waste coal'                                  :'FUELEE',
+  'waste oil and other oils'                   :'FUELEE',
+  'wind'                                        :'NON-FUELEE',
+  'wood and wood wastes'                        :'FUELEE'
+}
+
+FUELEEZ=[key for key, val in fueleeNotDict.items() if val == 'FUELEE']
+
+#'FUELEE' (uses fuel)
+#'NON-FUELEE' (doesnt use fuel)
+#'NULL' (neither/both)
+#'UNSURE' (unsure)
+
+
+
+df1=dfLONG
+
+
+pd.set_option('display.max_columns',40)
+df1.groupby('fuelTypeDescription').count()
+
+#EFFICIENCY 
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+
+
+kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+
 ```
 
+---
 
+## Introduction
+
+Why energy matters
+
+-   Energy is used everywhere
+
+-   Want cheap but effective energy
+
+-   Pollution
+
+
+---
+
+## Data
+
+Collected from Energy Information Agency (EIA)
+
+-   Agency of the Federal Statistical System of the U.S.
+
+-   Open Data program
+
+-   January - August 2023
+
+-   40,000 entries requested (5,000 per month)
+
+---
+
+## Background Information
+
+Something here !!!!
+
+---
+
+## Heat Rate
+
+```{python}
+#| echo: false
+#HEAT RATE
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
+plt.title("Graph 1 - Heat Rate of Fuelees")
+plt.ylabel("energy source")
+plt.xlabel("btu input per kwh output")
+plt.show()
+plt.close()
+
+```
+
+---
+
+
+## Thermal efficiency
+
+```{python}
+#| echo: false
+#EFFICIENCY 
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
+plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
+plt.ylabel("energy source")
+plt.xlabel("efficiecncy (KWH in per KWH out)")
+plt.show()
+plt.close()
+```
+
+---
+
+## Cost Per Million BTU
+
+```{python}
+#| echo: false
+#COST
+elligebleForCOST = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
+plt.title("Graph 3 - Fuel Unit Price of Fuelees")
+plt.ylabel("energy source")
+plt.xlabel("Cost Per Million BTU")
+plt.show()
+plt.close()
+```
+
+---
+
+## Unit Cost for Fuel
+
+```{python}
+#| echo: false
+#COSTPERKWH
+elligebleForCOST = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
+fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
+fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
+fuelCostPerKwhOut.plot(kind='barh')
+plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
+plt.ylabel("energy source")
+plt.xlabel("Cost Per Kwh fuel")
+plt.show()
+plt.close()
+```
+
+---
+
+## Sulfur Content
+
+```{python}
+#| echo: false
+#SULFUR CONTENT
+elligebleForSC = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
+plt.title("Graph 5 - Sulfur Content  of Fuelees")
+plt.ylabel("energy source")
+plt.xlabel("sulfur content (percentage of fuel weight)")
+plt.show()
+plt.close()
+```
+
+---
+
+
+# Ash Content
+
+```{python}
+#| echo: false
+#ASH CONTENT
+elligebleForAC = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
+plt.title("Graph 6 - Ash Content of Fuelees")
+plt.ylabel("energy source")
+plt.xlabel("Ash content (percentage of fuel weight)")
+plt.show()
+plt.close()
+```
