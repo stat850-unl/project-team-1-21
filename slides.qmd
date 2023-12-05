@@ -2,8 +2,11 @@
 title: "Group 1.21 Project"
 author: "Carson Trego and Ryan Lalicker"
 date: December 3, 2023
-theme: UNLTheme
 format: beamer
+theme: UNLTheme
+themeoptions: 
+  - left
+  - hideothersections
 ---
 
 ```{python}
@@ -174,7 +177,7 @@ kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mea
 
 ```
 
----
+------------------------------------------------------------------------
 
 ## Introduction
 
@@ -186,8 +189,7 @@ Why energy matters
 
 -   Pollution
 
-
----
+------------------------------------------------------------------------
 
 ## Data
 
@@ -201,13 +203,13 @@ Collected from Energy Information Agency (EIA)
 
 -   40,000 entries requested (5,000 per month)
 
----
+------------------------------------------------------------------------
 
 ## Background Information
 
 Something here !!!!
 
----
+------------------------------------------------------------------------
 
 ## Heat Rate
 
@@ -227,8 +229,7 @@ plt.close()
 
 ```
 
----
-
+------------------------------------------------------------------------
 
 ## Thermal efficiency
 
@@ -247,7 +248,7 @@ plt.show()
 plt.close()
 ```
 
----
+------------------------------------------------------------------------
 
 ## Cost Per Million BTU
 
@@ -264,7 +265,7 @@ plt.show()
 plt.close()
 ```
 
----
+------------------------------------------------------------------------
 
 ## Unit Cost for Fuel
 
@@ -283,9 +284,10 @@ plt.show()
 plt.close()
 ```
 
----
 
-## Sulfur Content
+------------------------------------------------------------------------
+
+## Sulfer Content
 
 ```{python}
 #| echo: false
@@ -300,10 +302,8 @@ plt.show()
 plt.close()
 ```
 
----
-
-
-# Ash Content
+----------------------------------------------------------
+## Ash Content
 
 ```{python}
 #| echo: false
@@ -317,3 +317,4 @@ plt.xlabel("Ash content (percentage of fuel weight)")
 plt.show()
 plt.close()
 ```
+
