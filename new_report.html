@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Group 1.21 Paper</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="new_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="new_report_files/libs/quarto-html/quarto.js"></script>
+<script src="new_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="new_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="new_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="new_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="new_report_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="new_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="new_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="new_report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Group 1.21 Paper</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Carson Trego and Ryan Lalicker</p>
+<p>Dr.&nbsp;Susan VanderPlas</p>
+<p>STAT 850 - Group 1.21</p>
+<p>November 28, 2023</p>
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">PURPOSE</h2>
+<p>In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more complicated, and the audience is more engaged than ever.</p>
+<p>^{&lt;this needs more sourcing but i may need to talk to someone who is better at finding historical trends&gt;}</p>
+<p>Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss individual characteristics, and not use those characteristics to form any recommendation.</p>
+</section>
+<section id="about-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-data"><strong>ABOUT THE DATA</strong></h2>
+<p>The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\&lt;SOURCE NEEDED\&gt;}.</p>
+<p>The EIA hosts an Open Data program with the stated intention of making energy data \“more accessible, understandable, relevant and responsive\” {\&lt;source, open data site\&gt;}. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country{\&lt;SOURCE EIA OPEN DATA\&gt;}. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.</p>
+<p>For more information on obtaining the information for reproducibility, please go to the Reproducibility and Code section.</p>
+</section>
+<section id="background-info" class="level2">
+<h2 class="anchored" data-anchor-id="background-info"><strong>BACKGROUND INFO</strong></h2>
+<p><strong>Steam -Electric Power</strong></p>
+<p>A Steam-Electric Power Station is a powerstation that makes use of a steam engine{\&lt;sourcedoc: \“steam turbine\”\&gt;}. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator.&nbsp;</p>
+<p>While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% {\&lt;sourcedoc: primary to final\&gt;}{\&lt;sourcedoc:heat rates\&gt;}.</p>
+<p>These steam turbines are critical components of the world’s power infrastructure, as most of the world\’s electricity is generated using them {\&lt;sourcedoc: steam turbine\&gt;}, and 53.2% of US electricity is generated using a steam turbine&nbsp; {\&lt;sourcedoc: steam turbine\&gt;}. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don’t require steam turbines. These alternatives will be discussed individually in the \@sources of power\@ section below.</p>
+<p><strong>Categorization</strong> &nbsp;####may need some sources here and there, specifically in the examples, will add later.</p>
+<p>Many of the metrics in this report are based on the use of fuel (e.g.&nbsp;The cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun’s rays to generate electricity, so there is no need to “top up” the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.</p>
+<p>To organize the data for convenient reading, the power sources were put into two groups, fuelees and non-fuelees. Fuelees are power sources that require fuel to be regularly put in the generator to make power. Examples include: coal, natural gas, biomass, and nuclear. Non-fuelees, on the other hand, do not require regular input fuel to operate (although they may require regular maintenance). Examples include: wind, solar, and hydro-electric power.</p>
+<p>It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun’s fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report.&nbsp;<br>
+</p>
+</section>
+<section id="background-power-types" class="level2">
+<h2 class="anchored" data-anchor-id="background-power-types">Background: Power Types</h2>
+<p>####there is an unfathomable amount of overlap in our variables [ residual fuel oil(petroleum fuel oil(petroleum))) ], i will consider making a visual venn diagram chart for this.</p>
+<p><strong>Coal Power</strong></p>
+<p>Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants {\&lt;sorucedoc:coaltypes\&gt;}. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced{\&lt;sorucedoc:coaltypes\&gt;}.</p>
+<p>Among the different types of coal power in the data set are the naturally occurring anthracite, bituminous, subbituminous, and lignite coal. The percentage of carbon varies for each with anthracite containing 86%-97%, bituminous containing 45%-86%, subbituminous containing 35%-45% carbon, and lignite containing 25%-65% carbon.&nbsp;&nbsp;</p>
+<p>Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials {\&lt;wastecoaldef\&gt;}</p>
+<p>Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has \@standard\@ pre-processing) is coal that has been modified to reduce impurities and improve heat content {\&lt;refinedcoaldef\&gt;}. Refined coal meets the standards set by the IRS definition of the substance{\&lt;notice 2010-54\&gt;}. Refined coal is often made by mixing proprietary additives into coal {\&lt;refinedcoalarticle\&gt;}.</p>
+<p><strong>Synthetic??? Unsure if it means pyrolytic or something else.</strong><br>
+</p>
+<p><strong>Flammable Gas Power</strong></p>
+<p>&lt;intro about gas&gt;</p>
+<p>Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane{\&lt;natgaseee\&gt;}. This is different from landfill gas, which occurs naturally when bacteria naturally decomposes organic materials into a gas that is approximately 50% methane and 50% carbon dioxide. This gas can be treated to remove carbon dioxide and other gasses, turning it into biomethane, or burned directly for energy.</p>
+<p><strong>Biomass</strong></p>
+<p>Biomass is organic material derived from living organisms. Biomass can include wood, grasses, foods, excrement, and biogenic portions of municipal solid waste{\&lt;biomass\&gt;}. Biomass can be burned directly or turned into other useful products such as methane or chemical feedstocks{\&lt;biomass\&gt;} {\&lt;waste to energy\&gt;}{\&lt;municiple solid waste\&gt;}.</p>
+<p><strong>Biogenic Municipal Solid Waste</strong></p>
+<p>Municipal solid waste is the formal term for garbage. Municipal solid waste can contain a mixture of organic flammable compounds and non-combustible materials {&lt;waste to energy&gt;}. The biogenic municipal solid waste is the parts of garbage that is produced by living organisms. Examples of this include discarded food, paper, cardboard. {&lt;biomass&gt;}.Municipal solid waste can be burned directly in waste to energy plants converted to combustible gas at landfills, or converted into other chemical products {&lt;waste to energy&gt;}{&lt;municiple solid waste&gt;}{&lt;biomass&gt;}. {&lt;waste to energy&gt;}<br>
+</p>
+<p><strong>Solar Power</strong></p>
+<p>Solar power is energy derived from energy directly produced by the sun. There are two main types: concentrated and photovoltaic. Concentrated solar power plants collect the energy from the sun’s rays into a small area using mirrors, to create heat, which is similar to using a magnifying glass on a bright day to start fires {\&lt;CSP\&gt;}. This heat can then be used to drive a \@generator\@{\&lt;CSP\&gt;}.&nbsp;</p>
+<p>Photovoltaic solar energy, also called solar panels, use semiconductors to directly convert light into electricity without any moving parts (\&lt;solarcellphysics\&gt;). Photovoltaic panels output minimal power at night, and are considered an intermittent form of power that can benefit from energy storage systems {\&lt;intermittent\&gt;}.</p>
+<p><strong>Hydro Electric</strong></p>
+<p>Hydroelectric power is power extracted from water flowing from a higher point of altitude to a lower point of altitude {&lt;con hydro&gt;} {&lt;pumped hydro&gt;}. There are two main kinds of hydroelectric power. The first is conventional hydroelectric power which uses naturally occurring water sources as a way to generate electricity{&lt;con hydro&gt;} . These water sources can replenish themselves via the water cycle, and shouldn’t need to be refilled{&lt;con hydro&gt;} .&nbsp;</p>
+<p>The second form of hydroelectric power in our data set is pumped. Pumped hydroelectric power uses water from reservoirs that are filled using mechanical pumps {\&lt;pumped hydro\&gt;}. These pumps require electricity, and are usually powered when energy is&nbsp; in lower demand{\&lt;pumped hydro\&gt;}. This allows the reservoir to extract that energy when demand goes up{\&lt;pumped hydro\&gt;}. Pumped hydro power is not a method of generating new energy into the grid, and is more so a method of storing energy that has already been generated{\&lt;pumped hydro\&gt;}. Energy storage systems can help increase the reliability of the grid, especially when intermittent generators (such as solar and wind power) are in use {(ph renew)}{\&lt;intermittent\&gt;}. Pumped hydro power is currently the largest source of energy storage in the United States, surpassing other forms of storage, such as large scale batteries {\&lt;pumped hydro\&gt;}.</p>
+<p><strong>Wind Power</strong></p>
+<p>Wind power is a form of electricity extracted from the motion of the wind, most commonly by using large generators called wind turbines. There are two main types of wind turbines depending on the location. If the turbines are built inland, they are most likely onshore wind turbines. Onshore wind turbines are built on land and typically in areas that are not densely populated {&lt;adv and challenges&gt;}{&lt;wind&gt;}. The output of an onshore wind turbine is dependent on the strength of the wind in the area, thus a wind turbine is considered an intermittent form of power, and can benefit from power storage systems {&lt;intermittent&gt;}.</p>
+<p>Conversely, offshore wind turbines are wind generators built off-land, usually on the ocean near the coasts. These turbines can potentially offer more powerful and consistent electricity than onshore wind, but are more difficult to establish and maintain {\&lt;wind\&gt;}{\&lt;offshore wind\&gt;}{\&lt;offshore article\&gt;}.</p>
+<p><strong>Petroleum Power</strong> **Petroleum describes a series of products made from crude oil {&lt;petrol&gt;}. These products can vary significantly, but in the context of this document we will focus on three main petroleum products: distillate fuel oil, residual fuel oil, and petroleum coke.</p>
+<p>Distillate fuel oil is a liquid product obtained from distilling crude oil {\&lt;petrol\&gt;}. Distillate fuel oil has a higher boiling point than gasoline and kerosine, and is often used in heating oil and diesel fuel{\&lt;petrol\&gt;}{\&lt;distilate fo def\&gt;}.</p>
+<p>Residual fuel oil is a liquid product obtained from dsitilling crude oil&nbsp; {\&lt;petrol\&gt;}. With a boiling point of greater than 1,050F, this fuel can be burned in steam boats and powerplants or mixed with distillate fuel oil to be used in certain types of diesel engines {\&lt;distilate fo def\&gt;}.&nbsp;</p>
+<p>Petroleum coke is a combustible, carbon-based, solid material obtained during petroleum refining operations {\&lt;petcoke\&gt;}. Despite being considered a waste byproduct{\&lt;waste oil\&gt;}It can be used in power generation, metal refining, and cement production {\&lt;petcoke\&gt;}.</p>
+<p><br>
+</p>
+<p><strong>Waste Oils and OtherOoils ##look into this one in particular</strong></p>
+<p>Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes {\&lt;wasteoil\&gt;}. These oils can still be burned for heating and energy purposes {\&lt;wasteoil\&gt;}.</p>
+<p><strong>Geothermal Power</strong></p>
+<p>Geothermal power is energy obtained from the natural heat given off by the internals of the earth {&lt;geotherm&gt;}. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed {&lt;SOURCE NEEDED&gt;}.<br>
+</p>
+<p><strong>Nuclear Power</strong></p>
+<p>Nuclear power is energy obtained from heat generated by splitting large atomic nuclei {&lt;nuclear&gt;}. Nuclear power plants typically rely on enriched uranium fuel {&lt;nuclear enrichment&gt;}, although some forms of reactors do not require enriched uranium and can use other fuels {&lt;fast reactors&gt;}<br>
+</p>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis"><strong>ANALYSIS</strong></h2>
+<p><strong>Heat Rate</strong></p>
+<p>The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen {&lt;presumebly&gt;} to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.&nbsp; Note that the higher values are less efficient.</p>
+<div class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<p><img src="new_report_files/figure-html/cell-3-output-1.png" width="800" height="449"></p>
+</div>
+</div>
+<p>The data on this table is functionally equivalent to the Thermal Efficiency section, so analysis will continue there.</p>
+<p><strong>Thermal Efficiency</strong></p>
+<p>Thermal efficiency is the ratio of energy used in a generator vs the amount of useful energy produced. For example, if you put in 10 units of energy, and get back 5 units of electricity, the thermal efficiency is 50%. Thermal efficiency is, to some, easier to understand than the heat rate. It can be used in other calculations, some of which will be mentioned further in the document. Below is Graph 2, which carts the available and sensible power types and their thermal efficiencies. Unlike in Graph 1, higher values represent higher efficiency.</p>
+<div class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<p><img src="new_report_files/figure-html/cell-4-output-1.png" width="800" height="449"></p>
+</div>
+</div>
+<p>#consider removing the “other”</p>
+<p>Solid waste has been shown to be the least efficient of the relevant types, below 20%. Natural gas was shown to be significantly more thermally efficient than most other power sources, with a thermal efficiency over 40%. This higher efficiency is partially due to the different types of generators used in natural gas power plants {&lt;source needed&gt;}. These generators, called combined cycle power plants, use multiple heat engines together to extract more energy during combustion{&lt;source needed&gt;}. This arrangement is primarily used for natural gas, which contributes to the large spike in efficiency for natural gas systems{&lt;source needed&gt;}.</p>
+<p><strong>COST PER MILLION BTU</strong></p>
+<p><strong>#I FORGOT TO LABLE THE AXIS AS MILLION</strong></p>
+<p>Fuel costs can be an important factor in the cost of operation for any machine, and electrical systems are no different. While the cost of fuel could be measured in kilograms, barrels, gallons, or any other physical unit, this may not be a fair measurement. The amount of energy in a kilogram of fuel can vary dramatically, so to account for those differences, the cost of fuels was measured by the amount of energy in dollars per million BTUs. Graph 3 below is a chart of available and sensible fuel types and their cost per million BTUs. In this graph higher values are more expensive.</p>
+<div class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<p><img src="new_report_files/figure-html/cell-5-output-1.png" width="801" height="449"></p>
+</div>
+</div>
+<p>The petroleum products, with the exception of petroleum coke, are each more expensive than any other source in Graph 3. Fuels such as coal and natural gas are more or less similar in price, and the difference between coal and natural gas with petroleum is dramatic. Cost is likely a contributing factor of why petroleum is only around 0.4% of total US electrical energy produced despite being produced in large quantities and being one of the primary sources of overall energy.{&lt;genbysource&gt;}{&lt;eneg by source&gt;}{&lt;prodbysource&gt;}</p>
+<p><strong>Unit Cost for Fuel</strong></p>
+<p>The cost per BTU of fuel does not fully capture the cost of fuel for a given power source, as different methods of generation can differ significantly in how efficient they can capture energy from the fuel. Using our thermal efficiency numbers from earlier, we can approximate the cost of fuel per Kwh by taking the cost per Kwh and dividing it by the thermal efficiency of the generator type. Graph 4 below is a chart of all the sensible and available generator types and their cost of fuel per Kwh produced. As in Graph 3, higher values imply a higher cost.</p>
+<div class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<p><img src="new_report_files/figure-html/cell-6-output-1.png" width="800" height="449"></p>
+</div>
+</div>
+<p>Once the efficiency is factored in, natural gas sources show to be less expensive than coal per kilowatt of generated electricity, while petroleum remains expensive per unit of energy. Petroleum coke, refined coal, and waste coal all show uniquely low values.</p>
+<p>It is important to note that this solely measures the cost for fuel, and the total cost for electricity generation is more than what is shown above, as electricity generation requires infrastructure, labor, and other associated costs.</p>
+<p><strong>Sulfur Content</strong></p>
+<p>The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk {&lt;SOURCE NEEDED&gt;}In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel’s total mass are shown. Note that higher values imply a higher sulfur content.</p>
+<div class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<p><img src="new_report_files/figure-html/cell-7-output-1.png" width="800" height="449"></p>
+</div>
+</div>
+<p>Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke{&lt;source needed&gt;}{&lt;this could be a huge jump in logic, maybe petroleum coke burners arent that protected?&gt;}</p>
+<p>Unsurprisingly, refined coal (coal which has been processed to remove impurities and improve heat content) has some of the lowest values for sulfur content.&nbsp;</p>
+<p><strong>Ash Content</strong></p>
+<p>Many combustible fuels produce a solid, incombustible substance, called ash, after being burned{&lt;SOURCE NEEDED?&gt;}. While the ashes of combustible fuels can be useful for a variety of products{&lt;&gt;}, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel’s total mass, where higher values mean a higher ash content.</p>
+<div class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<p><img src="new_report_files/figure-html/cell-8-output-1.png" width="800" height="449"></p>
+</div>
+</div>
+<p>Ash content was shown to be mostly evenly spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.</p>
+</section>
+<section id="references-scratch-work-planned-to-be-refined-on-full-completion" class="level2">
+<h2 class="anchored" data-anchor-id="references-scratch-work-planned-to-be-refined-on-full-completion"><strong>References {scratch work, planned to be refined on full completion}</strong></h2>
+<p>Python packages</p>
+<pre class="{txt}"><code>requests 2.31.0
+json 2.0.9 [DEFUALT PY]
+pandas 2.0.3
+skimpy {&lt;attribute version difficulties&gt;}
+matplotlib.pyplot {&lt;attribute version difficulties&gt;}</code></pre>
+<p>E-Sources</p>
+<pre class="{txt}"><code>DATA SOUCE—--EIA
+https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data?frequency=monthly&amp;data=ash-content;consumption-for-eg;consumption-for-eg-btu;consumption-uto;consumption-uto-btu;cost;cost-per-btu;generation;heat-content;receipts;receipts-btu;stocks;sulfur-content;total-consumption;total-consumption-btu;&amp;sortColumn=period;&amp;sortDirection=desc;
+
+POWER SOURCE ARTICLE&gt;?&lt;
+https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3
+
+Gen by source
+https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3
+
+Energ by source
+https://www.eia.gov/todayinenergy/detail.php?id=56980#:~:text=Fossil%20fuels%E2%80%94petroleum%2C%20natural%20gas,high%2013.2%20quads%20in%202022.
+
+Prod by source
+https://www.eia.gov/todayinenergy/detail.php?id=45096
+
+
+
+
+COAL TYPES
+https://www.eia.gov/energyexplained/coal/#:~:text=Types%20of%20coal,energy%20the%20coal%20can%20produce.
+
+
+STEAM TURBINE
+https://www.eia.gov/energyexplained/electricity/how-electricity-is-generated.php
+
+
+Heat rates
+https://www.eia.gov/electricity/annual/html/epa_08_02.html
+
+History primary to final
+https://www.sciencedirect.com/science/article/pii/S036054422300169X#fig13
+
+natgascs
+https://www.eia.gov/todayinenergy/detail.php?id=39012#:~:text=U.S.%20natural%20gas%2Dfired%20combined,capacity%20surpasses%20coal%2Dfired%20capacity&amp;text=The%20amount%20of%20generating%20capacity,capacity%20in%20the%20United%20States.
+
+wastecoaldef
+https://www.eia.gov/tools/glossary/index.php?id=W
+
+refinedcoaldef
+https://www.eia.gov/tools/glossary/index.php?id=refined_coal
+
+Refined coal article
+https://www.eia.gov/todayinenergy/detail.php?id=53099
+
+natgaseee
+https://www.eia.gov/kids/energy-sources/natural-gas/
+
+biogaslf
+https://www.eia.gov/energyexplained/biomass/landfill-gas-and-biogas.php
+Municipal solid waste
+https://www.eia.gov/energyexplained/biomass/waste-to-energy.php
+
+Waste to energy
+https://www.eia.gov/energyexplained/biomass/waste-to-energy-in-depth.php
+
+biomass
+https://www.eia.gov/energyexplained/biomass/
+
+solar
+https://www.eia.gov/energyexplained/solar/
+
+CSP
+https://www.energy.gov/eere/solar/concentrating-solar-thermal-power-basics#:~:text=What%20is%20concentrating%20solar%2Dthermal,temperature%20fluid%20in%20the%20receiver.
+
+
+Solar pv
+https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics
+
+HEAT RATE DEF
+https://www.eia.gov/tools/faqs/faq.php?id=107&amp;t=3#:~:text=The%20heat%20rate%20is%20the,Btu)%20per%20net%20kWh%20generated.
+
+PUMPED HYDRO
+https://www.eia.gov/todayinenergy/detail.php?id=41833
+
+CONHYDRO
+https://www.eia.gov/energyexplained/hydropower/
+
+Ph renewables
+https://www.eia.gov/todayinenergy/detail.php?id=57360
+
+WIND
+https://www.eia.gov/kids/energy-sources/wind/
+
+Offshore wind
+https://www.energy.gov/eere/wind/offshore-wind-research-and-development
+
+Adv and challenges
+https://www.energy.gov/eere/wind/advantages-and-challenges-wind-energy
+
+Offshore article
+https://www.eia.gov/todayinenergy/detail.php?id=52940
+
+Intermittency
+https://www.eia.gov/todayinenergy/detail.php?id=55719
+
+Solar cell physics
+https://www.energy.gov/eere/solar/solar-photovoltaic-cell-basics#:~:text=There%20are%20several%20different%20semiconductor,material%20as%20an%20electrical%20current.
+
+Petrol
+https://www.eia.gov/kids/energy-sources/oil/#:~:text=Petroleum%20means%20rock%20oil%20or,hydrocarbons%20contained%20in%20natural%20gas.
+
+
+Distillate fo def
+https://www.eia.gov/tools/glossary/index.php?id=Distillate%20fuel%20oil
+
+Resid fo def
+https://www.eia.gov/tools/glossary/index.php?id=residual%20fuel%20oil#:~:text=5%2C%20a%20residual%20fuel%20oil,government%20service%20and%20inshore%20powerplants.
+
+
+Coke def
+https://www.eia.gov/tools/glossary/index.php?id=Petroleum%20coke#:~:text=Petroleum%20coke%2C%20catalyst%3A%20The%20carbonaceous,carbon%20producing%20heat%20and%20CO2.
+Or
+https://www.eia.gov/dnav/pet/TblDefs/pet_pnp_capfuel_tbldef2.asp
+Second one is better
+
+Petcoke
+https://www.eia.gov/todayinenergy/detail.php?id=6430
+
+geotherm
+https://www.eia.gov/kids/energy-sources/geothermal/
+
+Waste oils
+https://www.eia.gov/todayinenergy/detail.php?id=13531#:~:text=The%20petroleum%20and%20coal%20products%20industry%20(mostly%20refineries)%20uses%20waste,23%25%20of%20its%20fuel%20use.
+
+nuclear
+https://www.eia.gov/energyexplained/nuclear/#:~:text=All%20nuclear%20power%20plants%20use,form%20of%20heat%20and%20radiation.
+
+Nuclear enerichment
+https://www.eia.gov/energyexplained/nuclear/the-nuclear-fuel-cycle.php#:~:text=Uranium%20enrichment,gaseous%20diffusion%20and%20gas%20centrifuge.
+
+Fast reactors
+https://www.ne.anl.gov/About/reactors/frt.shtml
+</code></pre>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
