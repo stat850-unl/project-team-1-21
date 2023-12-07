@@ -1,582 +1,16 @@
 ---
-title: "Group 1.21 Paper"
+title: "quartoproj"
 format: html
 editor: visual
 ---
 
+# Dependency Installation
 
+{\<we have questions on doing this in python, and using renv\>}
 
-```{python}
-#| echo: false
+# Main Code
 
-import requests
-import json
-import pandas as pd
-from skimpy import skim
-import matplotlib.pyplot as plt
-
-#AVAILABLE TIMES
-avtimes=["01","02","03","04","05","06","07","08"]
-
-dataofdatalist=[]
-for timeloop in avtimes:
-  # API KEY
-  api_key = 'RucYMPTp3yg6yYY0ktOEnbxaFDNvsDXDIQfGV3NK'
-  
-  #API URL
-  apiUrl = "https://api.eia.gov/v2/electricity/electric-power-operational-data/data/?frequency=monthly&data[0]=ash-content&data[1]=consumption-for-eg&data[2]=consumption-for-eg-btu&data[3]=consumption-uto&data[4]=consumption-uto-btu&data[5]=cost&data[6]=cost-per-btu&data[7]=generation&data[8]=heat-content&data[9]=receipts&data[10]=receipts-btu&data[11]=stocks&data[12]=sulfur-content&data[13]=total-consumption&data[14]=total-consumption-btu&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000"
-  
-  #Combined API URL and API key, will be used as a single input inton the api function
-  urlAndKey = f"{apiUrl}&api_key={api_key}"
-  
-  # HEADER, an input to the api
-  headers = {
-    "X-Params": json.dumps({
-      "frequency": "monthly",
-      "data": [
-        "ash-content",
-        "consumption-for-eg",
-        "consumption-for-eg-btu",
-        "consumption-uto",
-        "consumption-uto-btu",
-        "cost",
-        "cost-per-btu",
-        "generation",
-        "heat-content",
-        "receipts",
-        "receipts-btu",
-        "stocks",
-        "sulfur-content",
-        "total-consumption",
-        "total-consumption-btu"
-      ],
-      "facets": {},
-      "start": "2023-"+timeloop,
-      "end": "2023-"+timeloop,
-      "sort": [
-        {
-          "column": "period",
-          "direction": "desc"
-        }
-      ],
-      "offset": 0,
-      "length": 5000 #ADJUSTABLE; WILL EXTEND WHEN I GET MORE SPACE MY COMPUTER IS MELTING
-    })
-  }
-  
-  # GET REQUEST, as stated in the EIA method section
-  response = requests.get(urlAndKey, headers=headers)
-  
-  # Response Status code (200 = success)
-  if response.status_code == 200:
-    data = response.json()  # read response
-  else:
-    print(f"REQUEST FAILED---CODE: {response.status_code}")
-    print(response.text)
-  
-  dataofdatalist.append(data['response']['data'])
-  #print(timeloop)
-
-#dfTEST=pd.DataFrame(data['response']['data'])
-#for x in dataofdatalist:
-#  print(111)
-#  dataofdatalist[x]=pd.DataFrame(dataofdatalist[x])
-
-
-#Yeah yeah, this is horrfic design, may change it later
-df___i=pd.DataFrame(dataofdatalist[0])
-df__ii=pd.DataFrame(dataofdatalist[1])
-df_iii=pd.DataFrame(dataofdatalist[2])
-df__iv=pd.DataFrame(dataofdatalist[3])
-df___v=pd.DataFrame(dataofdatalist[4])
-df__vi=pd.DataFrame(dataofdatalist[5])
-df_vii=pd.DataFrame(dataofdatalist[6])
-dfviii=pd.DataFrame(dataofdatalist[7])
-
-#API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them
-metalist=[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]
-dfLONG=pd.concat(metalist, ignore_index=True)
-len(dfLONG['period'])
-
-
-
-
-
-
-fueleeNotDict={
-  'all coal products'                           :'FUELEE',
-  'all fuels'                                   :'FUELEE',
-  'all renewables'                              :'NULL',
-  'anthracite coal'                             :'FUELEE',
-  'biogenic municipal solid waste'              :'FUELEE',
-  'biomass'                                     :'FUELEE',
-  'bituminous coal'                             :'FUELEE',
-  'bituminous coal and synthetic coal'          :'FUELEE',
-  'coal, excluding waste coal'                  :'FUELEE',
-  'conventional hydroelectric'                  :'NON-FUELEE',
-  'distillate fuel oil'                         :'FUELEE',
-  'estimated small scale solar photovoltaic'    :'NON-FUELEE',
-  'estimated total solar'                       :'NON-FUELEE',
-  'estimated total solar photovoltaic'          :'NON-FUELEE',
-  'fossil fuels'                                :'FUELEE',
-  'geothermal'                                  :'NON-FUELEE',
-  'hydro-electric pumped storage'               :'NULL',
-  'landfill gas'                                :'FUELEE',
-  'lignite coal'                                :'FUELEE',
-  'municiapl landfill gas'                      :'FUELEE',
-  'natural gas'                                 :'FUELEE',
-  'natural gas & other gases'                   :'FUELEE',
-  'nuclear'                                     :'FUELEE',
-  'offshore wind turbine'                       :'NON-FUELEE',
-  'onshore wind turbine'                        :'NON-FUELEE',
-  'other'                                       :'NULL',
-  'other gases'                                 :'FUELEE',
-  'other renewables'                            :'NULL',
-  'petroleum'                                   :'FUELEE',
-  'petroleum coke'                              :'FUELEE',
-  'petroleum liquids'                           :'FUELEE',
-  'refined coal'                                :'FUELEE',
-  'renewable'                                   :'NULL',
-  'renewable waste products'                    :'UNSURE',
-  'residual fuel oil'                           :'FUELEE',
-  'solar'                                       :'NON-FUELEE',
-  'solar photovoltaic'                          :'NON-FUELEE',
-  'solar thermal'                               :'NON-FUELEE',
-  'subbituminous coal'                          :'FUELEE',
-  'waste coal'                                  :'FUELEE',
-  'waste oil and other oils'                   :'FUELEE',
-  'wind'                                        :'NON-FUELEE',
-  'wood and wood wastes'                        :'FUELEE'
-}
-
-FUELEEZ=[key for key, val in fueleeNotDict.items() if val == 'FUELEE']
-
-#'FUELEE' (uses fuel)
-#'NON-FUELEE' (doesnt use fuel)
-#'NULL' (neither/both)
-#'UNSURE' (unsure)
-
-
-
-df1=dfLONG
-
-
-pd.set_option('display.max_columns',40)
-df1.groupby('fuelTypeDescription').count()
-
-#EFFICIENCY 
-elligebleForIOEff=FUELEEZ.copy()
-elligebleForIOEff.remove('anthracite coal')
-elligebleForIOEff.remove('other gases')
-
-
-kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
-
-```
-
-
-
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--Start of paper---------------------------------------------------------------------------
-
-Carson Trego and Ryan Lalicker
-
-Dr. Susan VanderPlas
-
-STAT 850 - Group 1.21
-
-November 28, 2023
-
-## PURPOSE
-
-In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more complicated, and the audience is more engaged than ever.
-
-\^{\<this needs more sourcing but i may need to talk to someone who is better at finding historical trends\>}
-
-Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss individual characteristics, and not use those characteristics to form any recommendation.
-
-## **ABOUT THE DATA**
-
-The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\\\<SOURCE NEEDED\\\>}.
-
-The EIA hosts an Open Data program with the stated intention of making energy data \\"more accessible, understandable, relevant and responsive\\" {\\\<source, open data site\\\>}. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country{\\\<SOURCE EIA OPEN DATA\\\>}. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.
-
-For more information on obtaining the information for reproducibility, please go to the Reproducibility and Code section.
-
-## **BACKGROUND INFO**
-
-**Steam -Electric Power**
-
-A Steam-Electric Power Station is a powerstation that makes use of a steam engine{\\\<sourcedoc: \\"steam turbine\\"\\\>}. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator. 
-
-While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% {\\\<sourcedoc: primary to final\\\>}{\\\<sourcedoc:heat rates\\\>}.
-
-These steam turbines are critical components of the world's power infrastructure, as most of the world\\'s electricity is generated using them {\\\<sourcedoc: steam turbine\\\>}, and 53.2% of US electricity is generated using a steam turbine  {\\\<sourcedoc: steam turbine\\\>}. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don't require steam turbines. These alternatives will be discussed individually in the \\\@sources of power\\\@ section below.
-
-**Categorization**  ####may need some sources here and there, specifically in the examples, will add later.
-
-Many of the metrics in this report are based on the use of fuel (e.g. The cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun\'s rays to generate electricity, so there is no need to \"top up\" the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.
-
-To organize the data for convenient reading, the power sources were put into two groups, fuelees and non-fuelees. Fuelees are power sources that require fuel to be regularly put in the generator to make power. Examples include: coal, natural gas, biomass, and nuclear. Non-fuelees, on the other hand, do not require regular input fuel to operate (although they may require regular maintenance). Examples include: wind, solar, and hydro-electric power.
-
-It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun\'s fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report. \
-
-## Background: Power Types
-
-####there is an unfathomable amount of overlap in our variables \[ residual fuel oil(petroleum fuel oil(petroleum))) \], i will consider making a visual venn diagram chart for this.
-
-**Coal Power**
-
-Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants {\\\<sorucedoc:coaltypes\\\>}. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced{\\\<sorucedoc:coaltypes\\\>}.
-
-Among the different types of coal power in the data set are the naturally occurring anthracite, bituminous, subbituminous, and lignite coal. The percentage of carbon varies for each with anthracite containing 86%-97%, bituminous containing 45%-86%, subbituminous containing 35%-45% carbon, and lignite containing 25%-65% carbon.  
-
-Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials {\\\<wastecoaldef\\\>}
-
-Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has \\\@standard\\\@ pre-processing) is coal that has been modified to reduce impurities and improve heat content {\\\<refinedcoaldef\\\>}. Refined coal meets the standards set by the IRS definition of the substance{\\\<notice 2010-54\\\>}. Refined coal is often made by mixing proprietary additives into coal {\\\<refinedcoalarticle\\\>}.
-
-**Synthetic??? Unsure if it means pyrolytic or something else.**\
-
-**Flammable Gas Power**
-
-\<intro about gas\>
-
-Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane{\\\<natgaseee\\\>}. This is different from landfill gas, which occurs naturally when bacteria naturally decomposes organic materials into a gas that is approximately 50% methane and 50% carbon dioxide. This gas can be treated to remove carbon dioxide and other gasses, turning it into biomethane, or burned directly for energy.
-
-**Biomass**
-
-Biomass is organic material derived from living organisms. Biomass can include wood, grasses, foods, excrement, and biogenic portions of municipal solid waste{\\\<biomass\\\>}. Biomass can be burned directly or turned into other useful products such as methane or chemical feedstocks{\\\<biomass\\\>} {\\\<waste to energy\\\>}{\\\<municiple solid waste\\\>}.
-
-**Biogenic Municipal Solid Waste**
-
-Municipal solid waste is the formal term for garbage. Municipal solid waste can contain a mixture of organic flammable compounds and non-combustible materials {\<waste to energy\>}. The biogenic municipal solid waste is the parts of garbage that is produced by living organisms. Examples of this include discarded food, paper, cardboard. {\<biomass\>}.Municipal solid waste can be burned directly in waste to energy plants converted to combustible gas at landfills, or converted into other chemical products {\<waste to energy\>}{\<municiple solid waste\>}{\<biomass\>}. {\<waste to energy\>}\
-
-**Solar Power**
-
-Solar power is energy derived from energy directly produced by the sun. There are two main types: concentrated and photovoltaic. Concentrated solar power plants collect the energy from the sun's rays into a small area using mirrors, to create heat, which is similar to using a magnifying glass on a bright day to start fires {\\\<CSP\\\>}. This heat can then be used to drive a \\\@generator\\\@{\\\<CSP\\\>}. 
-
-Photovoltaic solar energy, also called solar panels, use semiconductors to directly convert light into electricity without any moving parts (\\\<solarcellphysics\\\>). Photovoltaic panels output minimal power at night, and are considered an intermittent form of power that can benefit from energy storage systems {\\\<intermittent\\\>}.
-
-**Hydro Electric**
-
-Hydroelectric power is power extracted from water flowing from a higher point of altitude to a lower point of altitude {\<con hydro\>} {\<pumped hydro\>}. There are two main kinds of hydroelectric power. The first is conventional hydroelectric power which uses naturally occurring water sources as a way to generate electricity{\<con hydro\>} . These water sources can replenish themselves via the water cycle, and shouldn't need to be refilled{\<con hydro\>} . 
-
-The second form of hydroelectric power in our data set is pumped. Pumped hydroelectric power uses water from reservoirs that are filled using mechanical pumps {\\\<pumped hydro\\\>}. These pumps require electricity, and are usually powered when energy is  in lower demand{\\\<pumped hydro\\\>}. This allows the reservoir to extract that energy when demand goes up{\\\<pumped hydro\\\>}. Pumped hydro power is not a method of generating new energy into the grid, and is more so a method of storing energy that has already been generated{\\\<pumped hydro\\\>}. Energy storage systems can help increase the reliability of the grid, especially when intermittent generators (such as solar and wind power) are in use {(ph renew)}{\\\<intermittent\\\>}. Pumped hydro power is currently the largest source of energy storage in the United States, surpassing other forms of storage, such as large scale batteries {\\\<pumped hydro\\\>}.
-
-**Wind Power**
-
-Wind power is a form of electricity extracted from the motion of the wind, most commonly by using large generators called wind turbines. There are two main types of wind turbines depending on the location. If the turbines are built inland, they are most likely onshore wind turbines. Onshore wind turbines are built on land and typically in areas that are not densely populated {\<adv and challenges\>}{\<wind\>}. The output of an onshore wind turbine is dependent on the strength of the wind in the area, thus a wind turbine is considered an intermittent form of power, and can benefit from power storage systems {\<intermittent\>}.
-
-Conversely, offshore wind turbines are wind generators built off-land, usually on the ocean near the coasts. These turbines can potentially offer more powerful and consistent electricity than onshore wind, but are more difficult to establish and maintain {\\\<wind\\\>}{\\\<offshore wind\\\>}{\\\<offshore article\\\>}.
-
-**Petroleum Power**
-**Petroleum describes a series of products made from crude oil {\<petrol\>}. These products can vary significantly, but in the context of this document we will focus on three main petroleum products: distillate fuel oil, residual fuel oil, and petroleum coke.
-
-Distillate fuel oil is a liquid product obtained from distilling crude oil {\\\<petrol\\\>}. Distillate fuel oil has a higher boiling point than gasoline and kerosine, and is often used in heating oil and diesel fuel{\\\<petrol\\\>}{\\\<distilate fo def\\\>}.
-
-Residual fuel oil is a liquid product obtained from dsitilling crude oil  {\\\<petrol\\\>}. With a boiling point of greater than 1,050F, this fuel can be burned in steam boats and powerplants or mixed with distillate fuel oil to be used in certain types of diesel engines {\\\<distilate fo def\\\>}. 
-
-Petroleum coke is a combustible, carbon-based, solid material obtained during petroleum refining operations {\\\<petcoke\\\>}. Despite being considered a waste byproduct{\\\<waste oil\\\>}It can be used in power generation, metal refining, and cement production {\\\<petcoke\\\>}.
-
-\
-
-**Waste Oils and OtherOoils ##look into this one in particular**
-
-Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes {\\\<wasteoil\\\>}. These oils can still be burned for heating and energy purposes {\\\<wasteoil\\\>}.
-
-**Geothermal Power**
-
-Geothermal power is energy obtained from the natural heat given off by the internals of the earth {\<geotherm\>}. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed {\<SOURCE NEEDED\>}.\
-
-**Nuclear Power**
-
-Nuclear power is energy obtained from heat generated by splitting large atomic nuclei {\<nuclear\>}. Nuclear power plants typically rely on enriched uranium fuel {\<nuclear enrichment\>}, although some forms of reactors do not require enriched uranium and can use other fuels {\<fast reactors\>}\
-
-## **ANALYSIS**
-
-**Heat Rate**
-
-The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen {\<presumebly\>} to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.  Note that the higher values are less efficient.
-
-```{python, @echo off}
-#| echo: false
-#HEAT RATE
-elligebleForIOEff=FUELEEZ.copy()
-elligebleForIOEff.remove('anthracite coal')
-elligebleForIOEff.remove('other gases')
-((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
-((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
-plt.title("Graph 1 - Heat Rate of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("btu input per kwh output")
-plt.show()
-plt.close()
-
-```
-
-The data on this table is functionally equivalent to the Thermal Efficiency section, so analysis will continue there.
-
-**Thermal Efficiency**
-
-Thermal efficiency is the ratio of energy used in a generator vs the amount of useful energy produced. For example, if you put in 10 units of energy, and get back 5 units of electricity, the thermal efficiency is 50%. Thermal efficiency is, to some, easier to understand than the heat rate. It can be used in other calculations, some of which will be mentioned further in the document. Below is Graph 2, which carts the available and sensible power types and their thermal efficiencies. Unlike in Graph 1, higher values represent higher efficiency.
-
-```{python}
-#| echo: false
-#EFFICIENCY 
-elligebleForIOEff=FUELEEZ.copy()
-elligebleForIOEff.remove('anthracite coal')
-elligebleForIOEff.remove('other gases')
-(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
-(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
-plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
-plt.ylabel("energy source")
-plt.xlabel("efficiecncy (KWH in per KWH out)")
-plt.show()
-plt.close()
-```
-
-#consider removing the "other"
-
-Solid waste has been shown to be the least efficient of the relevant types, below 20%. Natural gas was shown to be significantly more thermally efficient than most other power sources, with a thermal efficiency over 40%. This higher efficiency is partially due to the different types of generators used in natural gas power plants {\<source needed\>}. These generators, called combined cycle power plants, use multiple heat engines together to extract more energy during combustion{\<source needed\>}. This arrangement is primarily used for natural gas, which contributes to the large spike in efficiency for natural gas systems{\<source needed\>}.
-
-**COST PER MILLION BTU**
-
-**#I FORGOT TO LABLE THE AXIS AS MILLION**
-
-Fuel costs can be an important factor in the cost of operation for any machine, and electrical systems are no different. While the cost of fuel could be measured in kilograms, barrels, gallons, or any other physical unit, this may not be a fair measurement. The amount of energy in a kilogram of fuel can vary dramatically, so to account for those differences, the cost of fuels was measured by the amount of energy in dollars per million BTUs. Graph 3 below is a chart of available and sensible fuel types and their cost per million BTUs. In this graph higher values are more expensive.
-
-```{python}
-#| echo: false
-#COST
-elligebleForCOST = FUELEEZ.copy()
-df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
-(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
-plt.title("Graph 3 - Fuel Unit Price of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("Cost Per BTU")
-plt.show()
-plt.close()
-```
-
-The petroleum products, with the exception of petroleum coke, are each more expensive than any other source in Graph 3. Fuels such as coal and natural gas are more or less similar in price, and the difference between coal and natural gas with petroleum is dramatic. Cost is likely a contributing factor of why petroleum is only around 0.4% of total US electrical energy produced despite being produced in large quantities and being one of the primary sources of overall energy.{\<genbysource\>}{\<eneg by source\>}{\<prodbysource\>}
-
-**Unit Cost for Fuel**
-
-The cost per BTU of fuel does not fully capture the cost of fuel for a given power source, as different methods of generation can differ significantly in how efficient they can capture energy from the fuel. Using our thermal efficiency numbers from earlier, we can approximate the cost of fuel per Kwh by taking the cost per Kwh and dividing it by the thermal efficiency of the generator type. Graph 4 below is a chart of all the sensible and available generator types and their cost of fuel per Kwh produced. As in Graph 3, higher values imply a higher cost.
-
-```{python}
-#| echo: false
-#COSTPERKWH
-elligebleForCOST = FUELEEZ.copy()
-df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
-fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
-fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
-fuelCostPerKwhOut.plot(kind='barh')
-plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
-plt.ylabel("energy source")
-plt.xlabel("Cost Per Kwh fuel")
-plt.show()
-plt.close()
-```
-
-Once the efficiency is factored in, natural gas sources show to be less expensive than coal per kilowatt of generated electricity, while petroleum remains expensive per unit of energy. Petroleum coke, refined coal, and waste coal all show uniquely low values.
-
-It is important to note that this solely measures the cost for fuel, and the total cost for electricity generation is more than what is shown above, as electricity generation requires infrastructure, labor, and other associated costs.
-
-**Sulfur Content**
-
-The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk {\<SOURCE NEEDED\>}In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel's total mass are shown. Note that higher values imply a higher sulfur content.
-
-```{python}
-#| echo: false
-#SULFUR CONTENT
-elligebleForSC = FUELEEZ.copy()
-df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
-(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
-plt.title("Graph 5 - Sulfur Content  of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("sulfur content (percentage of fuel weight)")
-plt.show()
-plt.close()
-```
-
-Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke{\<source needed\>}{\<this could be a huge jump in logic, maybe petroleum coke burners arent that protected?\>}
-
-Unsurprisingly, refined coal (coal which has been processed to remove impurities and improve heat content) has some of the lowest values for sulfur content. 
-
-**Ash Content**
-
-Many combustible fuels produce a solid, incombustible substance, called ash, after being burned{\<SOURCE NEEDED?\>}. While the ashes of combustible fuels can be useful for a variety of products{\<\>}, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel's total mass, where higher values mean a higher ash content.
-
-```{python}
-#| echo: false
-#ASH CONTENT
-elligebleForAC = FUELEEZ.copy()
-df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
-(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
-plt.title("Graph 6 - Ash Content of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("Ash content (percentage of fuel weight)")
-plt.show()
-plt.close()
-```
-
-Ash content was shown to be mostly evenly spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.
-
-
-
-## **References {scratch work, planned to be refined on full completion}**
-
-Python packages
-
-```{txt}
-requests 2.31.0
-json 2.0.9 [DEFUALT PY]
-pandas 2.0.3
-skimpy {<attribute version difficulties>}
-matplotlib.pyplot {<attribute version difficulties>}
-```
-
-E-Sources
-
-```{txt}
-DATA SOUCE—--EIA
-https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data?frequency=monthly&data=ash-content;consumption-for-eg;consumption-for-eg-btu;consumption-uto;consumption-uto-btu;cost;cost-per-btu;generation;heat-content;receipts;receipts-btu;stocks;sulfur-content;total-consumption;total-consumption-btu;&sortColumn=period;&sortDirection=desc;
-
-POWER SOURCE ARTICLE>?<
-https://www.eia.gov/tools/faqs/faq.php?id=427&t=3
-
-Gen by source
-https://www.eia.gov/tools/faqs/faq.php?id=427&t=3
-
-Energ by source
-https://www.eia.gov/todayinenergy/detail.php?id=56980#:~:text=Fossil%20fuels%E2%80%94petroleum%2C%20natural%20gas,high%2013.2%20quads%20in%202022.
-
-Prod by source
-https://www.eia.gov/todayinenergy/detail.php?id=45096
-
-
-
-
-COAL TYPES
-https://www.eia.gov/energyexplained/coal/#:~:text=Types%20of%20coal,energy%20the%20coal%20can%20produce.
-
-
-STEAM TURBINE
-https://www.eia.gov/energyexplained/electricity/how-electricity-is-generated.php
-
-
-Heat rates
-https://www.eia.gov/electricity/annual/html/epa_08_02.html
-
-History primary to final
-https://www.sciencedirect.com/science/article/pii/S036054422300169X#fig13
-
-natgascs
-https://www.eia.gov/todayinenergy/detail.php?id=39012#:~:text=U.S.%20natural%20gas%2Dfired%20combined,capacity%20surpasses%20coal%2Dfired%20capacity&text=The%20amount%20of%20generating%20capacity,capacity%20in%20the%20United%20States.
-
-wastecoaldef
-https://www.eia.gov/tools/glossary/index.php?id=W
-
-refinedcoaldef
-https://www.eia.gov/tools/glossary/index.php?id=refined_coal
-
-Refined coal article
-https://www.eia.gov/todayinenergy/detail.php?id=53099
-
-natgaseee
-https://www.eia.gov/kids/energy-sources/natural-gas/
-
-biogaslf
-https://www.eia.gov/energyexplained/biomass/landfill-gas-and-biogas.php
-Municipal solid waste
-https://www.eia.gov/energyexplained/biomass/waste-to-energy.php
-
-Waste to energy
-https://www.eia.gov/energyexplained/biomass/waste-to-energy-in-depth.php
-
-biomass
-https://www.eia.gov/energyexplained/biomass/
-
-solar
-https://www.eia.gov/energyexplained/solar/
-
-CSP
-https://www.energy.gov/eere/solar/concentrating-solar-thermal-power-basics#:~:text=What%20is%20concentrating%20solar%2Dthermal,temperature%20fluid%20in%20the%20receiver.
-
-
-Solar pv
-https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics
-
-HEAT RATE DEF
-https://www.eia.gov/tools/faqs/faq.php?id=107&t=3#:~:text=The%20heat%20rate%20is%20the,Btu)%20per%20net%20kWh%20generated.
-
-PUMPED HYDRO
-https://www.eia.gov/todayinenergy/detail.php?id=41833
-
-CONHYDRO
-https://www.eia.gov/energyexplained/hydropower/
-
-Ph renewables
-https://www.eia.gov/todayinenergy/detail.php?id=57360
-
-WIND
-https://www.eia.gov/kids/energy-sources/wind/
-
-Offshore wind
-https://www.energy.gov/eere/wind/offshore-wind-research-and-development
-
-Adv and challenges
-https://www.energy.gov/eere/wind/advantages-and-challenges-wind-energy
-
-Offshore article
-https://www.eia.gov/todayinenergy/detail.php?id=52940
-
-Intermittency
-https://www.eia.gov/todayinenergy/detail.php?id=55719
-
-Solar cell physics
-https://www.energy.gov/eere/solar/solar-photovoltaic-cell-basics#:~:text=There%20are%20several%20different%20semiconductor,material%20as%20an%20electrical%20current.
-
-Petrol
-https://www.eia.gov/kids/energy-sources/oil/#:~:text=Petroleum%20means%20rock%20oil%20or,hydrocarbons%20contained%20in%20natural%20gas.
-
-
-Distillate fo def
-https://www.eia.gov/tools/glossary/index.php?id=Distillate%20fuel%20oil
-
-Resid fo def
-https://www.eia.gov/tools/glossary/index.php?id=residual%20fuel%20oil#:~:text=5%2C%20a%20residual%20fuel%20oil,government%20service%20and%20inshore%20powerplants.
-
-
-Coke def
-https://www.eia.gov/tools/glossary/index.php?id=Petroleum%20coke#:~:text=Petroleum%20coke%2C%20catalyst%3A%20The%20carbonaceous,carbon%20producing%20heat%20and%20CO2.
-Or
-https://www.eia.gov/dnav/pet/TblDefs/pet_pnp_capfuel_tbldef2.asp
-Second one is better
-
-Petcoke
-https://www.eia.gov/todayinenergy/detail.php?id=6430
-
-geotherm
-https://www.eia.gov/kids/energy-sources/geothermal/
-
-Waste oils
-https://www.eia.gov/todayinenergy/detail.php?id=13531#:~:text=The%20petroleum%20and%20coal%20products%20industry%20(mostly%20refineries)%20uses%20waste,23%25%20of%20its%20fuel%20use.
-
-nuclear
-https://www.eia.gov/energyexplained/nuclear/#:~:text=All%20nuclear%20power%20plants%20use,form%20of%20heat%20and%20radiation.
-
-Nuclear enerichment
-https://www.eia.gov/energyexplained/nuclear/the-nuclear-fuel-cycle.php#:~:text=Uranium%20enrichment,gaseous%20diffusion%20and%20gas%20centrifuge.
-
-Fast reactors
-https://www.ne.anl.gov/About/reactors/frt.shtml
-
-```
-
-
-
-# Full code
+NOTE: this is not intended for the document in-use (it should be and is at the end in the reproducability and code section), but is instead to be convenient when preparing the file
 
 ```{python}
 import requests
@@ -645,7 +79,7 @@ for timeloop in avtimes:
     print(response.text)
   
   dataofdatalist.append(data['response']['data'])
-  #print(timeloop)
+  print(timeloop)
 
 #dfTEST=pd.DataFrame(data['response']['data'])
 #for x in dataofdatalist:
@@ -813,8 +247,8 @@ elligebleForIOEff.remove('other gases')
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
 plt.title("input/output energy efficicency of fuelee sources")
-plt.ylabel("energy source")
-plt.xlabel("efficiecncy (KWH in per KWH out)")
+plt.xlabel("energy source")
+plt.ylabel("efficiecncy (KWH in per KWH out)")
 plt.show()
 plt.close()
 
@@ -829,8 +263,8 @@ elligebleForIOEff.remove('other gases')
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
 plt.title("Heat Rate of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("btu input per kwh output")
+plt.xlabel("energy source")
+plt.ylabel("btu input per kwh output")
 plt.show()
 plt.close()
 
@@ -840,8 +274,8 @@ elligebleForSC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
 (df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
 plt.title("Sulfur Content  of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("sulfur content (percentage of fuel weight)")
+plt.xlabel("energy source")
+plt.ylabel("sulfur content (percentage of fuel weight)")
 plt.show()
 plt.close()
 
@@ -850,8 +284,8 @@ elligebleForAC = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
 (df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
 plt.title("Ash Content  of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("Ash content (percentage of fuel weight)")
+plt.xlabel("energy source")
+plt.ylabel("Ash content (percentage of fuel weight)")
 plt.show()
 plt.close()
 
@@ -860,8 +294,8 @@ elligebleForCOST = FUELEEZ.copy()
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
 (df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
 plt.title("Fuel Unit Price of Fuelees")
-plt.ylabel("energy source")
-plt.xlabel("Cost Per BTU")
+plt.xlabel("energy source")
+plt.ylabel("Cost Per BTU")
 plt.show()
 plt.close()
 
@@ -872,8 +306,8 @@ fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[ell
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
 fuelCostPerKwhOut.plot(kind='barh')
 plt.title("Price per kwh Production (cost per kwh fuel/efficiency)")
-plt.ylabel("energy source")
-plt.xlabel("Cost Per Kwh fuel")
+plt.xlabel("energy source")
+plt.ylabel("Cost Per Kwh fuel")
 plt.show()
 plt.close()
 
@@ -889,4 +323,746 @@ df1['sectorDescription'].unique()
 df1['period'].unique()
 df1.head
 
+```
+
+## Improvement/progress needed notes
+
+-find more information about the sources without much to measure (solar, nuclear), as these sources have mostly been stripped in the analysis performed. There is a disbalance of information in favor of methods that use combustion
+
+-convert the scratch sources to normal sources
+
+-make the graphics not look bad: cropping, text size, x axis arrangement, and alternating colors of bars will be required
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--Start of paper---------------------------------------------------------------------------
+
+Carson Trego and Ryan Lalicker
+
+Dr. Susan VanderPlas
+
+STAT 850 - Group 1.21
+
+November 28, 2023
+
+## PURPOSE
+
+In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more complicated, and the audience is more engaged than ever.
+
+\^{\<this needs more sourcing but i may need to talk to someone who is better at finding historical trends\>}
+
+Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss individual characteristics, and not use those characteristics to form any recommendation.
+
+## **ABOUT THE DATA**
+
+The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\\\<SOURCE NEEDED\\\>}.
+
+The EIA hosts an Open Data program with the stated intention of making energy data \\"more accessible, understandable, relevant and responsive\\"$^{1}$. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country$^{1}$. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.
+
+For more information on obtaining the information for reproducibility, please go to the Reproducibility and Code section.
+
+## **BACKGROUND INFO**
+
+**Steam -Electric Power**
+
+A Steam-Electric Power Station is a powerstation that makes use of a steam engine$^{18}$. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator. 
+
+While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% $^{[28][29]}$.
+
+These steam turbines are critical components of the world's power infrastructure, as most of the world\\'s electricity is generated using them $^{[18]}$, and 53.2% of US electricity is generated using a steam turbine  $^{[18]}$. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don't require steam turbines. These alternatives will be discussed individually in the \\\@sources of power\\\@ section below.
+
+**Categorization** ####may need some sources here and there, specifically in the examples, will add later.
+
+Many of the metrics in this report are based on the use of fuel (e.g. The cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun's rays to generate electricity, so there is no need to "top up" the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.
+
+To organize the data for convenient reading, the power sources were put into two groups, fuelees and non-fuelees. Fuelees are power sources that require fuel to be regularly put in the generator to make power. Examples include: coal, natural gas, biomass, and nuclear. Non-fuelees, on the other hand, do not require regular input fuel to operate (although they may require regular maintenance). Examples include: wind, solar, and hydro-electric power.
+
+It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun's fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report. \
+
+## Background: Power Types
+
+####there is an unfathomable amount of overlap in our variables \[ residual fuel oil(petroleum fuel oil(petroleum))) \], i will consider making a visual venn diagram chart for this.
+
+**Coal Power**
+
+Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants $^{[5]}$. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced$^{[5]}$.
+
+Among the different types of coal power in the data set are the naturally occurring anthracite, bituminous, subbituminous, and lignite coal. The percentage of carbon varies for each with anthracite containing 86%-97%, bituminous containing 45%-86%, subbituminous containing 35%-45% carbon, and lignite containing 25%-65% carbon.  
+
+Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials $^{[15]}$
+
+Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has \\\@standard\\\@ pre-processing) is coal that has been modified to reduce impurities and improve heat content $^{[16]}$. Refined coal meets the standards set by the IRS definition of the substance{\\\<notice 2010-54\\\>}. Refined coal is often made by mixing proprietary additives into coal $^{[35]}$.
+
+**Synthetic??? Unsure if it means pyrolytic or something else.**\
+
+**Flammable Gas Power**
+
+\<intro about gas\>
+
+Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane$^{[21]}$. This is different from landfill gas, which occurs naturally when bacteria naturally decomposes organic materials into a gas that is approximately 50% methane and 50% carbon dioxide. This gas can be treated to remove carbon dioxide and other gasses, turning it into biomethane, or burned directly for energy.
+
+**Biomass**
+
+Biomass is organic material derived from living organisms. Biomass can include wood, grasses, foods, excrement, and biogenic portions of municipal solid waste$^{[4]}$. Biomass can be burned directly or turned into other useful products such as methane or chemical feedstocks$^{[4][37][38]}$.
+
+**Biogenic Municipal Solid Waste**
+
+Municipal solid waste is the formal term for garbage. Municipal solid waste can contain a mixture of organic flammable compounds and non-combustible materials$^{[37]}$. The biogenic municipal solid waste is the parts of garbage that is produced by living organisms. Examples of this include discarded food, paper, cardboard. $^{[4]}$.Municipal solid waste can be burned directly in waste to energy plants converted to combustible gas at landfills, or converted into other chemical products $^{[38]}$$^{[4]}$.$^{[37]}$\
+
+**SOLAR POWER**
+
+Solar power is energy derived from energy directly produced by the sun. There are two main types: concentrated and photovoltaic. Concentrated solar power plants collect the energy from the sun's rays into a small area using mirrors, to create heat, which is similar to using a magnifying glass on a bright day to start fires $^{[6]}$. This heat can then be used to drive a \\\@generator\\\@$^{[6]}$. 
+
+Photovoltaic solar energy, also called solar panels, use semiconductors to directly convert light into electricity without any moving parts $^{[31]}$. Photovoltaic panels output minimal power at night, and are considered an intermittent form of power that can benefit from energy storage systems $^{[39]}$.
+
+**HYDRO ELECTRIC**
+
+Hydroelectric power is power extracted from water flowing from a higher point of altitude to a lower point of altitude $^{[19]}$ $^{[20]}$. There are two main kinds of hydroelectric power. The first is conventional hydroelectric power which uses naturally occurring water sources as a way to generate electricity$^{[19]}$ . These water sources can replenish themselves via the water cycle, and shouldn't need to be refilled$^{[19]}$. 
+
+The second form of hydroelectric power in our data set is pumped. Pumped hydroelectric power uses water from reservoirs that are filled using mechanical pumps $^{[20]}$. These pumps require electricity, and are usually powered when energy is  in lower demand$^{[20]}$. This allows the reservoir to extract that energy when demand goes up$^{[20]}$. Pumped hydro power is not a method of generating new energy into the grid, and is more so a method of storing energy that has already been generated$^{[20]}$. Energy storage systems can help increase the reliability of the grid, especially when intermittent generators (such as solar and wind power) are in use $^{[22]}$$^{[39]}$. Pumped hydro power is currently the largest source of energy storage in the United States, surpassing other forms of storage, such as large scale batteries $^{[20]}$.
+
+**WIND POWER**
+
+Wind power is a form of electricity extracted from the motion of the wind, most commonly by using large generators called wind turbines. There are two main types of wind turbines depending on the location. If the turbines are built inland, they are most likely onshore wind turbines. Onshore wind turbines are built on land and typically in areas that are not densely populated $^{[0][40]}$. The output of an onshore wind turbine is dependent on the strength of the wind in the area, thus a wind turbine is considered an intermittent form of power, and can benefit from power storage systems $^{[39]}$.
+
+Conversely, offshore wind turbines are wind generators built off-land, usually on the ocean near the coasts. These turbines can potentially offer more powerful and consistent electricity than onshore wind, but are more difficult to establish and maintain $^{[40][26][7]}$.
+
+**PETROLEUM POWER\
+**Petroleum describes a series of products made from crude oil $^{[27]}$. These products can vary significantly, but in the context of this document we will focus on three main petroleum products: distillate fuel oil, residual fuel oil, and petroleum coke.
+
+Distillate fuel oil is a liquid product obtained from distilling crude oil $^{[27]}$. Distillate fuel oil has a higher boiling point than gasoline and kerosine, and is often used in heating oil and diesel fuel$^{[27][14]}$.
+
+Residual fuel oil is a liquid product obtained from distilling crude oil  $^{[27]}$. With a boiling point of greater than 1,050F, this fuel can be burned in steam boats and powerplants or mixed with distillate fuel oil to be used in certain types of diesel engines $^{[14]}$. 
+
+Petroleum coke is a combustible, carbon-based, solid material obtained during petroleum refining operations $^{[2]}$. Despite being considered a waste byproduct$^{[36]}$. It can be used in power generation, metal refining, and cement production $^{[2]}$.
+
+\
+
+**Waste Oils and OtherOoils ##look into this one in particular**
+
+Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes $^{[36]}$. These oils can still be burned for heating and energy purposes $^{[36]}$.
+
+**Geothermal Power**
+
+Geothermal power is energy obtained from the natural heat given off by the internals of the earth $^{[13]}$. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed {\<SOURCE NEEDED\>}.\
+
+**Nuclear Power**
+
+Nuclear power is energy obtained from heat generated by splitting large atomic nuclei $^{[24]}$. Nuclear power plants typically rely on enriched uranium fuel $^{[25]}$, although some forms of reactors do not require enriched uranium and can use other fuels $^{[8]}$\
+
+## **ANALYSIS**
+
+**Heat Rate**
+
+The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen {\<presumebly\>} to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.  Note that the higher values are less efficient.
+
+```{python}
+#HEAT RATE
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
+plt.title("Graph 1 - Heat Rate of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("btu input per kwh output")
+plt.show()
+plt.close()
+
+```
+
+The data on this table is functionally equivalent to the Thermal Efficiency section, so analysis will continue there.
+
+**Thermal Efficiency**
+
+Thermal efficiency is the ratio of energy used in a generator vs the amount of useful energy produced. For example, if you put in 10 units of energy, and get back 5 units of electricity, the thermal efficiency is 50%. Thermal efficiency is, to some, easier to understand than the heat rate. It can be used in other calculations, some of which will be mentioned further in the document. Below is Graph 2, which carts the available and sensible power types and their thermal efficiencies. Unlike in Graph 1, higher values represent higher efficiency.
+
+```{python}
+#EFFICIENCY 
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
+plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
+plt.xlabel("energy source")
+plt.ylabel("efficiecncy (KWH in per KWH out)")
+plt.show()
+plt.close()
+```
+
+#consider removing the "other"
+
+Solid waste has been shown to be the least efficient of the relevant types, below 20%. Natural gas was shown to be significantly more thermally efficient than most other power sources, with a thermal efficiency over 40%. This higher efficiency is partially due to the different types of generators used in natural gas power plants $^{[34]}$. These generators, called combined cycle power plants, use multiple heat engines together to extract more energy during combustion$^{[34]}$. This arrangement is primarily used for natural gas, which contributes to the large spike in efficiency for natural gas systems$^{[34]}$.
+
+**COST PER MILLION BTU**
+
+**#I FORGOT TO LABLE THE AXIS AS MILLION**
+
+Fuel costs can be an important factor in the cost of operation for any machine, and electrical systems are no different. While the cost of fuel could be measured in kilograms, barrels, gallons, or any other physical unit, this may not be a fair measurement. The amount of energy in a kilogram of fuel can vary dramatically, so to account for those differences, the cost of fuels was measured by the amount of energy in dollars per million BTUs. Graph 3 below is a chart of available and sensible fuel types and their cost per million BTUs. In this graph higher values are more expensive.
+
+```{python}
+#COST
+elligebleForCOST = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
+plt.title("Graph 3 - Fuel Unit Price of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("Cost Per BTU")
+plt.show()
+plt.close()
+```
+
+The petroleum products, with the exception of petroleum coke, are each more expensive than any other source in Graph 3. Fuels such as coal and natural gas are more or less similar in price, and the difference between coal and natural gas with petroleum is dramatic. Cost is likely a contributing factor of why petroleum is only around 0.4% of total US electrical energy produced despite being produced in large quantities and being one of the primary sources of overall energy $^{[9][10][23]}$.
+
+**Unit Cost for Fuel**
+
+The cost per BTU of fuel does not fully capture the cost of fuel for a given power source, as different methods of generation can differ significantly in how efficient they can capture energy from the fuel. Using our thermal efficiency numbers from earlier, we can approximate the cost of fuel per Kwh by taking the cost per Kwh and dividing it by the thermal efficiency of the generator type. Graph 4 below is a chart of all the sensible and available generator types and their cost of fuel per Kwh produced. As in Graph 3, higher values imply a higher cost.
+
+```{python}
+#COSTPERKWH
+elligebleForCOST = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
+fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
+fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
+fuelCostPerKwhOut.plot(kind='barh')
+plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
+plt.xlabel("energy source")
+plt.ylabel("Cost Per Kwh fuel")
+plt.show()
+plt.close()
+```
+
+Once the efficiency is factored in, natural gas sources show to be less expensive than coal per kilowatt of generated electricity, while petroleum remains expensive per unit of energy. Petroleum coke, refined coal, and waste coal all show uniquely low values.
+
+It is important to note that this solely measures the cost for fuel, and the total cost for electricity generation is more than what is shown above, as electricity generation requires infrastructure, labor, and other associated costs.
+
+**Sulfur Content**
+
+The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk {\<SOURCE NEEDED\>}In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel's total mass are shown. Note that higher values imply a higher sulfur content.
+
+```{python}
+#SULFUR CONTENT
+elligebleForSC = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
+plt.title("Graph 5 - Sulfur Content  of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("sulfur content (percentage of fuel weight)")
+plt.show()
+plt.close()
+```
+
+Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke{\<source needed\>}{\<this could be a huge jump in logic, maybe petroleum coke burners arent that protected?\>}
+
+Unsurprisingly, refined coal (coal which has been processed to remove impurities and improve heat content) has some of the lowest values for sulfur content. 
+
+**Ash Content**
+
+Many combustible fuels produce a solid, incombustible substance, called ash, after being burned{\<SOURCE NEEDED?\>}. While the ashes of combustible fuels can be useful for a variety of products{\<\>}, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel's total mass, where higher values mean a higher ash content.
+
+```{python}
+#ASH CONTENT
+elligebleForAC = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
+plt.title("Graph 6 - Ash Content of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("Ash content (percentage of fuel weight)")
+plt.show()
+plt.close()
+```
+
+Ash content was shown to be mostly evenly spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.
+
+## **Reproducibility and Code**
+
+```{python}
+import requests
+import json
+import pandas as pd
+from skimpy import skim
+import matplotlib.pyplot as plt
+
+#AVAILABLE TIMES
+avtimes=["01","02","03","04","05","06","07","08"]
+
+dataofdatalist=[]
+for timeloop in avtimes:
+  # API KEY
+  api_key = 'RucYMPTp3yg6yYY0ktOEnbxaFDNvsDXDIQfGV3NK'
+  
+  #API URL
+  apiUrl = "https://api.eia.gov/v2/electricity/electric-power-operational-data/data/?frequency=monthly&data[0]=ash-content&data[1]=consumption-for-eg&data[2]=consumption-for-eg-btu&data[3]=consumption-uto&data[4]=consumption-uto-btu&data[5]=cost&data[6]=cost-per-btu&data[7]=generation&data[8]=heat-content&data[9]=receipts&data[10]=receipts-btu&data[11]=stocks&data[12]=sulfur-content&data[13]=total-consumption&data[14]=total-consumption-btu&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000"
+  
+  #Combined API URL and API key, will be used as a single input inton the api function
+  urlAndKey = f"{apiUrl}&api_key={api_key}"
+  
+  # HEADER, an input to the api
+  headers = {
+    "X-Params": json.dumps({
+      "frequency": "monthly",
+      "data": [
+        "ash-content",
+        "consumption-for-eg",
+        "consumption-for-eg-btu",
+        "consumption-uto",
+        "consumption-uto-btu",
+        "cost",
+        "cost-per-btu",
+        "generation",
+        "heat-content",
+        "receipts",
+        "receipts-btu",
+        "stocks",
+        "sulfur-content",
+        "total-consumption",
+        "total-consumption-btu"
+      ],
+      "facets": {},
+      "start": "2023-"+timeloop,
+      "end": "2023-"+timeloop,
+      "sort": [
+        {
+          "column": "period",
+          "direction": "desc"
+        }
+      ],
+      "offset": 0,
+      "length": 5000 #ADJUSTABLE; WILL EXTEND WHEN I GET MORE SPACE MY COMPUTER IS MELTING
+    })
+  }
+  
+  # GET REQUEST, as stated in the EIA method section
+  response = requests.get(urlAndKey, headers=headers)
+  
+  # Response Status code (200 = success)
+  if response.status_code == 200:
+    data = response.json()  # read response
+  else:
+    print(f"REQUEST FAILED---CODE: {response.status_code}")
+    print(response.text)
+  
+  dataofdatalist.append(data['response']['data'])
+  print(timeloop)
+
+#dfTEST=pd.DataFrame(data['response']['data'])
+#for x in dataofdatalist:
+#  print(111)
+#  dataofdatalist[x]=pd.DataFrame(dataofdatalist[x])
+
+
+#Yeah yeah, this is horrfic design, may change it later
+df___i=pd.DataFrame(dataofdatalist[0])
+df__ii=pd.DataFrame(dataofdatalist[1])
+df_iii=pd.DataFrame(dataofdatalist[2])
+df__iv=pd.DataFrame(dataofdatalist[3])
+df___v=pd.DataFrame(dataofdatalist[4])
+df__vi=pd.DataFrame(dataofdatalist[5])
+df_vii=pd.DataFrame(dataofdatalist[6])
+dfviii=pd.DataFrame(dataofdatalist[7])
+
+#API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them
+metalist=[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]
+dfLONG=pd.concat(metalist, ignore_index=True)
+len(dfLONG['period'])
+
+
+
+
+
+
+fueleeNotDict={
+  'all coal products'                           :'FUELEE',
+  'all fuels'                                   :'FUELEE',
+  'all renewables'                              :'NULL',
+  'anthracite coal'                             :'FUELEE',
+  'biogenic municipal solid waste'              :'FUELEE',
+  'biomass'                                     :'FUELEE',
+  'bituminous coal'                             :'FUELEE',
+  'bituminous coal and synthetic coal'          :'FUELEE',
+  'coal, excluding waste coal'                  :'FUELEE',
+  'conventional hydroelectric'                  :'NON-FUELEE',
+  'distillate fuel oil'                         :'FUELEE',
+  'estimated small scale solar photovoltaic'    :'NON-FUELEE',
+  'estimated total solar'                       :'NON-FUELEE',
+  'estimated total solar photovoltaic'          :'NON-FUELEE',
+  'fossil fuels'                                :'FUELEE',
+  'geothermal'                                  :'NON-FUELEE',
+  'hydro-electric pumped storage'               :'NULL',
+  'landfill gas'                                :'FUELEE',
+  'lignite coal'                                :'FUELEE',
+  'municiapl landfill gas'                      :'FUELEE',
+  'natural gas'                                 :'FUELEE',
+  'natural gas & other gases'                   :'FUELEE',
+  'nuclear'                                     :'FUELEE',
+  'offshore wind turbine'                       :'NON-FUELEE',
+  'onshore wind turbine'                        :'NON-FUELEE',
+  'other'                                       :'NULL',
+  'other gases'                                 :'FUELEE',
+  'other renewables'                            :'NULL',
+  'petroleum'                                   :'FUELEE',
+  'petroleum coke'                              :'FUELEE',
+  'petroleum liquids'                           :'FUELEE',
+  'refined coal'                                :'FUELEE',
+  'renewable'                                   :'NULL',
+  'renewable waste products'                    :'UNSURE',
+  'residual fuel oil'                           :'FUELEE',
+  'solar'                                       :'NON-FUELEE',
+  'solar photovoltaic'                          :'NON-FUELEE',
+  'solar thermal'                               :'NON-FUELEE',
+  'subbituminous coal'                          :'FUELEE',
+  'waste coal'                                  :'FUELEE',
+  'waste oil and other oils'                   :'FUELEE',
+  'wind'                                        :'NON-FUELEE',
+  'wood and wood wastes'                        :'FUELEE'
+}
+
+FUELEEZ=[key for key, val in fueleeNotDict.items() if val == 'FUELEE']
+
+#'FUELEE' (uses fuel)
+#'NON-FUELEE' (doesnt use fuel)
+#'NULL' (neither/both)
+#'UNSURE' (unsure)
+
+
+
+df1=dfLONG
+
+
+pd.set_option('display.max_columns',40)
+df1.groupby('fuelTypeDescription').count()
+
+dfash=df1.groupby('fuelTypeDescription')['ash-content'].mean()
+dfsulfur=df1.groupby('fuelTypeDescription')['sulfur-content'].mean()
+dfash.plot(kind='barh')
+plt.show()
+plt.close()
+dfsulfur.plot(kind='barh')
+plt.show()
+plt.close()
+dfsulfur
+dfash
+# Sulfur content higher in bituminous coal, bituminous coal and synthetic coal,
+# coal, excluding waste coal , lignite coal, petroleum, petroleum coal, and waste coal.
+
+
+plt.close('all')
+df1['cost-per-btu']
+
+
+dfcost=df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()
+dfcost.plot(kind='barh')
+plt.show()
+plt.close()
+dfcost
+
+if False:
+  # These next two graphs are likely not useful but I made them anyway.
+  dfAshByState = df1.groupby('location')['ash-content'].mean()
+  dfAshByState.plot(kind='barh')
+  plt.show()
+  plt.close()
+  dfAshByState
+  
+  dfSulferByState = df1.groupby('location')['sulfur-content'].mean()
+  dfSulferByState.plot(kind='barh')
+  plt.show()
+  plt.close()
+  dfSulferByState
+
+
+# Looking at generation by fuel type - probably not useful in its current form.
+dfgen=df1.groupby('fuelTypeDescription')['generation'].mean()
+dfgen.plot(kind='barh')
+plt.show()
+plt.close()
+dfgen
+
+# Some bars seem to follow the ash and sulfer content, which would be expected.
+# Some do not - may want to take a closer look.
+
+
+# Consumption
+dfCon=df1.groupby('fuelTypeDescription')['total-consumption-btu'].mean()
+dfCon.plot(kind='barh')
+plt.show()
+plt.close()
+dfCon
+
+
+
+#######
+df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000
+#NOTE!!!! THE OTHER HEAT RATE IS BUGGED, BUT THIS ONE SEEMS TO WORK JUST FINE
+
+#1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412)
+#EFFICIENCY 
+
+#(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[FUELEEZ].plot(kind='barh')
+#plt.show()
+#plt.close()
+FUELEEZ
+
+
+#EFFICIENCY 
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
+plt.title("input/output energy efficicency of fuelee sources")
+plt.xlabel("energy source")
+plt.ylabel("efficiecncy (KWH in per KWH out)")
+plt.show()
+plt.close()
+
+kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+
+
+
+#HEAT RATE
+elligebleForIOEff=FUELEEZ.copy()
+elligebleForIOEff.remove('anthracite coal')
+elligebleForIOEff.remove('other gases')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
+plt.title("Heat Rate of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("btu input per kwh output")
+plt.show()
+plt.close()
+
+
+#SULFUR CONTENT
+elligebleForSC = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
+plt.title("Sulfur Content  of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("sulfur content (percentage of fuel weight)")
+plt.show()
+plt.close()
+
+#ASH CONTENT
+elligebleForAC = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
+plt.title("Ash Content  of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("Ash content (percentage of fuel weight)")
+plt.show()
+plt.close()
+
+#COST
+elligebleForCOST = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
+plt.title("Fuel Unit Price of Fuelees")
+plt.xlabel("energy source")
+plt.ylabel("Cost Per BTU")
+plt.show()
+plt.close()
+
+#COSTPERKWH
+elligebleForCOST = FUELEEZ.copy()
+df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
+fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
+fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
+fuelCostPerKwhOut.plot(kind='barh')
+plt.title("Price per kwh Production (cost per kwh fuel/efficiency)")
+plt.xlabel("energy source")
+plt.ylabel("Cost Per Kwh fuel")
+plt.show()
+plt.close()
+
+
+df1.columns
+df1.head()
+
+
+df1.groupby('fuelTypeDescription')['heat-content'].mean()[elligebleForCOST]
+
+df1['stocks-units'].unique()
+df1['sectorDescription'].unique()
+df1['period'].unique()
+df1.head
+```
+
+## **References {scratch work, planned to be refined on full completion}**
+
+Python packages
+
+```{txt}
+requests 2.31.0
+json 2.0.9 [DEFUALT PY]
+pandas 2.0.3
+skimpy {<attribute version difficulties>}
+matplotlib.pyplot {<attribute version difficulties>}
+```
+
+E-Sources
+
+```{txt}
+0-Adv and challenges
+Advantages and challenges of wind energy. (n.d.). Energy.gov. https://www.energy.gov/eere/wind/advantages-and-challenges-wind-energy
+
+
+1-DATA SOURCE—EIA
+API Dashboard. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data?frequency=monthly&data=ash-content;consumption-for-eg;consumption-for-eg-btu;consumption-uto;consumption-uto-btu;cost;cost-per-btu;generation;heat-content;receipts;receipts-btu;stocks;sulfur-content;total-consumption;total-consumption-btu;&sortColumn=period;&sortDirection=desc;
+
+
+2-Petcoke
+Asian demand spurs U.S. net exports of petroleum Coke to higher levels in early 2012. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=6430
+
+
+3-biogaslf
+Biogas-renewable natural gas. (2022, October 18). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/landfill-gas-and-biogas.php
+
+
+4-biomass
+Biomass explained. (2023, June 30). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/
+
+
+5-COAL TYPES
+Coal explained. (2022, October 19). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/coal/#:~:text=Types%20of%20coal,energy%20the%20coal%20can%20produce
+
+
+6-CSP
+Concentrating solar-thermal power basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/concentrating-solar-thermal-power-basics#:~:text=What%20is%20concentrating%20solar%2Dthermal,temperature%20fluid%20in%20the%20receiver
+
+
+7-Offshore article
+Developers plan to add 6 gigawatts of U.S. offshore wind capacity through 2029. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=52940
+
+
+8-Fast reactors
+Fast reactor technology - Reactors designed/built by Argonne national laboratory. (2020, April 1). Nuclear Engineering Division of Argonne National Laboratory (Argonne). https://www.ne.anl.gov/About/reactors/frt.shtml
+
+
+9-prod by source
+Fossil fuels account for the largest share of U.S. energy production and consumption. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=45096
+
+
+10-Gen by source
+Frequently asked questions (FAQs). (2023, March 2). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/faqs/faq.php?id=427&t=3
+11-HEAT RATE DEF
+Frequently asked questions (FAQs). (n.d.). U.S. Energy Information Administration (EIA).
+
+
+https://www.eia.gov/tools/faqs/faq.php?id=107&t=3#:~:text=The%20heat%20rate%20is%20the,Btu)%20per%20net%20kWh%20generated
+
+
+12-Gen by Source???
+Frequently Asked Questions (FAQs). (2023, March 2). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/faqs/faq.php?id=427&t=3
+
+
+13-geotherm
+Geothermal. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/geothermal/
+
+
+14-Distillate fo def
+Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=Distillate%20fuel%20oil
+
+
+15-wastecoaldef
+Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=W
+
+
+16-refinedcoaldef
+Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=refined_coal
+
+
+17-Resid fo def
+Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=residual%20fuel%20oil#:~:text=5%2C%20a%20residual%20fuel%20oil,government%20service%20and%20inshore%20powerplants
+
+
+18-STEAM TURBINE
+How electricity is generated. (2022, November 9). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/electricity/how-electricity-is-generated.php
+
+
+19-CONHYDRO
+Hydropower explained. (2023, April 20). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/hydropower/
+
+
+20-PUMPED HYDRO
+Most pumped storage electricity generators in the U.S. were built in the 1970s. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=41833
+
+
+21-natgaseee
+Natural gas. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/natural-gas/
+
+
+22-Ph renewables
+New pumped-storage capacity in China is helping to integrate growing wind and solar power. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=57360
+
+
+23-Energ by source
+Nonfossil fuel energy sources accounted for 21% of U.S. energy consumption in 2022. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=56980#:~:text=Fossil%20fuels%E2%80%94petroleum%2C%20natural%20gas,high%2013.2%20quads%20in%202022
+
+
+24-nuclear
+Nuclear explained. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/nuclear/#:~:text=All%20nuclear%20power%20plants%20use,form%20of%20heat%20and%20radiation
+
+
+25-Nuclear enerichment
+The nuclear fuel cycle. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/nuclear/the-nuclear-fuel-cycle.php#:~:text=Uranium%20enrichment,gaseous%20diffusion%20and%20gas%20centrifuge
+
+
+26-Offshore wind
+Offshore wind research and development. (n.d.). Energy.gov. https://www.energy.gov/eere/wind/offshore-wind-research-and-development
+
+
+27-Petrol
+Oil (petroleum). (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/oil/#:~:text=Petroleum%20means%20rock%20oil%20or,hydrocarbons%20contained%20in%20natural%20gas
+
+
+28-History primary to final
+Pinto, R., Henriques, S. T., Brockway, P. E., Heun, M. K., & Sousa, T. (2023). The rise and stall of world electricity efficiency:1900–2017, results and insights for the renewables transition. Energy, 269, 126775. https://doi.org/10.1016/j.energy.2023.126775
+
+
+29-??? Heat rates
+SAS output. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/electricity/annual/html/epa_08_02.html
+
+
+30-solar
+Solar explained. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/solar/
+
+
+31-Solar cell physics
+Solar photovoltaic cell basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/solar-photovoltaic-cell-basics#:~:text=There%20are%20several%20different%20semiconductor,material%20as%20an%20electrical%20current
+
+
+32-Solar pv
+Solar photovoltaic technology basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics
+
+
+33-coke def
+Table definitions, sources, and explanatory notes. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/dnav/pet/TblDefs/pet_pnp_capfuel_tbldef2.asp
+
+
+34-natgascs
+U.S. natural gas-fired combined-cycle capacity surpasses coal-fired capacity. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=39012#:~:text=U.S.%20natural%20gas%2Dfired%20combined,capacity%20surpasses%20coal%2Dfired%20capacity&text=The%20amount%20of%20generating%20capacity,capacity%20in%20the%20United%20States
+
+
+35-Refined coal article
+U.S. refined coal production and consumption declines with the expiration of a tax credit. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=53099
+
+
+36-Waste oils
+Waste fuels are a significant energy source for U.S. manufacturers. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=13531#:~:text=The%20petroleum%20and%20coal%20products%20industry%20(mostly%20refineries)%20uses%20waste,23%25%20of%20its%20fuel%20use
+
+
+37-Waste to energy
+Waste-to-energy (MSW) in depth. (2022, December 28). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/waste-to-energy-in-depth.php
+
+
+38-Municipal solid waste
+Waste-to-energy (MSW). (2022, October 31). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/waste-to-energy.php
+
+
+39-Intermittency
+Wind, solar, and batteries increasingly account for more new U.S. power capacity additions. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=55719
+
+
+40-WIND
+Wind. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/wind/
 ```
