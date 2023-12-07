@@ -207,7 +207,17 @@ Collected from Energy Information Agency (EIA)
 
 ## Background Information
 
-Something here !!!!
+Two groups
+
+-   Fuelees
+
+-   Non-Fuelees
+
+Two units
+
+-   Btu - British thermal units
+
+-   kWh - kilowatt hours
 
 ------------------------------------------------------------------------
 
@@ -223,7 +233,7 @@ elligebleForIOEff.remove('other gases')
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
 plt.title("Graph 1 - Heat Rate of Fuelees")
 plt.ylabel("energy source")
-plt.xlabel("btu input per kwh output")
+plt.xlabel("Btu input per kWh output")
 plt.show()
 plt.close()
 
@@ -231,7 +241,7 @@ plt.close()
 
 ------------------------------------------------------------------------
 
-## Thermal efficiency
+## Thermal Efficiency
 
 ```{python}
 #| echo: false
@@ -241,16 +251,16 @@ elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
-plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
+plt.title("Graph 2 - Input/Output Energy Efficicency of Fuelee Sources")
 plt.ylabel("energy source")
-plt.xlabel("efficiecncy (KWH in per KWH out)")
+plt.xlabel("efficiecncy (kWh in per kWh out)")
 plt.show()
 plt.close()
 ```
 
 ------------------------------------------------------------------------
 
-## Cost Per Million BTU
+## Cost Per Million Btu
 
 ```{python}
 #| echo: false
@@ -260,7 +270,7 @@ df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.
 (df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
 plt.title("Graph 3 - Fuel Unit Price of Fuelees")
 plt.ylabel("energy source")
-plt.xlabel("Cost Per Million BTU")
+plt.xlabel("Cost Per Million Btu")
 plt.show()
 plt.close()
 ```
@@ -277,17 +287,16 @@ df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.
 fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
 fuelCostPerKwhOut.plot(kind='barh')
-plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
+plt.title("Graph 4 - Price per kWh Production (cost per kWh fuel/efficiency)")
 plt.ylabel("energy source")
-plt.xlabel("Cost Per Kwh fuel")
+plt.xlabel("Cost Per kWh fuel")
 plt.show()
 plt.close()
 ```
 
-
 ------------------------------------------------------------------------
 
-## Sulfer Content
+## Sulfur Content
 
 ```{python}
 #| echo: false
@@ -302,7 +311,8 @@ plt.show()
 plt.close()
 ```
 
-----------------------------------------------------------
+------------------------------------------------------------------------
+
 ## Ash Content
 
 ```{python}
@@ -313,8 +323,7 @@ df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.gro
 (df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
 plt.title("Graph 6 - Ash Content of Fuelees")
 plt.ylabel("energy source")
-plt.xlabel("Ash content (percentage of fuel weight)")
+plt.xlabel("ash content (percentage of fuel weight)")
 plt.show()
 plt.close()
 ```
-
