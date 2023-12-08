@@ -184,7 +184,7 @@ STAT 850 - Group 1.21
 
 November 28, 2023
 
-## PURPOSE
+## **PURPOSE**
 
 In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more complicated, and the audience is more engaged than ever.
 
@@ -581,7 +581,7 @@ plt.close()
 
 Ash content was shown to be mostly evenly spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.
 
-## **References {scratch work, planned to be refined on full completion}**
+## **REFERENCES**
 
 Python packages
 

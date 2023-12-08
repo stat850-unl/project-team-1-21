@@ -105,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>STAT 850 - Group 1.21</p>
 <p>November 28, 2023</p>
 <section id="purpose" class="level2">
-<h2 class="anchored" data-anchor-id="purpose">PURPOSE</h2>
+<h2 class="anchored" data-anchor-id="purpose"><strong>PURPOSE</strong></h2>
 <p>In the recent past and for many today, the sole concern when talking about electricity supply was reliability: If I flip the switch, do my lights turn on every single time. As consumers, reliability is paramount, but there have been growing concerns about other factors, and new ways of generating electricity have set many power sources apart from the rest. Concerns about mitigation of pollution have also become more pressing as information about the potential harm of power generation has become more widely available. Grid power is more complicated, and the audience is more engaged than ever.</p>
 <p>Being an informed consumer and voter is difficult task when topic is complicated, and power infrastructure is a deeply technical and interconnected topic. We would like to provide some helpful information to people interested in learning more about energy sources and their characteristics, but there will be no conclusion, and no final winner. Whether or not one power source is better than another depends largely on there area and time of construction, how it is operated, and the values of the consumers. As such, this report will only discuss individual characteristics, and not use those characteristics to form any recommendation.</p>
 </section>
@@ -173,8 +173,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Warning: package 'DiagrammeR' was built under R version 4.2.3</code></pre>
 </div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-c9144f3fe3c1be4a5da3" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-c9144f3fe3c1be4a5da3">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = LR]\n\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\npwr  [label = \"generators\"]\n\nfee [label = \"fuelee\"]\nnfee [label =  \"non-fuelee\"]\n\ncoal [label = \"coal\", fillcolor=\"#5A5A5A\"]\npetrol [label = \"petroleum\",fillcolor=\"red\"]\nngog [label = \"natural gas and other gasses\", fillcolor=\"mediumpurple\"]\nmsw [label = \"municipal solid waste\", fillcolor=\"brown\"]\nnucl [label = \"nuclear\", fillcolor=\"green\"]\n\natc [label = \"anthracite\", fillcolor=\"#5A5A5A\"]\nbands [label = \"bituminous and synthetic coal\", fillcolor=\"#5A5A5A\"]\nbit [label = \"bituminous\", fillcolor=\"#5A5A5A\"]\nsynth [label = \"synthetic\", fillcolor=\"#5A5A5A\"]\nsubbit [label = \"subbituminous\", fillcolor=\"#5A5A5A\"]\nlign [label = \"lignite\", fillcolor=\"#5A5A5A\"]\n\nlpp [label = \"liquid petroleum products\",fillcolor=\"red\"]\ndfo [label = \"distillate fuel oil\",fillcolor=\"red\"]\nrfo [label = \"residual fuel oil\",fillcolor=\"red\"]\npcoke [label = \"petroleum coke\",fillcolor=\"red\"]\n\nnatgas [label = \"natural gas\", fillcolor=\"mediumpurple\"]\nothgas [label = \"other gasses\", fillcolor=\"mediumpurple\"]\n\n# edge definitions with the node IDs\n#var ->{cat, quant} \n#cat -> {nomi, ord}\n#quant -> {disc, cont}\n\npwr->{fee, nfee}\nfee->{coal, petrol, ngog, msw, nucl}\n\ncoal->{atc, bands, subbit,lign}\nbands->{bit, synth}\n\npetrol->{lpp, pcoke}\nlpp->{dfo,rfo}\n\nngog->{natgas, othgas}\n\nslr [label = \"solar\", fillcolor=\"orange\"]\nwind [label = \"wind\", fillcolor=\"grey\"]\nhydro [label = \"hydro\",fillcolor=\"lightblue\"]\ngthr [label = \"geothermal\", fillcolor=\"yellow\"]\n\ncsp [label = \"concentrated solar power\", fillcolor=\"orange\"]\npv [label = \"solar photovoltaic (panels)\", fillcolor=\"orange\"]\n\nonshr [label = \"onshore wind\",fillcolor=\"grey\"]\nofsh [label = \"offshore wind\",fillcolor=\"grey\"]\n\nchyd [label = \"conventional hydroelectric\",fillcolor=\"lightblue\"]\nphyd [label = \"pumped hydroelectric\",fillcolor=\"lightblue\"]\n\nnfee->{slr, wind, hydro, gthr}\n\nslr->{pv, csp}\n\nwind->{onshr,ofsh}\n\nhydro->{chyd,phyd}\n\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1289d36f02f6f453f60e" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-1289d36f02f6f453f60e">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = LR]\n\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\npwr  [label = \"generators\"]\n\nfee [label = \"fuelee\"]\nnfee [label =  \"non-fuelee\"]\n\ncoal [label = \"coal\", fillcolor=\"#5A5A5A\"]\npetrol [label = \"petroleum\",fillcolor=\"red\"]\nngog [label = \"natural gas and other gasses\", fillcolor=\"mediumpurple\"]\nmsw [label = \"municipal solid waste\", fillcolor=\"brown\"]\nnucl [label = \"nuclear\", fillcolor=\"green\"]\n\natc [label = \"anthracite\", fillcolor=\"#5A5A5A\"]\nbands [label = \"bituminous and synthetic coal\", fillcolor=\"#5A5A5A\"]\nbit [label = \"bituminous\", fillcolor=\"#5A5A5A\"]\nsynth [label = \"synthetic\", fillcolor=\"#5A5A5A\"]\nsubbit [label = \"subbituminous\", fillcolor=\"#5A5A5A\"]\nlign [label = \"lignite\", fillcolor=\"#5A5A5A\"]\n\nlpp [label = \"liquid petroleum products\",fillcolor=\"red\"]\ndfo [label = \"distillate fuel oil\",fillcolor=\"red\"]\nrfo [label = \"residual fuel oil\",fillcolor=\"red\"]\npcoke [label = \"petroleum coke\",fillcolor=\"red\"]\n\nnatgas [label = \"natural gas\", fillcolor=\"mediumpurple\"]\nothgas [label = \"other gasses\", fillcolor=\"mediumpurple\"]\n\n# edge definitions with the node IDs\n#var ->{cat, quant} \n#cat -> {nomi, ord}\n#quant -> {disc, cont}\n\npwr->{fee, nfee}\nfee->{coal, petrol, ngog, msw, nucl}\n\ncoal->{atc, bands, subbit,lign}\nbands->{bit, synth}\n\npetrol->{lpp, pcoke}\nlpp->{dfo,rfo}\n\nngog->{natgas, othgas}\n\nslr [label = \"solar\", fillcolor=\"orange\"]\nwind [label = \"wind\", fillcolor=\"grey\"]\nhydro [label = \"hydro\",fillcolor=\"lightblue\"]\ngthr [label = \"geothermal\", fillcolor=\"yellow\"]\n\ncsp [label = \"concentrated solar power\", fillcolor=\"orange\"]\npv [label = \"solar photovoltaic (panels)\", fillcolor=\"orange\"]\n\nonshr [label = \"onshore wind\",fillcolor=\"grey\"]\nofsh [label = \"offshore wind\",fillcolor=\"grey\"]\n\nchyd [label = \"conventional hydroelectric\",fillcolor=\"lightblue\"]\nphyd [label = \"pumped hydroelectric\",fillcolor=\"lightblue\"]\n\nnfee->{slr, wind, hydro, gthr}\n\nslr->{pv, csp}\n\nwind->{onshr,ofsh}\n\nhydro->{chyd,phyd}\n\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -185,30 +185,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     10686.554508
-all fuels                              7570.866440
-biogenic municipal solid waste        18697.058316
-biomass                               12237.609730
-bituminous coal                       10514.113952
-bituminous coal and synthetic coal    10511.107895
-coal, excluding waste coal            10645.092731
-distillate fuel oil                   11304.594401
-fossil fuels                           8448.549812
-landfill gas                          12287.504642
-lignite coal                          11503.736780
-municiapl landfill gas                14562.625726
-natural gas                            7640.158924
-natural gas &amp; other gases              7633.384622
-nuclear                               10429.326924
-petroleum                             10341.375278
-petroleum coke                        10200.020450
-petroleum liquids                     10534.585048
-refined coal                          10101.533005
-residual fuel oil                     10204.902893
-subbituminous coal                    10466.175196
-waste coal                            12242.230219
-waste oil and other oils               8169.021826
-wood and wood wastes                   9836.504646
+all coal products                     10709.174927
+all fuels                              7542.699789
+biogenic municipal solid waste        18726.262022
+biomass                               12090.686702
+bituminous coal                       10492.315008
+bituminous coal and synthetic coal    10500.806660
+coal, excluding waste coal            10640.620896
+distillate fuel oil                   11238.770470
+fossil fuels                           8382.862897
+landfill gas                          12507.063545
+lignite coal                          11492.608042
+municiapl landfill gas                14690.484863
+natural gas                            7602.339834
+natural gas &amp; other gases              7595.114002
+nuclear                               10429.250487
+petroleum                             10501.407481
+petroleum coke                        10484.464013
+petroleum liquids                     10691.373118
+refined coal                          10113.997595
+residual fuel oil                     10258.635860
+subbituminous coal                    10542.027743
+waste coal                            12185.461873
+waste oil and other oils               8008.741102
+wood and wood wastes                   9913.397195
 dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -221,30 +221,30 @@ dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     0.319280
-all fuels                             0.450675
-biogenic municipal solid waste        0.182489
-biomass                               0.278813
-bituminous coal                       0.324516
-bituminous coal and synthetic coal    0.324609
-coal, excluding waste coal            0.320523
-distillate fuel oil                   0.301824
-fossil fuels                          0.403856
-landfill gas                          0.277680
-lignite coal                          0.296599
-municiapl landfill gas                0.234298
-natural gas                           0.446588
-natural gas &amp; other gases             0.446984
-nuclear                               0.327154
-petroleum                             0.329937
-petroleum coke                        0.334509
-petroleum liquids                     0.323886
-refined coal                          0.337771
-residual fuel oil                     0.334349
-subbituminous coal                    0.326003
-waste coal                            0.278707
-waste oil and other oils              0.417675
-wood and wood wastes                  0.346871
+all coal products                     0.318605
+all fuels                             0.452358
+biogenic municipal solid waste        0.182204
+biomass                               0.282201
+bituminous coal                       0.325190
+bituminous coal and synthetic coal    0.324927
+coal, excluding waste coal            0.320658
+distillate fuel oil                   0.303592
+fossil fuels                          0.407021
+landfill gas                          0.272806
+lignite coal                          0.296886
+municiapl landfill gas                0.232259
+natural gas                           0.448809
+natural gas &amp; other gases             0.449236
+nuclear                               0.327157
+petroleum                             0.324909
+petroleum coke                        0.325434
+petroleum liquids                     0.319136
+refined coal                          0.337354
+residual fuel oil                     0.332598
+subbituminous coal                    0.323657
+waste coal                            0.280006
+waste oil and other oils              0.426034
+wood and wood wastes                  0.344181
 dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -257,22 +257,22 @@ dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                      1.554001
-bituminous coal                        2.764688
-bituminous coal and synthetic coal     2.688917
-coal, excluding waste coal             2.429648
-distillate fuel oil                   13.982706
-fossil fuels                           3.244979
-lignite coal                           1.842269
-natural gas                            2.168997
-natural gas &amp; other gases              3.402487
-petroleum                             11.555491
-petroleum coke                         0.667644
-petroleum liquids                      6.661164
-refined coal                           0.551324
-residual fuel oil                      4.568738
-subbituminous coal                     1.680013
-waste coal                             1.116484
+all coal products                      1.572182
+bituminous coal                        2.730616
+bituminous coal and synthetic coal     2.713326
+coal, excluding waste coal             2.500553
+distillate fuel oil                   12.799778
+fossil fuels                           3.683626
+lignite coal                           2.024587
+natural gas                            2.266863
+natural gas &amp; other gases              3.695360
+petroleum                             11.646794
+petroleum coke                         0.581214
+petroleum liquids                      6.539047
+refined coal                           0.576625
+residual fuel oil                      4.735981
+subbituminous coal                     1.694242
+waste coal                             1.200039
 Name: cost-per-btu, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -285,22 +285,22 @@ Name: cost-per-btu, dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     0.005302
-bituminous coal                       0.009434
-bituminous coal and synthetic coal    0.009175
-coal, excluding waste coal            0.008290
-distillate fuel oil                   0.047711
-fossil fuels                          0.011072
-lignite coal                          0.006286
-natural gas                           0.007401
-natural gas &amp; other gases             0.011610
-petroleum                             0.039429
-petroleum coke                        0.002278
-petroleum liquids                     0.022729
-refined coal                          0.001881
-residual fuel oil                     0.015589
-subbituminous coal                    0.005732
-waste coal                            0.003810
+all coal products                     0.005365
+bituminous coal                       0.009317
+bituminous coal and synthetic coal    0.009258
+coal, excluding waste coal            0.008532
+distillate fuel oil                   0.043675
+fossil fuels                          0.012569
+lignite coal                          0.006908
+natural gas                           0.007735
+natural gas &amp; other gases             0.012609
+petroleum                             0.039741
+petroleum coke                        0.001983
+petroleum liquids                     0.022312
+refined coal                          0.001968
+residual fuel oil                     0.016160
+subbituminous coal                    0.005781
+waste coal                            0.004095
 Name: cost-per-btu, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -314,19 +314,19 @@ Name: cost-per-btu, dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     0.710453
-bituminous coal                       1.086554
-bituminous coal and synthetic coal    1.075080
-coal, excluding waste coal            0.717507
-fossil fuels                          0.477910
-lignite coal                          0.334693
-petroleum                             0.256106
-petroleum coke                        0.866084
-petroleum liquids                     0.076270
-refined coal                          0.058473
-residual fuel oil                     0.142992
-subbituminous coal                    0.204640
-waste coal                            0.375560
+all coal products                     0.708324
+bituminous coal                       1.062757
+bituminous coal and synthetic coal    1.061700
+coal, excluding waste coal            0.714067
+fossil fuels                          0.472224
+lignite coal                          0.342143
+petroleum                             0.261209
+petroleum coke                        0.861933
+petroleum liquids                     0.078829
+refined coal                          0.045266
+residual fuel oil                     0.157530
+subbituminous coal                    0.226179
+waste coal                            0.360255
 Name: sulfur-content, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -340,17 +340,17 @@ Name: sulfur-content, dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                      6.135698
-bituminous coal                        5.269062
-bituminous coal and synthetic coal     5.229518
-coal, excluding waste coal             5.196776
-fossil fuels                           3.894091
-lignite coal                           6.574749
-petroleum                              0.014634
-petroleum coke                         0.060117
-refined coal                           0.750432
-subbituminous coal                     3.639035
-waste coal                            13.190172
+all coal products                      6.448520
+bituminous coal                        5.256423
+bituminous coal and synthetic coal     5.263488
+coal, excluding waste coal             5.449082
+fossil fuels                           4.024201
+lignite coal                           6.802262
+petroleum                              0.014831
+petroleum coke                         0.059381
+refined coal                           0.580769
+subbituminous coal                     4.017313
+waste coal                            13.872894
 Name: ash-content, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -359,8 +359,8 @@ Name: ash-content, dtype: float64</code></pre>
 </div>
 <p>Ash content was shown to be mostly evenly spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.</p>
 </section>
-<section id="references-scratch-work-planned-to-be-refined-on-full-completion" class="level2">
-<h2 class="anchored" data-anchor-id="references-scratch-work-planned-to-be-refined-on-full-completion"><strong>References {scratch work, planned to be refined on full completion}</strong></h2>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references"><strong>REFERENCES</strong></h2>
 <p>Python packages</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Python Software Foundation. (2023). *Python 3* (Version 3.11.3). [Programming Language]. Python Software Foundation. python.org</span>
