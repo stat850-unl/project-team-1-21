@@ -3,12 +3,12 @@ title: "Group 1.21 Paper"
 format: html
 editor: visual
 ---
-```{r}
+```{r, echo=FALSE}
 renv::deactivate()
 ```
 
 ```{python}
-#| echo: false
+#| echo: False
 
 import requests
 import json
@@ -93,7 +93,7 @@ dfviii=pd.DataFrame(dataofdatalist[7])
 # API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them
 metalist=[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]
 dfLONG=pd.concat(metalist, ignore_index=True)
-len(dfLONG['period'])
+#len(dfLONG['period'])
 
 
 
@@ -192,7 +192,7 @@ Being an informed consumer and voter is difficult task when topic is complicated
 
 ## **ABOUT THE DATA**
 
-The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\\\<SOURCE NEEDED\\\>}.
+The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies.
 
 The EIA hosts an Open Data program with the stated intention of making energy data \\"more accessible, understandable, relevant and responsive\\"$^{1}$. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country$^{1}$. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.
 
@@ -208,7 +208,7 @@ While using a steam engine for power may seem old fashioned, modern steam turbin
 
 These steam turbines are critical components of the world's power infrastructure, as most of the world\\'s electricity is generated using them $^{[18]}$, and 53.2% of US electricity is generated using a steam turbine  $^{[18]}$. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don't require steam turbines. These alternatives will be discussed individually in the "Background: Power Types" section below.
 
-**Categorization**  ####may need some sources here and there, specifically in the examples, will add later.
+**Categorization** 
 
 Many of the metrics in this report are based on the use of fuel (e.g. the cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun's rays to generate electricity, so there is no need to "top up" the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.
 
@@ -217,8 +217,6 @@ To organize the data for convenient reading, the power sources were put into two
 It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun's fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report. \
 
 ## Background: Power Types
-
-####there is an unfathomable amount of overlap in our variables \[ residual fuel oil(petroleum fuel oil(petroleum))) \], i will consider making a visual venn diagram chart for this.
 
 **Coal Power**
 
@@ -229,8 +227,6 @@ Among the different types of coal power in the data set are the naturally occurr
 Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials $^{[15]}$
 
 Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has standard pre-processing) is coal that has been modified to reduce impurities and improve heat content $^{[16]}$. Refined coal meets the standards set by the IRS definition of the substance{\\\<notice 2010-54\\\>}. Refined coal is often made by mixing proprietary additives into coal $^{[35]}$.
-
-**Synthetic??? Unsure if it means pyrolytic or something else.**\
 
 **Flammable Gas Power**
 
@@ -280,17 +276,99 @@ Similar to petroleum coke, waste oil is oil that is produced as a byproduct of s
 
 **Geothermal Power**
 
-Geothermal power is energy obtained from the natural heat given off by the internals of the earth $^{[13]}$. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed {\<SOURCE NEEDED\>}.\
+Geothermal power is energy obtained from the natural heat given off by the internals of the earth $^{[13]}$. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed.\
 
 **Nuclear Power**
 
 Nuclear power is energy obtained from heat generated by splitting large atomic nuclei $^{[24]}$. Nuclear power plants typically rely on enriched uranium fuel $^{[25]}$, although some forms of reactors do not require enriched uranium and can use other fuels $^{[8]}$\
 
+
+## **Flowchart of Different Power Generation Methods**
+```{r, echo=FALSE}
+library(DiagrammeR)
+
+
+DiagrammeR::grViz("digraph {
+
+graph [layout = dot, rankdir = LR]
+
+
+# define the global styles of the nodes. We can override these in box if we wish
+node [shape = rectangle, style = filled, fillcolor = Linen]
+
+pwr  [label = 'generators']
+
+fee [label = 'fuelee']
+nfee [label =  'non-fuelee']
+
+coal [label = 'coal', fillcolor='#5A5A5A']
+petrol [label = 'petroleum',fillcolor='red']
+ngog [label = 'natural gas and other gasses', fillcolor='mediumpurple']
+msw [label = 'municipal solid waste', fillcolor='brown']
+nucl [label = 'nuclear', fillcolor='green']
+
+atc [label = 'anthracite', fillcolor='#5A5A5A']
+bands [label = 'bituminous and synthetic coal', fillcolor='#5A5A5A']
+bit [label = 'bituminous', fillcolor='#5A5A5A']
+synth [label = 'synthetic', fillcolor='#5A5A5A']
+subbit [label = 'subbituminous', fillcolor='#5A5A5A']
+lign [label = 'lignite', fillcolor='#5A5A5A']
+
+lpp [label = 'liquid petroleum products',fillcolor='red']
+dfo [label = 'distillate fuel oil',fillcolor='red']
+rfo [label = 'residual fuel oil',fillcolor='red']
+pcoke [label = 'petroleum coke',fillcolor='red']
+
+natgas [label = 'natural gas', fillcolor='mediumpurple']
+othgas [label = 'other gasses', fillcolor='mediumpurple']
+
+# edge definitions with the node IDs
+#var ->{cat, quant} 
+#cat -> {nomi, ord}
+#quant -> {disc, cont}
+
+pwr->{fee, nfee}
+fee->{coal, petrol, ngog, msw, nucl}
+
+coal->{atc, bands, subbit,lign}
+bands->{bit, synth}
+
+petrol->{lpp, pcoke}
+lpp->{dfo,rfo}
+
+ngog->{natgas, othgas}
+
+slr [label = 'solar', fillcolor='orange']
+wind [label = 'wind', fillcolor='grey']
+hydro [label = 'hydro',fillcolor='lightblue']
+gthr [label = 'geothermal', fillcolor='yellow']
+
+csp [label = 'concentrated solar power', fillcolor='orange']
+pv [label = 'solar photovoltaic (panels)', fillcolor='orange']
+
+onshr [label = 'onshore wind',fillcolor='grey']
+ofsh [label = 'offshore wind',fillcolor='grey']
+
+chyd [label = 'conventional hydroelectric',fillcolor='lightblue']
+phyd [label = 'pumped hydroelectric',fillcolor='lightblue']
+
+nfee->{slr, wind, hydro, gthr}
+
+slr->{pv, csp}
+
+wind->{onshr,ofsh}
+
+hydro->{chyd,phyd}
+
+
+}")
+```
+
 ## **ANALYSIS**
 
 **Heat Rate**
 
-The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen {\<presumebly\>} to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.  Note that the higher values are less efficient.
+The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.  Note that the higher values are less efficient.
 
 ```{python, @echo off}
 #| echo: false
@@ -315,6 +393,9 @@ colorset=( ['black','grey'] *  (len(elligebleForIOEff)//2+1) )[:len(elligebleFor
 plt.title("Graph 1 - Heat Rate of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Btu input per kWh output")
+
+plt.tight_layout()
+
 plt.show()
 plt.close()
 
@@ -349,9 +430,12 @@ kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mea
 
 
 # Add reading details to the plot
-plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
+plt.title("Graph 2 - thermal efficicency of fuelee sources")
 plt.ylabel("energy source")
 plt.xlabel("efficiecncy (KWH in per KWH out)")
+
+plt.tight_layout()
+
 plt.show()
 plt.close()
 ```
@@ -381,6 +465,9 @@ df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.
 plt.title("Graph 3 - Fuel Unit Price of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Cost Per Million Btu")
+
+plt.tight_layout()
+
 plt.show()
 plt.close()
 ```
@@ -414,9 +501,12 @@ fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
 fuelCostPerKwhOut.plot(kind='barh', color=colorset)
 
 # add reading details to the plot
-plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
+plt.title("Graph 4 - cost per kwh fuel/efficiency")
 plt.ylabel("energy source")
 plt.xlabel("Cost Per Kwh fuel")
+
+plt.tight_layout()
+
 plt.show()
 plt.close()
 ```
@@ -427,7 +517,7 @@ It is important to note that this solely measures the cost for fuel, and the tot
 
 **Sulfur Content**
 
-The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk {\<SOURCE NEEDED\>}In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel's total mass are shown. Note that higher values imply a higher sulfur content.
+The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk. In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel's total mass are shown. Note that higher values imply a higher sulfur content.
 
 ```{python}
 #| echo: false
@@ -448,17 +538,20 @@ df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.
 plt.title("Graph 5 - Sulfur Content  of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("sulfur content (percentage of fuel weight)")
+
+plt.tight_layout()
+
 plt.show()
 plt.close()
 ```
 
-Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke{\<source needed\>}{\<this could be a huge jump in logic, maybe petroleum coke burners arent that protected?\>}
+Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke.
 
 Unsurprisingly, refined coal (coal which has been processed to remove impurities and improve heat content) has some of the lowest values for sulfur content.  
 
 **Ash Content**
 
-Many combustible fuels produce a solid, incombustible substance, called ash, after being burned{\<SOURCE NEEDED?\>}. While the ashes of combustible fuels can be useful for a variety of products{\<\>}, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel's total mass, where higher values mean a higher ash content.
+Many combustible fuels produce a solid, incombustible substance, called ash, after being burned. While the ashes of combustible fuels can be useful for a variety of products, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel's total mass, where higher values mean a higher ash content.
 
 ```{python}
 #| echo: false
@@ -479,6 +572,9 @@ df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.gro
 plt.title("Graph 6 - Ash Content of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Ash content (percentage of fuel weight)")
+
+plt.tight_layout()
+
 plt.show()
 plt.close()
 ```
@@ -492,6 +588,8 @@ Python packages
 ```{txt}
 Python Software Foundation. (2023). *Python 3* (Version 3.11.3). [Programming Language]. Python Software Foundation. python.org
 
+R Foundation. (2023). *R* (Version 4.2.2). [Programming Language]. R Foundation. r-project.org
+
 Kenneth Reitz. (2023). *requests* (Version 2.31.0) [Python Library]. Python Package Index.
 
 Python Software Foundation. (2023). *json* (Version 2.0.9) [Python Library]. The Python Standard Library.
@@ -502,6 +600,7 @@ Arthur Turrell. (2023). *skimpy* (Version 0.0.11) [Python Library]. Python Packa
 
 John D. Hunter, Micheal Droettboom. (2023). *matplotlib* (Version 3.8.2). [Python Library]. Python Package Index.
 
+Richard Iannone. (2023). *DiagrammeR*  (Version  1.0.10) [R Library]. CRAN.  
 ```
 
 E-Sources

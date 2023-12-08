@@ -67,6 +67,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="merger_report_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="merger_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="merger_report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="merger_report_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="merger_report_files/libs/viz-1.8.2/viz.js"></script>
+<link href="merger_report_files/libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="merger_report_files/libs/grViz-binding-1.0.10/grViz.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -96,14 +100,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">deactivate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>40000</code></pre>
-</div>
-</div>
 <p>Carson Trego and Ryan Lalicker</p>
 <p>Dr.&nbsp;Susan VanderPlas</p>
 <p>STAT 850 - Group 1.21</p>
@@ -115,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="about-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="about-the-data"><strong>ABOUT THE DATA</strong></h2>
-<p>The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies {\&lt;SOURCE NEEDED\&gt;}.</p>
+<p>The Energy Information Agency (EIA) is an agency of the Federal Statistical System of the United States, and the agency collects, analyzes, and publishes information about energy systems. The EIA is intended to work independently of public policy decisions, and does not directly advocate for specific policies.</p>
 <p>The EIA hosts an Open Data program with the stated intention of making energy data \“more accessible, understandable, relevant and responsive\”<span class="math inline">\(^{1}\)</span>. As part of the Open Data program, individuals are allowed to request large datasets containing information on generators across the country<span class="math inline">\(^{1}\)</span>. Requesting this information free, provided the person obtains a free API key to make the request. For the data used in this analysis, a request was made for 5000 entries for each 8 months in the timeframe of January 2023 to August 2023 with a total of 40,000 entries used in our analysis.</p>
 <p>For more information on obtaining the information for reproducibility, please go to the Reproducibility and Code section.</p>
 </section>
@@ -125,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A Steam-Electric Power Station is a powerstation that makes use of a steam engine<span class="math inline">\(^{18}\)</span>. These steam engines take in heat energy and convert it into mechanical motion by boiling water. This mechanical motion is then converted into electricity by generator.&nbsp;</p>
 <p>While using a steam engine for power may seem old fashioned, modern steam turbines are much different that the kind that old steam trains used, and are much more efficient. A typical coal power plant in the year 1900 would be less than 5% efficient, while a modem steam power plant usually achieve efficiencies over 32% and a combined cycle natural gas plant can go well over 40% <span class="math inline">\(^{[28][29]}\)</span>.</p>
 <p>These steam turbines are critical components of the world’s power infrastructure, as most of the world\’s electricity is generated using them <span class="math inline">\(^{[18]}\)</span>, and 53.2% of US electricity is generated using a steam turbine&nbsp; <span class="math inline">\(^{[18]}\)</span>. These turbines make use of a large variety of heat sources: coal, natural gas, nuclear, biomass, and even solar power are used to drive steam turbines. While steam turbines are part of a large share of the electricity generated, there are many other technologies achieving widespread use that don’t require steam turbines. These alternatives will be discussed individually in the “Background: Power Types” section below.</p>
-<p><strong>Categorization</strong> &nbsp;####may need some sources here and there, specifically in the examples, will add later.</p>
+<p><strong>Categorization</strong></p>
 <p>Many of the metrics in this report are based on the use of fuel (e.g.&nbsp;the cost of fuel to generate a unit of energy), but not all sources of electricity require the operator to input fuel. For example, solar panels use the sun’s rays to generate electricity, so there is no need to “top up” the panels with fuel. This makes concepts such as the sulfur content of the fuel and the cost per unit of the fuel a bit nonsensical, because there is no fuel to begin with.</p>
 <p>To organize the data for convenient reading, the power sources were put into two groups, fuelees and non-fuelees. Fuelees are power sources that require fuel to be regularly put in the generator to make power. Examples include: coal, natural gas, biomass, and nuclear. Non-fuelees, on the other hand, do not require regular input fuel to operate (although they may require regular maintenance). Examples include: wind, solar, and hydro-electric power.</p>
 <p>It is worth noting that while solar panels do technically require fuel to generate power, the fuel in question is fusion in the sun, which provides that energy free of charge. While it would be possible to do a similar analysis on the sun’s fusion, this would not produce practical information in regards to power generation, as cost per unit of hydrogen and the sulfur content in the sun are not relevant to the normal use of solar panels on Earth. For this reason, this form of analysis was not included in the report.&nbsp;<br>
@@ -133,14 +129,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="background-power-types" class="level2">
 <h2 class="anchored" data-anchor-id="background-power-types">Background: Power Types</h2>
-<p>####there is an unfathomable amount of overlap in our variables [ residual fuel oil(petroleum fuel oil(petroleum))) ], i will consider making a visual venn diagram chart for this.</p>
 <p><strong>Coal Power</strong></p>
 <p>Coal power is generated by burning coal to generate heat which powers a steam electric generator. Coal is a combustible organic sedimentary rock composed of a large fraction of carbon, with several different types that can be burned in coal power plants <span class="math inline">\(^{[5]}\)</span>. The types of coal used for power are often differentiated by percentage of the stones mass which is made of carbon as well as how the coal was produced<span class="math inline">\(^{[5]}\)</span>.</p>
 <p>Among the different types of coal power in the data set are the naturally occurring anthracite, bituminous, subbituminous, and lignite coal. The percentage of carbon varies for each with anthracite containing 86%-97%, bituminous containing 45%-86%, subbituminous containing 35%-45% carbon, and lignite containing 25%-65% carbon.&nbsp;&nbsp;</p>
 <p>Not all coal included in the data set are naturally occurring. One of the included unnatural forms of coal is waste coal. Waste coal is a term for the usable material that is generated as a byproduct of coal processing. In addition to coal, this material contains soil and mine waste. This can be burned using specific machines and can sometimes be cleaned by removing some of the non-combustible materials <span class="math inline">\(^{[15]}\)</span></p>
 <p>Another unnatural coal in the data set is refined coal. Refined coal (not to be confused with coal that has standard pre-processing) is coal that has been modified to reduce impurities and improve heat content <span class="math inline">\(^{[16]}\)</span>. Refined coal meets the standards set by the IRS definition of the substance{\&lt;notice 2010-54\&gt;}. Refined coal is often made by mixing proprietary additives into coal <span class="math inline">\(^{[35]}\)</span>.</p>
-<p><strong>Synthetic??? Unsure if it means pyrolytic or something else.</strong><br>
-</p>
 <p><strong>Flammable Gas Power</strong></p>
 <p>Natural gas power is generated by burning gas reserves found underground. The gas is highly flammable and is composed mostly of methane<span class="math inline">\(^{[21]}\)</span>. This is different from landfill gas, which occurs naturally when bacteria naturally decomposes organic materials into a gas that is approximately 50% methane and 50% carbon dioxide. This gas can be treated to remove carbon dioxide and other gasses, turning it into biomethane, or burned directly for energy.</p>
 <p><strong>Biomass</strong></p>
@@ -167,43 +160,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Waste Oils and Other Oils ##look into this one in particular</strong></p>
 <p>Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes <span class="math inline">\(^{[36]}\)</span>. These oils can still be burned for heating and energy purposes <span class="math inline">\(^{[36]}\)</span>.</p>
 <p><strong>Geothermal Power</strong></p>
-<p>Geothermal power is energy obtained from the natural heat given off by the internals of the earth <span class="math inline">\(^{[13]}\)</span>. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed {&lt;SOURCE NEEDED&gt;}.<br>
+<p>Geothermal power is energy obtained from the natural heat given off by the internals of the earth <span class="math inline">\(^{[13]}\)</span>. Conventional geothermal power is currently restricted in where it can be effectively and safely constructed.<br>
 </p>
 <p><strong>Nuclear Power</strong></p>
 <p>Nuclear power is energy obtained from heat generated by splitting large atomic nuclei <span class="math inline">\(^{[24]}\)</span>. Nuclear power plants typically rely on enriched uranium fuel <span class="math inline">\(^{[25]}\)</span>, although some forms of reactors do not require enriched uranium and can use other fuels <span class="math inline">\(^{[8]}\)</span><br>
 </p>
 </section>
+<section id="flowchart-of-different-power-generation-methods" class="level2">
+<h2 class="anchored" data-anchor-id="flowchart-of-different-power-generation-methods"><strong>Flowchart of Different Power Generation Methods</strong></h2>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'DiagrammeR' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-c9144f3fe3c1be4a5da3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-c9144f3fe3c1be4a5da3">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = LR]\n\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\npwr  [label = \"generators\"]\n\nfee [label = \"fuelee\"]\nnfee [label =  \"non-fuelee\"]\n\ncoal [label = \"coal\", fillcolor=\"#5A5A5A\"]\npetrol [label = \"petroleum\",fillcolor=\"red\"]\nngog [label = \"natural gas and other gasses\", fillcolor=\"mediumpurple\"]\nmsw [label = \"municipal solid waste\", fillcolor=\"brown\"]\nnucl [label = \"nuclear\", fillcolor=\"green\"]\n\natc [label = \"anthracite\", fillcolor=\"#5A5A5A\"]\nbands [label = \"bituminous and synthetic coal\", fillcolor=\"#5A5A5A\"]\nbit [label = \"bituminous\", fillcolor=\"#5A5A5A\"]\nsynth [label = \"synthetic\", fillcolor=\"#5A5A5A\"]\nsubbit [label = \"subbituminous\", fillcolor=\"#5A5A5A\"]\nlign [label = \"lignite\", fillcolor=\"#5A5A5A\"]\n\nlpp [label = \"liquid petroleum products\",fillcolor=\"red\"]\ndfo [label = \"distillate fuel oil\",fillcolor=\"red\"]\nrfo [label = \"residual fuel oil\",fillcolor=\"red\"]\npcoke [label = \"petroleum coke\",fillcolor=\"red\"]\n\nnatgas [label = \"natural gas\", fillcolor=\"mediumpurple\"]\nothgas [label = \"other gasses\", fillcolor=\"mediumpurple\"]\n\n# edge definitions with the node IDs\n#var ->{cat, quant} \n#cat -> {nomi, ord}\n#quant -> {disc, cont}\n\npwr->{fee, nfee}\nfee->{coal, petrol, ngog, msw, nucl}\n\ncoal->{atc, bands, subbit,lign}\nbands->{bit, synth}\n\npetrol->{lpp, pcoke}\nlpp->{dfo,rfo}\n\nngog->{natgas, othgas}\n\nslr [label = \"solar\", fillcolor=\"orange\"]\nwind [label = \"wind\", fillcolor=\"grey\"]\nhydro [label = \"hydro\",fillcolor=\"lightblue\"]\ngthr [label = \"geothermal\", fillcolor=\"yellow\"]\n\ncsp [label = \"concentrated solar power\", fillcolor=\"orange\"]\npv [label = \"solar photovoltaic (panels)\", fillcolor=\"orange\"]\n\nonshr [label = \"onshore wind\",fillcolor=\"grey\"]\nofsh [label = \"offshore wind\",fillcolor=\"grey\"]\n\nchyd [label = \"conventional hydroelectric\",fillcolor=\"lightblue\"]\nphyd [label = \"pumped hydroelectric\",fillcolor=\"lightblue\"]\n\nnfee->{slr, wind, hydro, gthr}\n\nslr->{pv, csp}\n\nwind->{onshr,ofsh}\n\nhydro->{chyd,phyd}\n\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis"><strong>ANALYSIS</strong></h2>
 <p><strong>Heat Rate</strong></p>
-<p>The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen {&lt;presumebly&gt;} to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.&nbsp; Note that the higher values are less efficient.</p>
+<p>The heat rate is a measure of efficiency in electricity generation, and is measured by the amount of raw heat energy in British Thermal Units, or BTU, required to generate one kilowatt hour of electricity. Both BTU and Kilowatt-hours are interchangeable units of energy, but the different units were chosen to demonstrate that the measurement compares raw heat to electricity. Graph 1 below is a chart of available and sensible power types and their heat rates.&nbsp; Note that the higher values are less efficient.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     10742.385386
-all fuels                              7626.511792
-biogenic municipal solid waste        18585.370726
-biomass                               12317.363387
-bituminous coal                       10495.049494
-bituminous coal and synthetic coal    10503.057198
-coal, excluding waste coal            10677.470420
-distillate fuel oil                   11379.523686
-fossil fuels                           8461.404091
-landfill gas                          12216.867538
-lignite coal                          11442.003319
-municiapl landfill gas                14617.218938
-natural gas                            7630.116657
-natural gas &amp; other gases              7625.419092
-nuclear                               10429.284872
-petroleum                             10496.515610
-petroleum coke                         9967.202310
-petroleum liquids                     10738.232783
-refined coal                          10175.870939
-residual fuel oil                     10356.124977
-subbituminous coal                    10473.734115
-waste coal                            12250.466874
-waste oil and other oils               7800.286907
-wood and wood wastes                   9452.022709
+all coal products                     10686.554508
+all fuels                              7570.866440
+biogenic municipal solid waste        18697.058316
+biomass                               12237.609730
+bituminous coal                       10514.113952
+bituminous coal and synthetic coal    10511.107895
+coal, excluding waste coal            10645.092731
+distillate fuel oil                   11304.594401
+fossil fuels                           8448.549812
+landfill gas                          12287.504642
+lignite coal                          11503.736780
+municiapl landfill gas                14562.625726
+natural gas                            7640.158924
+natural gas &amp; other gases              7633.384622
+nuclear                               10429.326924
+petroleum                             10341.375278
+petroleum coke                        10200.020450
+petroleum liquids                     10534.585048
+refined coal                          10101.533005
+residual fuel oil                     10204.902893
+subbituminous coal                    10466.175196
+waste coal                            12242.230219
+waste oil and other oils               8169.021826
+wood and wood wastes                   9836.504646
 dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
@@ -216,34 +221,34 @@ dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     0.317620
-all fuels                             0.447387
-biogenic municipal solid waste        0.183585
-biomass                               0.277007
-bituminous coal                       0.325106
-bituminous coal and synthetic coal    0.324858
-coal, excluding waste coal            0.319551
-distillate fuel oil                   0.299837
-fossil fuels                          0.403243
-landfill gas                          0.279286
-lignite coal                          0.298200
-municiapl landfill gas                0.233423
-natural gas                           0.447175
-natural gas &amp; other gases             0.447451
-nuclear                               0.327156
-petroleum                             0.325060
-petroleum coke                        0.342323
-petroleum liquids                     0.317743
-refined coal                          0.335303
-residual fuel oil                     0.329467
-subbituminous coal                    0.325767
-waste coal                            0.278520
-waste oil and other oils              0.437420
-wood and wood wastes                  0.360981
+all coal products                     0.319280
+all fuels                             0.450675
+biogenic municipal solid waste        0.182489
+biomass                               0.278813
+bituminous coal                       0.324516
+bituminous coal and synthetic coal    0.324609
+coal, excluding waste coal            0.320523
+distillate fuel oil                   0.301824
+fossil fuels                          0.403856
+landfill gas                          0.277680
+lignite coal                          0.296599
+municiapl landfill gas                0.234298
+natural gas                           0.446588
+natural gas &amp; other gases             0.446984
+nuclear                               0.327154
+petroleum                             0.329937
+petroleum coke                        0.334509
+petroleum liquids                     0.323886
+refined coal                          0.337771
+residual fuel oil                     0.334349
+subbituminous coal                    0.326003
+waste coal                            0.278707
+waste oil and other oils              0.417675
+wood and wood wastes                  0.346871
 dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="merger_report_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
+<p><img src="merger_report_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Solid waste has been shown to be the least efficient of the relevant types, below 20%. Natural gas was shown to be significantly more thermally efficient than most other power sources, with a thermal efficiency over 40%. This higher efficiency is partially due to the different types of generators used in natural gas power plants <span class="math inline">\(^{[34]}\)</span>. These generators, called combined cycle power plants, use multiple heat engines together to extract more energy during combustion<span class="math inline">\(^{[34]}\)</span>. This arrangement is primarily used for natural gas, which contributes to the large spike in efficiency for natural gas systems<span class="math inline">\(^{[34]}\)</span>.</p>
@@ -252,26 +257,26 @@ dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                      1.515719
-bituminous coal                        2.647504
-bituminous coal and synthetic coal     2.608050
-coal, excluding waste coal             2.447022
-distillate fuel oil                   14.195348
-fossil fuels                           3.931817
-lignite coal                           1.678749
-natural gas                            2.119939
-natural gas &amp; other gases              3.780788
-petroleum                             12.142584
-petroleum coke                         0.617765
-petroleum liquids                      6.723098
-refined coal                           0.458329
-residual fuel oil                      5.646084
-subbituminous coal                     1.828806
-waste coal                             1.219449
+all coal products                      1.554001
+bituminous coal                        2.764688
+bituminous coal and synthetic coal     2.688917
+coal, excluding waste coal             2.429648
+distillate fuel oil                   13.982706
+fossil fuels                           3.244979
+lignite coal                           1.842269
+natural gas                            2.168997
+natural gas &amp; other gases              3.402487
+petroleum                             11.555491
+petroleum coke                         0.667644
+petroleum liquids                      6.661164
+refined coal                           0.551324
+residual fuel oil                      4.568738
+subbituminous coal                     1.680013
+waste coal                             1.116484
 Name: cost-per-btu, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="merger_report_files/figure-html/unnamed-chunk-4-5.png" class="img-fluid" width="672"></p>
+<p><img src="merger_report_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The petroleum products, with the exception of petroleum coke, are each more expensive than any other source in Graph 3. Fuels such as coal and natural gas are more or less similar in price, and the difference between coal and natural gas with petroleum is dramatic. Cost is likely a contributing factor of why petroleum is only around 0.4% of total US electrical energy produced despite being produced in large quantities and being one of the primary sources of overall energy <span class="math inline">\(^{[9][10][23]}\)</span>.</p>
@@ -280,76 +285,76 @@ Name: cost-per-btu, dtype: float64</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     0.005172
-bituminous coal                       0.009034
-bituminous coal and synthetic coal    0.008899
-coal, excluding waste coal            0.008350
-distillate fuel oil                   0.048437
-fossil fuels                          0.013416
-lignite coal                          0.005728
-natural gas                           0.007234
-natural gas &amp; other gases             0.012901
-petroleum                             0.041432
-petroleum coke                        0.002108
-petroleum liquids                     0.022940
-refined coal                          0.001564
-residual fuel oil                     0.019265
-subbituminous coal                    0.006240
-waste coal                            0.004161
+all coal products                     0.005302
+bituminous coal                       0.009434
+bituminous coal and synthetic coal    0.009175
+coal, excluding waste coal            0.008290
+distillate fuel oil                   0.047711
+fossil fuels                          0.011072
+lignite coal                          0.006286
+natural gas                           0.007401
+natural gas &amp; other gases             0.011610
+petroleum                             0.039429
+petroleum coke                        0.002278
+petroleum liquids                     0.022729
+refined coal                          0.001881
+residual fuel oil                     0.015589
+subbituminous coal                    0.005732
+waste coal                            0.003810
 Name: cost-per-btu, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="merger_report_files/figure-html/unnamed-chunk-5-7.png" class="img-fluid" width="672"></p>
+<p><img src="merger_report_files/figure-html/unnamed-chunk-6-7.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Once the efficiency is factored in, natural gas sources show to be less expensive than coal per kilowatt of generated electricity, while petroleum remains expensive per unit of energy. Petroleum coke, refined coal, and waste coal all show low values as well.</p>
 <p>It is important to note that this solely measures the cost for fuel, and the total cost for electricity generation is more than what is shown above, as electricity generation requires infrastructure, labor, and other associated costs.</p>
 <p><strong>Sulfur Content</strong></p>
-<p>The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk {&lt;SOURCE NEEDED&gt;}In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel’s total mass are shown. Note that higher values imply a higher sulfur content.</p>
+<p>The amount of sulfur present in a fuel can play a large role in how much pollution is produced by its use, and how much infrastructure costs will be incurred in mitigating that risk. In Graph 5 below, the sensible and available generator types and their ash content as a percentage of the fuel’s total mass are shown. Note that higher values imply a higher sulfur content.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                     0.708838
-bituminous coal                       1.081875
-bituminous coal and synthetic coal    1.090781
-coal, excluding waste coal            0.716400
-fossil fuels                          0.480400
-lignite coal                          0.341383
-petroleum                             0.276090
-petroleum coke                        0.861878
-petroleum liquids                     0.074652
-refined coal                          0.044906
-residual fuel oil                     0.146163
-subbituminous coal                    0.211930
-waste coal                            0.380413
+all coal products                     0.710453
+bituminous coal                       1.086554
+bituminous coal and synthetic coal    1.075080
+coal, excluding waste coal            0.717507
+fossil fuels                          0.477910
+lignite coal                          0.334693
+petroleum                             0.256106
+petroleum coke                        0.866084
+petroleum liquids                     0.076270
+refined coal                          0.058473
+residual fuel oil                     0.142992
+subbituminous coal                    0.204640
+waste coal                            0.375560
 Name: sulfur-content, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="merger_report_files/figure-html/unnamed-chunk-6-9.png" class="img-fluid" width="672"></p>
+<p><img src="merger_report_files/figure-html/unnamed-chunk-7-9.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke{&lt;source needed&gt;}{&lt;this could be a huge jump in logic, maybe petroleum coke burners arent that protected?&gt;}</p>
+<p>Naturally mined coal, of all kinds, displays a large sulfur content here. Interestingly, the sulfur content of petroleum is modest, but when split into petroleum coke and petroleum liquids, the petroleum coke has some of the highest sulfur content values, while the petroleum liquids have some of the lowest sulfur content values. The process of refining petroleum seems to isolate the high sulfur content substances from the lower sulfur content substances. This is likely a good thing, as vehicles without much sulfur scrubbing protection burn petroleum liquids, while more specific power plants tend to burn petroleum coke.</p>
 <p>Unsurprisingly, refined coal (coal which has been processed to remove impurities and improve heat content) has some of the lowest values for sulfur content.&nbsp;&nbsp;</p>
 <p><strong>Ash Content</strong></p>
-<p>Many combustible fuels produce a solid, incombustible substance, called ash, after being burned{&lt;SOURCE NEEDED?&gt;}. While the ashes of combustible fuels can be useful for a variety of products{&lt;&gt;}, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel’s total mass, where higher values mean a higher ash content.</p>
+<p>Many combustible fuels produce a solid, incombustible substance, called ash, after being burned. While the ashes of combustible fuels can be useful for a variety of products, the ashes in power generation can present a variety of problems. Graph 6 below shows all the sensible and available generator types and their ash content as a percentage of the fuel’s total mass, where higher values mean a higher ash content.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>fuelTypeDescription
-all coal products                      6.255361
-bituminous coal                        5.132946
-bituminous coal and synthetic coal     5.153896
-coal, excluding waste coal             5.254586
-fossil fuels                           3.957691
-lignite coal                           6.837872
-petroleum                              0.016866
-petroleum coke                         0.059460
-refined coal                           0.571875
-subbituminous coal                     3.729939
-waste coal                            14.704008
+all coal products                      6.135698
+bituminous coal                        5.269062
+bituminous coal and synthetic coal     5.229518
+coal, excluding waste coal             5.196776
+fossil fuels                           3.894091
+lignite coal                           6.574749
+petroleum                              0.014634
+petroleum coke                         0.060117
+refined coal                           0.750432
+subbituminous coal                     3.639035
+waste coal                            13.190172
 Name: ash-content, dtype: float64</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="merger_report_files/figure-html/unnamed-chunk-7-11.png" class="img-fluid" width="672"></p>
+<p><img src="merger_report_files/figure-html/unnamed-chunk-8-11.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ash content was shown to be mostly evenly spread among power sources, but large outliers such as petroleum, petroleum coke, refined coal, and waste coal were noted. Petroleum, petroleum coke, and refined coal all had exceptionally low ash contents, while wast coal included almost twice the ash content of all other sources. This may be unsurprising, as waste coal is made from coal with large amounts of noncombustible materials in the mixture.</p>
@@ -358,183 +363,187 @@ Name: ash-content, dtype: float64</code></pre>
 <h2 class="anchored" data-anchor-id="references-scratch-work-planned-to-be-refined-on-full-completion"><strong>References {scratch work, planned to be refined on full completion}</strong></h2>
 <p>Python packages</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Python Software Foundation. (2023). *Python 3* (Version 3.11.3). [Programming Language]. Python Software Foundation. python.org</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Kenneth Reitz. (2023). *requests* (Version 2.31.0) [Python Library]. Python Package Index.</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>Python Software Foundation. (2023). *json* (Version 2.0.9) [Python Library]. The Python Standard Library.</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>The Pandas Development Team. (2023). *pandas* (Version 2.1.3) [Python Library]. Python Package Index.</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>Arthur Turrell. (2023). *skimpy* (Version 0.0.11) [Python Library]. Python Package Index.</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>John D. Hunter, Micheal Droettboom. (2023). *matplotlib* (Version 3.8.2). [Python Library]. Python Package Index.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Python Software Foundation. (2023). *Python 3* (Version 3.11.3). [Programming Language]. Python Software Foundation. python.org</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>R Foundation. (2023). *R* (Version 4.2.2). [Programming Language]. R Foundation. r-project.org</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>Kenneth Reitz. (2023). *requests* (Version 2.31.0) [Python Library]. Python Package Index.</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>Python Software Foundation. (2023). *json* (Version 2.0.9) [Python Library]. The Python Standard Library.</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>The Pandas Development Team. (2023). *pandas* (Version 2.1.3) [Python Library]. Python Package Index.</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>Arthur Turrell. (2023). *skimpy* (Version 0.0.11) [Python Library]. Python Package Index.</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>John D. Hunter, Micheal Droettboom. (2023). *matplotlib* (Version 3.8.2). [Python Library]. Python Package Index.</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>Richard Iannone. (2023). *DiagrammeR*  (Version  1.0.10) [R Library]. CRAN.  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>E-Sources</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>0-Adv and challenges</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Advantages and challenges of wind energy. (n.d.). Energy.gov. https://www.energy.gov/eere/wind/advantages-and-challenges-wind-energy</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>1-DATA SOURCE—EIA</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>API Dashboard. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data?frequency=monthly&amp;data=ash-content;consumption-for-eg;consumption-for-eg-btu;consumption-uto;consumption-uto-btu;cost;cost-per-btu;generation;heat-content;receipts;receipts-btu;stocks;sulfur-content;total-consumption;total-consumption-btu;&amp;sortColumn=period;&amp;sortDirection=desc;</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>2-Petcoke</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>Asian demand spurs U.S. net exports of petroleum Coke to higher levels in early 2012. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=6430</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>3-biogaslf</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>Biogas-renewable natural gas. (2022, October 18). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/landfill-gas-and-biogas.php</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>4-biomass</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>Biomass explained. (2023, June 30). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>5-COAL TYPES</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>Coal explained. (2022, October 19). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/coal/#:~:text=Types%20of%20coal,energy%20the%20coal%20can%20produce</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>6-CSP</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>Concentrating solar-thermal power basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/concentrating-solar-thermal-power-basics#:~:text=What%20is%20concentrating%20solar%2Dthermal,temperature%20fluid%20in%20the%20receiver</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>7-Offshore article</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>Developers plan to add 6 gigawatts of U.S. offshore wind capacity through 2029. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=52940</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>8-Fast reactors</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>Fast reactor technology - Reactors designed/built by Argonne national laboratory. (2020, April 1). Nuclear Engineering Division of Argonne National Laboratory (Argonne). https://www.ne.anl.gov/About/reactors/frt.shtml</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>9-prod by source</span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>Fossil fuels account for the largest share of U.S. energy production and consumption. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=45096</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>10-Gen by source</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>Frequently asked questions (FAQs). (2023, March 2). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>11-HEAT RATE DEF</span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>Frequently asked questions (FAQs). (n.d.). U.S. Energy Information Administration (EIA).</span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>https://www.eia.gov/tools/faqs/faq.php?id=107&amp;t=3#:~:text=The%20heat%20rate%20is%20the,Btu)%20per%20net%20kWh%20generated</span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>12-Gen by Source???</span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>Frequently Asked Questions (FAQs). (2023, March 2). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3</span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>13-geotherm</span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>Geothermal. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/geothermal/</span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>14-Distillate fo def</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=Distillate%20fuel%20oil</span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>15-wastecoaldef</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=W</span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>16-refinedcoaldef</span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=refined_coal</span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>17-Resid fo def</span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=residual%20fuel%20oil#:~:text=5%2C%20a%20residual%20fuel%20oil,government%20service%20and%20inshore%20powerplants</span>
-<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>18-STEAM TURBINE</span>
-<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>How electricity is generated. (2022, November 9). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/electricity/how-electricity-is-generated.php</span>
-<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>19-CONHYDRO</span>
-<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>Hydropower explained. (2023, April 20). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/hydropower/</span>
-<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>20-PUMPED HYDRO</span>
-<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>Most pumped storage electricity generators in the U.S. were built in the 1970s. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=41833</span>
-<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>21-natgaseee</span>
-<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>Natural gas. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/natural-gas/</span>
-<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>22-Ph renewables</span>
-<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>New pumped-storage capacity in China is helping to integrate growing wind and solar power. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=57360</span>
-<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>23-Energ by source</span>
-<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a>Nonfossil fuel energy sources accounted for 21% of U.S. energy consumption in 2022. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=56980#:~:text=Fossil%20fuels%E2%80%94petroleum%2C%20natural%20gas,high%2013.2%20quads%20in%202022</span>
-<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>24-nuclear</span>
-<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>Nuclear explained. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/nuclear/#:~:text=All%20nuclear%20power%20plants%20use,form%20of%20heat%20and%20radiation</span>
-<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>25-Nuclear enerichment</span>
-<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>The nuclear fuel cycle. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/nuclear/the-nuclear-fuel-cycle.php#:~:text=Uranium%20enrichment,gaseous%20diffusion%20and%20gas%20centrifuge</span>
-<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>26-Offshore wind</span>
-<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>Offshore wind research and development. (n.d.). Energy.gov. https://www.energy.gov/eere/wind/offshore-wind-research-and-development</span>
-<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>27-Petrol</span>
-<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a>Oil (petroleum). (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/oil/#:~:text=Petroleum%20means%20rock%20oil%20or,hydrocarbons%20contained%20in%20natural%20gas</span>
-<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>28-History primary to final</span>
-<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>Pinto, R., Henriques, S. T., Brockway, P. E., Heun, M. K., &amp; Sousa, T. (2023). The rise and stall of world electricity efficiency:1900–2017, results and insights for the renewables transition. Energy, 269, 126775. https://doi.org/10.1016/j.energy.2023.126775</span>
-<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a>29-??? Heat rates</span>
-<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a>SAS output. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/electricity/annual/html/epa_08_02.html</span>
-<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a>30-solar</span>
-<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a>Solar explained. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/solar/</span>
-<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a>31-Solar cell physics</span>
-<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a>Solar photovoltaic cell basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/solar-photovoltaic-cell-basics#:~:text=There%20are%20several%20different%20semiconductor,material%20as%20an%20electrical%20current</span>
-<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a>32-Solar pv</span>
-<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a>Solar photovoltaic technology basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics</span>
-<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a>33-coke def</span>
-<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a>Table definitions, sources, and explanatory notes. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/dnav/pet/TblDefs/pet_pnp_capfuel_tbldef2.asp</span>
-<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a>34-natgascs</span>
-<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a>U.S. natural gas-fired combined-cycle capacity surpasses coal-fired capacity. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=39012#:~:text=U.S.%20natural%20gas%2Dfired%20combined,capacity%20surpasses%20coal%2Dfired%20capacity&amp;text=The%20amount%20of%20generating%20capacity,capacity%20in%20the%20United%20States</span>
-<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a>35-Refined coal article</span>
-<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a>U.S. refined coal production and consumption declines with the expiration of a tax credit. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=53099</span>
-<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a>36-Waste oils</span>
-<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a>Waste fuels are a significant energy source for U.S. manufacturers. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=13531#:~:text=The%20petroleum%20and%20coal%20products%20industry%20(mostly%20refineries)%20uses%20waste,23%25%20of%20its%20fuel%20use</span>
-<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a>37-Waste to energy</span>
-<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a>Waste-to-energy (MSW) in depth. (2022, December 28). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/waste-to-energy-in-depth.php</span>
-<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a>38-Municipal solid waste</span>
-<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a>Waste-to-energy (MSW). (2022, October 31). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/waste-to-energy.php</span>
-<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a>39-Intermittency</span>
-<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a>Wind, solar, and batteries increasingly account for more new U.S. power capacity additions. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=55719</span>
-<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a>40-WIND</span>
-<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a>Wind. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/wind/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>0-Adv and challenges</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Advantages and challenges of wind energy. (n.d.). Energy.gov. https://www.energy.gov/eere/wind/advantages-and-challenges-wind-energy</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>1-DATA SOURCE—EIA</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>API Dashboard. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data?frequency=monthly&amp;data=ash-content;consumption-for-eg;consumption-for-eg-btu;consumption-uto;consumption-uto-btu;cost;cost-per-btu;generation;heat-content;receipts;receipts-btu;stocks;sulfur-content;total-consumption;total-consumption-btu;&amp;sortColumn=period;&amp;sortDirection=desc;</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>2-Petcoke</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>Asian demand spurs U.S. net exports of petroleum Coke to higher levels in early 2012. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=6430</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>3-biogaslf</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>Biogas-renewable natural gas. (2022, October 18). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/landfill-gas-and-biogas.php</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>4-biomass</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>Biomass explained. (2023, June 30). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>5-COAL TYPES</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>Coal explained. (2022, October 19). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/coal/#:~:text=Types%20of%20coal,energy%20the%20coal%20can%20produce</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>6-CSP</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>Concentrating solar-thermal power basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/concentrating-solar-thermal-power-basics#:~:text=What%20is%20concentrating%20solar%2Dthermal,temperature%20fluid%20in%20the%20receiver</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>7-Offshore article</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>Developers plan to add 6 gigawatts of U.S. offshore wind capacity through 2029. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=52940</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>8-Fast reactors</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>Fast reactor technology - Reactors designed/built by Argonne national laboratory. (2020, April 1). Nuclear Engineering Division of Argonne National Laboratory (Argonne). https://www.ne.anl.gov/About/reactors/frt.shtml</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>9-prod by source</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>Fossil fuels account for the largest share of U.S. energy production and consumption. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=45096</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>10-Gen by source</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>Frequently asked questions (FAQs). (2023, March 2). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>11-HEAT RATE DEF</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>Frequently asked questions (FAQs). (n.d.). U.S. Energy Information Administration (EIA).</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>https://www.eia.gov/tools/faqs/faq.php?id=107&amp;t=3#:~:text=The%20heat%20rate%20is%20the,Btu)%20per%20net%20kWh%20generated</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>12-Gen by Source???</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>Frequently Asked Questions (FAQs). (2023, March 2). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/faqs/faq.php?id=427&amp;t=3</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>13-geotherm</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>Geothermal. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/geothermal/</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>14-Distillate fo def</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=Distillate%20fuel%20oil</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>15-wastecoaldef</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=W</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>16-refinedcoaldef</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=refined_coal</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>17-Resid fo def</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>Glossary. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/tools/glossary/index.php?id=residual%20fuel%20oil#:~:text=5%2C%20a%20residual%20fuel%20oil,government%20service%20and%20inshore%20powerplants</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>18-STEAM TURBINE</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>How electricity is generated. (2022, November 9). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/electricity/how-electricity-is-generated.php</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>19-CONHYDRO</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>Hydropower explained. (2023, April 20). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/hydropower/</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>20-PUMPED HYDRO</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>Most pumped storage electricity generators in the U.S. were built in the 1970s. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=41833</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>21-natgaseee</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>Natural gas. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/natural-gas/</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>22-Ph renewables</span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>New pumped-storage capacity in China is helping to integrate growing wind and solar power. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=57360</span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>23-Energ by source</span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>Nonfossil fuel energy sources accounted for 21% of U.S. energy consumption in 2022. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=56980#:~:text=Fossil%20fuels%E2%80%94petroleum%2C%20natural%20gas,high%2013.2%20quads%20in%202022</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>24-nuclear</span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>Nuclear explained. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/nuclear/#:~:text=All%20nuclear%20power%20plants%20use,form%20of%20heat%20and%20radiation</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>25-Nuclear enerichment</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a>The nuclear fuel cycle. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/nuclear/the-nuclear-fuel-cycle.php#:~:text=Uranium%20enrichment,gaseous%20diffusion%20and%20gas%20centrifuge</span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a>26-Offshore wind</span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a>Offshore wind research and development. (n.d.). Energy.gov. https://www.energy.gov/eere/wind/offshore-wind-research-and-development</span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a>27-Petrol</span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a>Oil (petroleum). (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/oil/#:~:text=Petroleum%20means%20rock%20oil%20or,hydrocarbons%20contained%20in%20natural%20gas</span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>28-History primary to final</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a>Pinto, R., Henriques, S. T., Brockway, P. E., Heun, M. K., &amp; Sousa, T. (2023). The rise and stall of world electricity efficiency:1900–2017, results and insights for the renewables transition. Energy, 269, 126775. https://doi.org/10.1016/j.energy.2023.126775</span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>29-??? Heat rates</span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a>SAS output. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/electricity/annual/html/epa_08_02.html</span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>30-solar</span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>Solar explained. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/solar/</span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a>31-Solar cell physics</span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a>Solar photovoltaic cell basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/solar-photovoltaic-cell-basics#:~:text=There%20are%20several%20different%20semiconductor,material%20as%20an%20electrical%20current</span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a>32-Solar pv</span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a>Solar photovoltaic technology basics. (n.d.). Energy.gov. https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics</span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a>33-coke def</span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a>Table definitions, sources, and explanatory notes. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/dnav/pet/TblDefs/pet_pnp_capfuel_tbldef2.asp</span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a>34-natgascs</span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a>U.S. natural gas-fired combined-cycle capacity surpasses coal-fired capacity. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=39012#:~:text=U.S.%20natural%20gas%2Dfired%20combined,capacity%20surpasses%20coal%2Dfired%20capacity&amp;text=The%20amount%20of%20generating%20capacity,capacity%20in%20the%20United%20States</span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-142"><a href="#cb9-142" aria-hidden="true" tabindex="-1"></a>35-Refined coal article</span>
+<span id="cb9-143"><a href="#cb9-143" aria-hidden="true" tabindex="-1"></a>U.S. refined coal production and consumption declines with the expiration of a tax credit. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=53099</span>
+<span id="cb9-144"><a href="#cb9-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-145"><a href="#cb9-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-146"><a href="#cb9-146" aria-hidden="true" tabindex="-1"></a>36-Waste oils</span>
+<span id="cb9-147"><a href="#cb9-147" aria-hidden="true" tabindex="-1"></a>Waste fuels are a significant energy source for U.S. manufacturers. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=13531#:~:text=The%20petroleum%20and%20coal%20products%20industry%20(mostly%20refineries)%20uses%20waste,23%25%20of%20its%20fuel%20use</span>
+<span id="cb9-148"><a href="#cb9-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-149"><a href="#cb9-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-150"><a href="#cb9-150" aria-hidden="true" tabindex="-1"></a>37-Waste to energy</span>
+<span id="cb9-151"><a href="#cb9-151" aria-hidden="true" tabindex="-1"></a>Waste-to-energy (MSW) in depth. (2022, December 28). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/waste-to-energy-in-depth.php</span>
+<span id="cb9-152"><a href="#cb9-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-153"><a href="#cb9-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-154"><a href="#cb9-154" aria-hidden="true" tabindex="-1"></a>38-Municipal solid waste</span>
+<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a>Waste-to-energy (MSW). (2022, October 31). U.S. Energy Information Administration (EIA). https://www.eia.gov/energyexplained/biomass/waste-to-energy.php</span>
+<span id="cb9-156"><a href="#cb9-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-157"><a href="#cb9-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-158"><a href="#cb9-158" aria-hidden="true" tabindex="-1"></a>39-Intermittency</span>
+<span id="cb9-159"><a href="#cb9-159" aria-hidden="true" tabindex="-1"></a>Wind, solar, and batteries increasingly account for more new U.S. power capacity additions. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/todayinenergy/detail.php?id=55719</span>
+<span id="cb9-160"><a href="#cb9-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-161"><a href="#cb9-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-162"><a href="#cb9-162" aria-hidden="true" tabindex="-1"></a>40-WIND</span>
+<span id="cb9-163"><a href="#cb9-163" aria-hidden="true" tabindex="-1"></a>Wind. (n.d.). U.S. Energy Information Administration (EIA). https://www.eia.gov/kids/energy-sources/wind/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 
