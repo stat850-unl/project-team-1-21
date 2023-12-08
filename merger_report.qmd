@@ -16,9 +16,10 @@ import pandas as pd
 from skimpy import skim
 import matplotlib.pyplot as plt
 
-#AVAILABLE TIMES
+# AVAILABLE TIMES
 avtimes=["01","02","03","04","05","06","07","08"]
 
+# This loop will call the API several times over to get as much data as the current time can provide (up to august)
 dataofdatalist=[]
 for timeloop in avtimes:
   # API KEY
@@ -78,13 +79,8 @@ for timeloop in avtimes:
   dataofdatalist.append(data['response']['data'])
   #print(timeloop)
 
-#dfTEST=pd.DataFrame(data['response']['data'])
-#for x in dataofdatalist:
-#  print(111)
-#  dataofdatalist[x]=pd.DataFrame(dataofdatalist[x])
 
-
-#Yeah yeah, this is horrfic design, may change it later
+# Yeah yeah, this is horrific design, may change it later
 df___i=pd.DataFrame(dataofdatalist[0])
 df__ii=pd.DataFrame(dataofdatalist[1])
 df_iii=pd.DataFrame(dataofdatalist[2])
@@ -94,7 +90,7 @@ df__vi=pd.DataFrame(dataofdatalist[5])
 df_vii=pd.DataFrame(dataofdatalist[6])
 dfviii=pd.DataFrame(dataofdatalist[7])
 
-#API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them
+# API requests are limited, so we can stitch together one mega request by doing multiple and concatonating them
 metalist=[df___i,df__ii,df_iii,df__iv,df___v,df__vi,df_vii,dfviii]
 dfLONG=pd.concat(metalist, ignore_index=True)
 len(dfLONG['period'])
@@ -103,7 +99,9 @@ len(dfLONG['period'])
 
 
 
-
+# This dictionary categegorizes the power types into fuelees, non fuelees, null,
+# and unsure.
+# since many metrics are dependent on being a fuelee
 fueleeNotDict={
   'all coal products'                           :'FUELEE',
   'all fuels'                                   :'FUELEE',
@@ -158,20 +156,23 @@ FUELEEZ=[key for key, val in fueleeNotDict.items() if val == 'FUELEE']
 #'UNSURE' (unsure)
 
 
-
+# This is the main dataframe we will be working with
+# its where all the data is pulled from here on out
 df1=dfLONG
 
 
-pd.set_option('display.max_columns',40)
-df1.groupby('fuelTypeDescription').count()
-
-#EFFICIENCY 
-elligebleForIOEff=FUELEEZ.copy()
-elligebleForIOEff.remove('anthracite coal')
-elligebleForIOEff.remove('other gases')
-
-
-kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+# antiquated exploratory section, please ignore:
+if False:
+  pd.set_option('display.max_columns',40)
+  df1.groupby('fuelTypeDescription').count()
+  
+  #EFFICIENCY 
+  elligebleForIOEff=FUELEEZ.copy()
+  elligebleForIOEff.remove('anthracite coal')
+  elligebleForIOEff.remove('other gases')
+  
+  
+  kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
 
 ```
 
@@ -293,13 +294,24 @@ The heat rate is a measure of efficiency in electricity generation, and is measu
 
 ```{python, @echo off}
 #| echo: false
+
+
 #HEAT RATE
+
+# create new list for the purpose and remove ones with empty data
 elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
+
+# create list to make alternating color bars
 colorset=( ['black','grey'] *  (len(elligebleForIOEff)//2+1) )[:len(elligebleForIOEff)]
+
+# Convert MMBTU/KWH to BTU/KWH by multiplying by 1000000
+# then prep plot
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh', color=colorset)
+
+# Add reading details to chart
 plt.title("Graph 1 - Heat Rate of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Btu input per kWh output")
@@ -317,11 +329,26 @@ Thermal efficiency is the ratio of energy used in a generator vs the amount of u
 ```{python}
 #| echo: false
 #EFFICIENCY 
+
+# Create a new list to remove ones with empty date
 elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
+
+# create list to make alternating color bars
+colorset=( ['black','grey'] *  (len(elligebleForIOEff)//2+1) )[:len(elligebleForIOEff)]
+
+# Take the heat rate, and divide it by 3412 to get KWHin/KWHout
+# then divide 1 by the unit to flip the variables to get KWHout/KWHin
+# prep the plot
 (1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
-(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh')
+(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff].plot(kind='barh', color = colorset)
+
+# set a variable for KWHout/KWHin for later use in computing the practical cost
+kwhToKwhEff=(1/(df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 /3412))[elligebleForIOEff] #million mmbtu per kwh to mmbtu per kwh (*1000 000), then convert btu to kwh, then flip to get input/output instead of output/input
+
+
+# Add reading details to the plot
 plt.title("Graph 2 - input/output energy efficicency of fuelee sources")
 plt.ylabel("energy source")
 plt.xlabel("efficiecncy (KWH in per KWH out)")
@@ -338,10 +365,19 @@ Fuel costs can be an important factor in the cost of operation for any machine, 
 ```{python}
 #| echo: false
 #COST
+
+# Create a new list for the cost metric (note: nothing was removed)
 elligebleForCOST = FUELEEZ.copy()
+
+# create list to make alternating color bars
 colorset=( ['black','grey'] *  (len(elligebleForCOST)//2+1) )[:len(elligebleForCOST)]
+
+# Remove cost values that arent reported (in this dataset, reported as 0)
+# prep the plot
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
 (df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh', color=colorset)
+
+# add reading details to the plot
 plt.title("Graph 3 - Fuel Unit Price of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Cost Per Million Btu")
@@ -358,12 +394,26 @@ The cost per Btu of fuel does not fully capture the cost of fuel for a given pow
 ```{python}
 #| echo: false
 #COSTPERKWH
+
+# Create new list for the cost per kwh (note: nothing is removed)
 elligebleForCOST = FUELEEZ.copy()
+
+# create list to make alternating color bars
 colorset=( ['black','grey'] *  (len(elligebleForCOST)//2+1) )[:len(elligebleForCOST)]
+
+# Divide the cost per mmbtu to get cost per kwh 
+# MATH: (1/1000000)*(1/(1/3412)) = 853/250000 
+# MATH: 1/(853/250000) ~ 293.07107
+# So the operation of converting to BTU and then KWH can be reduced to one division operation.
+# Empty values will be be removed and the operation will be performed to convert the value from cost/MMBTUin to cost/KWHin
+# Then the cost/KWHin will be divided by the KWHout/KWHin to get cost/KWHout
+# finally, prep the plot
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
 fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
 fuelCostPerKwhOut.plot(kind='barh', color=colorset)
+
+# add reading details to the plot
 plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
 plt.ylabel("energy source")
 plt.xlabel("Cost Per Kwh fuel")
@@ -382,10 +432,19 @@ The amount of sulfur present in a fuel can play a large role in how much polluti
 ```{python}
 #| echo: false
 #SULFUR CONTENT
+
+# prepare a list for sulfur content (note: none are removed) 
 elligebleForSC = FUELEEZ.copy()
+
+# create list to make alternating color bars
 colorset=( ['black','grey'] *  (len(elligebleForSC)//2+1) )[:len(elligebleForSC)]
+
+# Remove empty data
+# prep the plot
 df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
 (df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh', color=colorset)
+
+# add reading details to the plot
 plt.title("Graph 5 - Sulfur Content  of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("sulfur content (percentage of fuel weight)")
@@ -404,10 +463,19 @@ Many combustible fuels produce a solid, incombustible substance, called ash, aft
 ```{python}
 #| echo: false
 #ASH CONTENT
+
+# Create new list for ash content (note: none are removed)
 elligebleForAC = FUELEEZ.copy()
+
+# create list to make alternating color bars
 colorset=( ['black','grey'] *  (len(elligebleForAC)//2+1) )[:len(elligebleForAC)]
+
+# remove empty data
+# prep the plot
 df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
 (df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh', color=colorset)
+
+# add reading details to the plot
 plt.title("Graph 6 - Ash Content of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Ash content (percentage of fuel weight)")
