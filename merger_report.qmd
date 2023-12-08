@@ -3,6 +3,9 @@ title: "Group 1.21 Paper"
 format: html
 editor: visual
 ---
+```{r}
+renv::deactivate()
+```
 
 ```{python}
 #| echo: false
@@ -294,8 +297,9 @@ The heat rate is a measure of efficiency in electricity generation, and is measu
 elligebleForIOEff=FUELEEZ.copy()
 elligebleForIOEff.remove('anthracite coal')
 elligebleForIOEff.remove('other gases')
+colorset=( ['black','grey'] *  (len(elligebleForIOEff)//2+1) )[:len(elligebleForIOEff)]
 ((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff] #same operation as above but dont flip the operation and leave the mmbtu as btu
-((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh')
+((df1.groupby('fuelTypeDescription')['consumption-for-eg-btu'].mean() / df1.groupby('fuelTypeDescription')['generation'].mean() *1000*1000 ))[elligebleForIOEff].plot(kind='barh', color=colorset)
 plt.title("Graph 1 - Heat Rate of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Btu input per kWh output")
@@ -335,8 +339,9 @@ Fuel costs can be an important factor in the cost of operation for any machine, 
 #| echo: false
 #COST
 elligebleForCOST = FUELEEZ.copy()
+colorset=( ['black','grey'] *  (len(elligebleForCOST)//2+1) )[:len(elligebleForCOST)]
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]
-(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh')
+(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]).plot(kind='barh', color=colorset)
 plt.title("Graph 3 - Fuel Unit Price of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Cost Per Million Btu")
@@ -354,10 +359,11 @@ The cost per Btu of fuel does not fully capture the cost of fuel for a given pow
 #| echo: false
 #COSTPERKWH
 elligebleForCOST = FUELEEZ.copy()
+colorset=( ['black','grey'] *  (len(elligebleForCOST)//2+1) )[:len(elligebleForCOST)]
 df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107 #dollars per million btu to dollars per kwh
 fuelCostPerKwhOut=(df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST][df1.groupby('fuelTypeDescription')['cost-per-btu'].mean()[elligebleForCOST] != 0]/293.07107)/kwhToKwhEff #cost per millionn btu to dollars per kwh input divided by efficiency of input energy 
 fuelCostPerKwhOut=fuelCostPerKwhOut[fuelCostPerKwhOut>0] #get rid of Nan valjues
-fuelCostPerKwhOut.plot(kind='barh')
+fuelCostPerKwhOut.plot(kind='barh', color=colorset)
 plt.title("Graph 4 - Price per kwh Production (cost per kwh fuel/efficiency)")
 plt.ylabel("energy source")
 plt.xlabel("Cost Per Kwh fuel")
@@ -377,8 +383,9 @@ The amount of sulfur present in a fuel can play a large role in how much polluti
 #| echo: false
 #SULFUR CONTENT
 elligebleForSC = FUELEEZ.copy()
+colorset=( ['black','grey'] *  (len(elligebleForSC)//2+1) )[:len(elligebleForSC)]
 df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]
-(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh')
+(df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC][df1.groupby('fuelTypeDescription')['sulfur-content'].mean()[elligebleForSC] != 0]).plot(kind='barh', color=colorset)
 plt.title("Graph 5 - Sulfur Content  of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("sulfur content (percentage of fuel weight)")
@@ -398,8 +405,9 @@ Many combustible fuels produce a solid, incombustible substance, called ash, aft
 #| echo: false
 #ASH CONTENT
 elligebleForAC = FUELEEZ.copy()
+colorset=( ['black','grey'] *  (len(elligebleForAC)//2+1) )[:len(elligebleForAC)]
 df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]
-(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh')
+(df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC][df1.groupby('fuelTypeDescription')['ash-content'].mean()[elligebleForAC] != 0]).plot(kind='barh', color=colorset)
 plt.title("Graph 6 - Ash Content of Fuelees")
 plt.ylabel("energy source")
 plt.xlabel("Ash content (percentage of fuel weight)")
@@ -414,11 +422,18 @@ Ash content was shown to be mostly evenly spread among power sources, but large 
 Python packages
 
 ```{txt}
-requests 2.31.0
-json 2.0.9 [DEFUALT PY]
-pandas 2.0.3
-skimpy {<attribute version difficulties>}
-matplotlib.pyplot {<attribute version difficulties>}
+Python Software Foundation. (2023). *Python 3* (Version 3.11.3). [Programming Language]. Python Software Foundation. python.org
+
+Kenneth Reitz. (2023). *requests* (Version 2.31.0) [Python Library]. Python Package Index.
+
+Python Software Foundation. (2023). *json* (Version 2.0.9) [Python Library]. The Python Standard Library.
+
+The Pandas Development Team. (2023). *pandas* (Version 2.1.3) [Python Library]. Python Package Index.
+
+Arthur Turrell. (2023). *skimpy* (Version 0.0.11) [Python Library]. Python Package Index.
+
+John D. Hunter, Micheal Droettboom. (2023). *matplotlib* (Version 3.8.2). [Python Library]. Python Package Index.
+
 ```
 
 E-Sources
