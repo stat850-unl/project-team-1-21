@@ -270,7 +270,7 @@ Petroleum coke is a combustible, carbon-based, solid material obtained during pe
 
 \
 
-**Waste Oils and Other Oils ##look into this one in particular**
+**Waste Oils and Other Oils**
 
 Similar to petroleum coke, waste oil is oil that is produced as a byproduct of some industrial processes $^{[36]}$. These oils can still be burned for heating and energy purposes $^{[36]}$.
 
